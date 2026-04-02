@@ -3,42 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>레이드 파티 신청</title>
+  <title>아이온2 레이드 파티 신청</title>
   <style>
+    :root {
+      --bg: #0a0f18;
+      --panel: rgba(22, 28, 40, 0.96);
+      --panel-2: rgba(29, 37, 54, 0.96);
+      --slot: #151b28;
+      --text: #f5f7fb;
+      --muted: #aab4c8;
+      --gold: #f4d27a;
+      --gold-line: rgba(244, 210, 122, 0.2);
+      --purple: #7c3aed;
+      --purple-2: #5b21b6;
+      --red: #dc2626;
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    * { box-sizing: border-box; }
+
     body {
       margin: 0;
-      background: #0b0f17;
-      color: #fff;
       font-family: Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top, rgba(124, 58, 237, 0.15), transparent 30%),
+        radial-gradient(circle at right top, rgba(37, 99, 235, 0.12), transparent 28%),
+        linear-gradient(180deg, #08101b 0%, #0a0f18 100%);
       padding: 20px;
     }
 
     .wrap {
-      max-width: 1000px;
+      max-width: 1100px;
       margin: 0 auto;
     }
 
     h1 {
-      margin-bottom: 20px;
-      font-size: 40px;
-      font-weight: 800;
+      margin: 0 0 8px;
+      text-align: center;
+      font-size: 34px;
+      color: var(--gold);
+      text-shadow: 0 0 16px rgba(244, 210, 122, 0.2);
+    }
+
+    .subtitle {
+      text-align: center;
+      color: var(--muted);
+      margin-bottom: 24px;
+      font-size: 15px;
     }
 
     .box {
-      background: #1b1d22;
+      background: var(--panel);
+      border: 1px solid var(--gold-line);
       border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 20px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 14px;
+      color: var(--gold);
     }
 
     input, select, button {
       width: 100%;
       box-sizing: border-box;
-      padding: 14px;
+      padding: 14px 16px;
       border-radius: 14px;
       border: none;
-      font-size: 17px;
-      margin-bottom: 12px;
+      font-size: 16px;
+      margin-bottom: 10px;
     }
 
     input, select {
@@ -48,56 +87,50 @@
 
     button {
       width: auto;
-      padding: 12px 18px;
-      border-radius: 12px;
-      background: #50b84f;
-      color: white;
+      background: linear-gradient(135deg, var(--purple), var(--purple-2));
+      color: #fff;
       font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 8px 18px rgba(91, 33, 182, 0.25);
     }
 
-    .gray {
-      background: #555;
+    button.gray {
+      background: linear-gradient(135deg, #64748b, #475569);
     }
 
-    .danger {
-      background: #b91c1c;
+    button.danger {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
     }
 
-    .section-title {
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 16px;
-    }
-
-    .notice {
-      color: #bbb;
-      font-size: 14px;
-      margin-top: -4px;
-      margin-bottom: 12px;
-    }
-
-    .admin-row {
-      display: flex;
+    .row {
+      display: grid;
+      grid-template-columns: 1fr;
       gap: 10px;
-      flex-wrap: wrap;
     }
 
-    .admin-row button {
+    .inline-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .inline-buttons button {
       margin-bottom: 0;
     }
 
-    .admin-status {
-      font-size: 14px;
-      color: #bbb;
-      margin-top: 6px;
+    .admin-status, .notice {
+      color: var(--muted);
+      font-size: 13px;
+      margin-top: 4px;
     }
 
     .raid-card {
-      background: #1b1d22;
+      background: linear-gradient(180deg, var(--panel-2), #121826);
+      border: 1px solid var(--gold-line);
       border-radius: 20px;
-      padding: 20px;
-      margin-bottom: 20px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow);
     }
 
     .raid-head {
@@ -105,54 +138,81 @@
       justify-content: space-between;
       align-items: flex-start;
       gap: 12px;
-      margin-bottom: 16px;
       flex-wrap: wrap;
+      margin-bottom: 14px;
     }
 
     .raid-title {
       font-size: 24px;
       font-weight: 800;
+      color: var(--gold);
     }
 
     .raid-time {
-      color: #bbb;
+      color: var(--muted);
+      font-size: 14px;
       margin-top: 6px;
-      font-size: 15px;
+    }
+
+    .raid-status {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 5px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .open {
+      background: rgba(34,197,94,0.15);
+      color: #86efac;
+      border: 1px solid rgba(34,197,94,0.35);
+    }
+
+    .closed {
+      background: rgba(220,38,38,0.15);
+      color: #fca5a5;
+      border: 1px solid rgba(220,38,38,0.35);
     }
 
     .party-grid {
       display: grid;
       grid-template-columns: 1fr;
       gap: 16px;
+      margin-top: 12px;
     }
 
     .party-card {
-      background: #262a31;
-      border-radius: 16px;
+      background: rgba(20, 26, 38, 0.95);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 18px;
       padding: 16px;
     }
 
     .party-title {
       font-size: 20px;
       font-weight: 800;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
     }
 
     .party-meta {
-      color: #bbb;
+      color: var(--muted);
+      font-size: 14px;
       margin-bottom: 12px;
     }
 
     .slot {
-      background: #1a1d22;
-      border-radius: 12px;
+      background: var(--slot);
+      border: 1px solid rgba(255,255,255,0.05);
+      border-radius: 14px;
       padding: 12px;
       margin-bottom: 10px;
+      min-height: 110px;
     }
 
     .slot.empty {
-      opacity: 0.75;
-      border: 1px dashed #666;
+      opacity: 0.85;
+      border: 1px dashed rgba(244, 210, 122, 0.45);
     }
 
     .role {
@@ -160,58 +220,72 @@
       padding: 4px 10px;
       border-radius: 999px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 800;
       margin-bottom: 8px;
     }
 
-    .tank { background: #2563eb; }
-    .heal { background: #16a34a; }
-    .dps  { background: #ea580c; }
+    .tank { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
+    .heal { background: linear-gradient(135deg, #16a34a, #15803d); }
+    .dps  { background: linear-gradient(135deg, #f97316, #ea580c); }
 
     .member-name {
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 800;
+      margin-bottom: 4px;
     }
 
     .member-job {
-      color: #ccc;
-      margin-top: 4px;
+      color: #d5d9e2;
+      font-size: 14px;
     }
 
-    #debugBox {
-      position: fixed;
-      left: 10px;
-      right: 10px;
-      bottom: 10px;
-      background: #000;
-      color: #00ff66;
-      padding: 10px;
+    .slot-note {
+      color: var(--gold);
+      font-size: 14px;
+      font-weight: 700;
+      margin-top: 8px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
       font-size: 12px;
-      max-height: 180px;
-      overflow: auto;
-      z-index: 99999;
-      white-space: pre-wrap;
+      font-weight: 800;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .leader {
+      background: rgba(244, 210, 122, 0.15);
+      color: var(--gold);
+      border: 1px solid rgba(244, 210, 122, 0.35);
     }
 
     .empty-text {
-      color: #999;
+      color: var(--muted);
     }
 
-    @media (min-width: 900px) {
-      .party-grid {
-        grid-template-columns: 1fr 1fr;
-      }
+    /* 디버그 박스 숨김 */
+    #debugBox {
+      display: none;
+    }
+
+    @media (min-width: 820px) {
+      .row.two { grid-template-columns: 1fr 1fr; }
+      .party-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>레이드 파티 신청</h1>
+    <h1>아이온2 레이드 파티 신청</h1>
+    <div class="subtitle">공유 버전 · 같은 링크로 같은 데이터를 봄</div>
 
     <div class="box">
       <div class="section-title">관리자</div>
-      <input id="adminPassword" type="password" placeholder="관리자 비밀번호 입력" />
-      <div class="admin-row">
+      <input id="adminPassword" type="password" placeholder="관리자 비밀번호 입력">
+      <div class="inline-buttons">
         <button onclick="loginAdmin()">관리자 로그인</button>
         <button class="gray" onclick="logoutAdmin()">로그아웃</button>
         <button class="danger" onclick="resetAll()">전체 초기화</button>
@@ -222,43 +296,48 @@
 
     <div class="box" id="raidCreateBox" style="display:none;">
       <div class="section-title">공대 만들기</div>
-      <input id="raidName" placeholder="공대 이름 예: 8시 1공대" />
-      <input id="raidTime" placeholder="공대 시간 예: 저녁 8시" />
+      <div class="row two">
+        <input id="raidName" placeholder="공대 이름 예: 8시 1공대">
+        <input id="raidTime" placeholder="공대 시간 예: 저녁 8시">
+      </div>
       <button onclick="createRaid()">공대 생성</button>
     </div>
 
     <div class="box">
       <div class="section-title">파티 신청</div>
+      <div class="row two">
+        <select id="raidSelect">
+          <option value="">신청할 공대 선택</option>
+        </select>
 
-      <select id="raidSelect">
-        <option value="">신청할 공대 선택</option>
-      </select>
+        <select id="partySelect">
+          <option value="party1">1파티</option>
+          <option value="party2">2파티</option>
+        </select>
+      </div>
 
-      <select id="partySelect">
-        <option value="party1">1파티</option>
-        <option value="party2">2파티</option>
-      </select>
+      <input id="name" placeholder="이름">
 
-      <input id="name" placeholder="이름" />
+      <div class="row two">
+        <select id="job">
+          <option value="">직업 선택</option>
+          <option value="수호">수호</option>
+          <option value="치유성">치유성</option>
+          <option value="궁성">궁성</option>
+          <option value="살성">살성</option>
+          <option value="검성">검성</option>
+          <option value="마도성">마도성</option>
+          <option value="정령성">정령성</option>
+          <option value="호법성">호법성</option>
+        </select>
 
-      <select id="job">
-        <option value="">직업 선택</option>
-        <option value="수호">수호</option>
-        <option value="치유성">치유성</option>
-        <option value="궁성">궁성</option>
-        <option value="살성">살성</option>
-        <option value="검성">검성</option>
-        <option value="마도성">마도성</option>
-        <option value="정령성">정령성</option>
-        <option value="호법성">호법성</option>
-      </select>
-
-      <select id="roleSelect" style="display:none;">
-        <option value="">역할 선택</option>
-      </select>
+        <select id="roleSelect" style="display:none;">
+          <option value="">역할 선택</option>
+        </select>
+      </div>
 
       <button onclick="addMember()">신청하기</button>
-      <div class="notice">파티당 4명 / 탱1 힐1 딜2</div>
+      <div class="notice">파티당 4명 / 탱1 / 힐1 / 딜2</div>
     </div>
 
     <div class="box">
@@ -276,7 +355,7 @@
     const debugBox = document.getElementById("debugBox");
     function debug(msg) {
       console.log(msg);
-      debugBox.textContent += "\n" + msg;
+      if (debugBox) debugBox.textContent += "\n" + msg;
     }
 
     window.onerror = (m) => debug("ERROR: " + m);
@@ -295,9 +374,9 @@
     };
 
     let db;
-    let isAdmin = false;
-    const ADMIN_PASSWORD = "1234";
+    let isAdmin = localStorage.getItem("raid_admin") === "1";
     let raids = {};
+    const ADMIN_PASSWORD = "1234";
 
     try {
       firebase.initializeApp(firebaseConfig);
@@ -345,8 +424,10 @@
       const pw = document.getElementById("adminPassword").value.trim();
       if (pw === ADMIN_PASSWORD) {
         isAdmin = true;
+        localStorage.setItem("raid_admin", "1");
         document.getElementById("adminPassword").value = "";
         renderAdminStatus();
+        renderRaids();
         alert("관리자 로그인 완료");
         debug("관리자 로그인");
       } else {
@@ -356,7 +437,9 @@
 
     function logoutAdmin() {
       isAdmin = false;
+      localStorage.removeItem("raid_admin");
       renderAdminStatus();
+      renderRaids();
       alert("로그아웃 완료");
       debug("관리자 로그아웃");
     }
@@ -451,9 +534,20 @@
       return "dps";
     }
 
+    function getJobIcon(job) {
+      if (job === "수호") return "🛡️";
+      if (job === "검성") return "⚔️";
+      if (job === "살성") return "🗡️";
+      if (job === "궁성") return "🏹";
+      if (job === "마도성") return "🔥";
+      if (job === "정령성") return "🌪️";
+      if (job === "치유성") return "💚";
+      if (job === "호법성") return "✨";
+      return "🎮";
+    }
+
     function renderRaidSelect() {
       raidSelectEl.innerHTML = `<option value="">신청할 공대 선택</option>`;
-
       Object.entries(raids).forEach(([raidId, raid]) => {
         raidSelectEl.innerHTML += `
           <option value="${raidId}">
@@ -461,6 +555,16 @@
           </option>
         `;
       });
+    }
+
+    function getMembers(raid, partyName) {
+      return raid[partyName]
+        ? Object.entries(raid[partyName]).map(([key, value]) => ({ key, ...value }))
+        : [];
+    }
+
+    function getTotalRaidCount(raid) {
+      return getMembers(raid, "party1").length + getMembers(raid, "party2").length;
     }
 
     function addMember() {
@@ -489,27 +593,30 @@
 
       if (!role) return;
 
-      db.ref("raids/" + raidId + "/" + party).once("value").then(snapshot => {
-        const current = snapshot.val() || {};
-        const members = Object.entries(current).map(([key, value]) => ({
-          key,
-          ...value
-        }));
+      db.ref("raids/" + raidId).once("value").then(snapshot => {
+        const raid = snapshot.val() || {};
+        const partyMembers = getMembers(raid, party);
+        const totalMembers = getTotalRaidCount(raid);
 
-        if (members.length >= 4) {
+        if (totalMembers >= 8) {
+          alert("이 공대는 마감이야");
+          return;
+        }
+
+        if (partyMembers.length >= 4) {
           alert("이 파티는 4명이 가득 찼어");
           return;
         }
 
-        const sameName = members.some(m => (m.name || "").toLowerCase() === name.toLowerCase());
+        const sameName = partyMembers.some(m => (m.name || "").toLowerCase() === name.toLowerCase());
         if (sameName) {
           alert("같은 파티에 같은 이름은 안 돼");
           return;
         }
 
-        const tanks = members.filter(m => m.role === "tank").length;
-        const heals = members.filter(m => m.role === "heal").length;
-        const dps = members.filter(m => m.role === "dps").length;
+        const tanks = partyMembers.filter(m => m.role === "tank").length;
+        const heals = partyMembers.filter(m => m.role === "heal").length;
+        const dps = partyMembers.filter(m => m.role === "dps").length;
 
         if (role === "tank" && tanks >= 1) {
           alert("탱 자리는 이미 있어");
@@ -529,7 +636,8 @@
         db.ref("raids/" + raidId + "/" + party).push({
           name: name,
           job: job,
-          role: role
+          role: role,
+          leader: false
         });
 
         document.getElementById("name").value = "";
@@ -558,22 +666,108 @@
         });
     }
 
+    function toggleLeader(raidId, partyName, key) {
+      if (!isAdmin) {
+        alert("관리자만 파티장 지정 가능");
+        return;
+      }
+
+      db.ref("raids/" + raidId + "/" + partyName).once("value").then(snapshot => {
+        const current = snapshot.val() || {};
+        const updates = {};
+
+        Object.keys(current).forEach(memberKey => {
+          updates[memberKey + "/leader"] = (memberKey === key);
+        });
+
+        db.ref("raids/" + raidId + "/" + partyName).update(updates)
+          .then(() => {
+            debug("파티장 지정 완료");
+          })
+          .catch(err => {
+            debug("파티장 지정 실패: " + err.message);
+          });
+      });
+    }
+
+    function moveMember(raidId, fromParty, toParty, key) {
+      if (!isAdmin) {
+        alert("관리자만 이동 가능");
+        return;
+      }
+
+      db.ref("raids/" + raidId).once("value").then(snapshot => {
+        const raid = snapshot.val() || {};
+        const fromMembers = getMembers(raid, fromParty);
+        const toMembers = getMembers(raid, toParty);
+
+        const member = fromMembers.find(m => m.key === key);
+        if (!member) return;
+
+        if (toMembers.length >= 4) {
+          alert("옮길 파티가 이미 4명이야");
+          return;
+        }
+
+        const roleCount = toMembers.filter(m => m.role === member.role).length;
+        if (member.role === "tank" && roleCount >= 1) {
+          alert("옮길 파티의 탱 자리가 이미 있어");
+          return;
+        }
+        if (member.role === "heal" && roleCount >= 1) {
+          alert("옮길 파티의 힐 자리가 이미 있어");
+          return;
+        }
+        if (member.role === "dps" && roleCount >= 2) {
+          alert("옮길 파티의 딜 자리가 이미 꽉 찼어");
+          return;
+        }
+
+        const data = {
+          name: member.name,
+          job: member.job,
+          role: member.role,
+          leader: member.leader || false
+        };
+
+        db.ref("raids/" + raidId + "/" + fromParty + "/" + key).remove().then(() => {
+          db.ref("raids/" + raidId + "/" + toParty).push(data);
+          debug("신청자 이동 완료");
+        });
+      }).catch(err => {
+        debug("이동 실패: " + err.message);
+      });
+    }
+
     function renderSlot(label, member, roleClass, raidId, partyName) {
       if (!member) {
         return `
           <div class="slot empty">
             <div class="role ${roleClass}">${label}</div>
             <div class="member-name">모집중</div>
+            <div class="slot-note">빈 자리</div>
           </div>
         `;
       }
 
+      const moveTo = partyName === "party1" ? "party2" : "party1";
+      const moveLabel = partyName === "party1" ? "2파티로 이동" : "1파티로 이동";
+
       return `
         <div class="slot">
           <div class="role ${roleClass}">${label}</div>
-          <div class="member-name">${member.name}</div>
+          <div class="member-name">
+            ${getJobIcon(member.job)} ${member.name}
+            ${member.leader ? '<span class="tag leader">👑 파티장</span>' : ''}
+          </div>
           <div class="member-job">${member.job}</div>
-          ${isAdmin ? `<button class="danger" style="margin-top:10px;" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>` : ""}
+          ${isAdmin ? `
+            <div class="inline-buttons" style="margin-top:10px;">
+              <button class="gray" onclick="toggleLeader('${raidId}', '${partyName}', '${member.key}')">파티장</button>
+              <button class="gray" onclick="moveMember('${raidId}', '${partyName}', '${moveTo}', '${member.key}')">${moveLabel}</button>
+              <button class="danger" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>
+            </div>
+          ` : ""}
         </div>
       `;
     }
@@ -606,12 +800,10 @@
       let html = "";
 
       Object.entries(raids).forEach(([raidId, raid]) => {
-        const party1 = raid.party1
-          ? Object.entries(raid.party1).map(([key, value]) => ({ key, ...value }))
-          : [];
-        const party2 = raid.party2
-          ? Object.entries(raid.party2).map(([key, value]) => ({ key, ...value }))
-          : [];
+        const party1 = getMembers(raid, "party1");
+        const party2 = getMembers(raid, "party2");
+        const total = party1.length + party2.length;
+        const closed = total >= 8;
 
         html += `
           <div class="raid-card">
@@ -619,6 +811,9 @@
               <div>
                 <div class="raid-title">${raid.name}</div>
                 <div class="raid-time">${raid.time}</div>
+                <div class="raid-status ${closed ? 'closed' : 'open'}">
+                  ${closed ? '마감' : '모집중'} · ${total}/8
+                </div>
               </div>
               ${isAdmin ? `<button class="danger" onclick="deleteRaid('${raidId}')">공대 삭제</button>` : ""}
             </div>
@@ -655,6 +850,8 @@
     window.deleteRaid = deleteRaid;
     window.addMember = addMember;
     window.deleteMember = deleteMember;
+    window.toggleLeader = toggleLeader;
+    window.moveMember = moveMember;
   </script>
 </body>
 </html>
