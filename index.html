@@ -1147,8 +1147,9 @@ function formatDate(dateStr) {
                 <span>${raid.name} (${total}/8)</span>
                 <span class="raid-state">${closed ? "🔴" : "🟢"}</span>
               </div>
-              <div class="raid-meta">${raid.date ? formatDate(raid.date) + " / " : ""}${raid.time}</div>
-            </div>
+              <div class="raid-meta">
+  ${raid.date ? formatDate(raid.date) + " / " : ""}${raid.time}
+</div>
 
             ${opened ? `
               <div class="raid-detail">
