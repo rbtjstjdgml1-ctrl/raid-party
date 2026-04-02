@@ -746,8 +746,8 @@ function requestEntry() {
         return;
       }
 
-      const raidName = document.getElementById("raidName").value.trim();
-      const raidTime = document.getElementById("raidTime").value.trim();
+      const raidName = document.getElementById("raidName").value;
+      const raidTime = document.getElementById("raidTime").value;
 
       if (!raidName || !raidTime) {
         alert("공대 이름과 시간 입력");
