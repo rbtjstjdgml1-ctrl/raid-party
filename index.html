@@ -17,6 +17,7 @@
       --purple: #7c3aed;
       --purple-2: #5b21b6;
       --red: #dc2626;
+      --green: #16a34a;
       --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     }
 
@@ -34,7 +35,7 @@
     }
 
     .wrap {
-      max-width: 1100px;
+      max-width: 1150px;
       margin: 0 auto;
     }
 
@@ -70,6 +71,13 @@
       color: var(--gold);
     }
 
+    .sub-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 10px;
+      color: #fff;
+    }
+
     input, select, button {
       width: 100%;
       box-sizing: border-box;
@@ -102,6 +110,10 @@
       background: linear-gradient(135deg, #dc2626, #991b1b);
     }
 
+    button.green {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+    }
+
     .row {
       display: grid;
       grid-template-columns: 1fr;
@@ -122,6 +134,29 @@
       color: var(--muted);
       font-size: 13px;
       margin-top: 4px;
+    }
+
+    .current-user {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      background: rgba(244, 210, 122, 0.12);
+      color: var(--gold);
+      border: 1px solid rgba(244, 210, 122, 0.25);
+    }
+
+    .gate-message {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .muted {
+      color: var(--muted);
+      font-size: 14px;
     }
 
     .raid-card {
@@ -207,7 +242,7 @@
       border-radius: 14px;
       padding: 12px;
       margin-bottom: 10px;
-      min-height: 110px;
+      min-height: 118px;
     }
 
     .slot.empty {
@@ -266,21 +301,33 @@
       color: var(--muted);
     }
 
-    /* 디버그 박스 숨김 */
-    #debugBox {
-      display: none;
+    .user-card {
+      background: rgba(20, 26, 38, 0.95);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 10px;
     }
+
+    .user-name {
+      font-size: 17px;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+
+    #debugBox { display: none; }
 
     @media (min-width: 820px) {
       .row.two { grid-template-columns: 1fr 1fr; }
       .party-grid { grid-template-columns: 1fr 1fr; }
+      .row.admin-two { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>아이온2 레이드 파티 신청</h1>
-    <div class="subtitle">공유 버전 · 같은 링크로 같은 데이터를 봄</div>
+    <div class="subtitle">입장 승인형 · 같은 링크로 같은 데이터를 봄</div>
 
     <div class="box">
       <div class="section-title">관리자</div>
@@ -294,55 +341,102 @@
       <div class="notice">예시 관리자 비밀번호: 1234</div>
     </div>
 
-    <div class="box" id="raidCreateBox" style="display:none;">
-      <div class="section-title">공대 만들기</div>
-      <div class="row two">
-        <input id="raidName" placeholder="공대 이름 예: 8시 1공대">
-        <input id="raidTime" placeholder="공대 시간 예: 저녁 8시">
-      </div>
-      <button onclick="createRaid()">공대 생성</button>
+    <div class="box" id="entryBox" style="display:none;">
+      <div class="section-title">입장 신청</div>
+      <div class="gate-message">처음 들어오는 사람은 아이디를 입력하고 입장 신청해야 해.</div>
+      <input id="entryName" placeholder="사용할 아이디 입력">
+      <button onclick="requestEntry()">입장 신청</button>
+      <div class="notice">관리자가 승인해야 사용 가능</div>
     </div>
 
-    <div class="box">
-      <div class="section-title">파티 신청</div>
-      <div class="row two">
-        <select id="raidSelect">
-          <option value="">신청할 공대 선택</option>
-        </select>
-
-        <select id="partySelect">
-          <option value="party1">1파티</option>
-          <option value="party2">2파티</option>
-        </select>
+    <div class="box" id="waitingBox" style="display:none;">
+      <div class="section-title">승인 대기</div>
+      <div class="gate-message">입장 승인 대기중입니다.</div>
+      <div class="muted">관리자가 승인하면 자동으로 입장 가능해져.</div>
+      <div class="inline-buttons" style="margin-top:12px;">
+        <button class="gray" onclick="changeMyId()">아이디 변경</button>
       </div>
-
-      <input id="name" placeholder="이름">
-
-      <div class="row two">
-        <select id="job">
-          <option value="">직업 선택</option>
-          <option value="수호">수호</option>
-          <option value="치유성">치유성</option>
-          <option value="궁성">궁성</option>
-          <option value="살성">살성</option>
-          <option value="검성">검성</option>
-          <option value="마도성">마도성</option>
-          <option value="정령성">정령성</option>
-          <option value="호법성">호법성</option>
-        </select>
-
-        <select id="roleSelect" style="display:none;">
-          <option value="">역할 선택</option>
-        </select>
-      </div>
-
-      <button onclick="addMember()">신청하기</button>
-      <div class="notice">파티당 4명 / 탱1 / 힐1 / 딜2</div>
     </div>
 
-    <div class="box">
-      <div class="section-title">공대 목록</div>
-      <div id="raidList"></div>
+    <div class="box" id="bannedBox" style="display:none;">
+      <div class="section-title">입장 불가</div>
+      <div class="gate-message">관리자에 의해 추방되었거나 입장이 제한된 상태야.</div>
+      <div class="inline-buttons" style="margin-top:12px;">
+        <button class="gray" onclick="changeMyId()">다른 아이디로 다시 신청</button>
+      </div>
+    </div>
+
+    <div class="box" id="pendingManageBox" style="display:none;">
+      <div class="section-title">입장 승인 관리</div>
+      <div class="row admin-two">
+        <div>
+          <div class="sub-title">승인 대기</div>
+          <div id="pendingUsers"></div>
+        </div>
+        <div>
+          <div class="sub-title">승인된 사용자</div>
+          <div id="approvedUsers"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="appWrap" style="display:none;">
+      <div class="box">
+        <div class="section-title">내 상태</div>
+        <div class="current-user" id="currentUserLabel">현재 아이디: -</div>
+        <div class="inline-buttons" style="margin-top:12px;">
+          <button class="gray" onclick="changeMyId()">아이디 변경</button>
+        </div>
+      </div>
+
+      <div class="box" id="raidCreateBox" style="display:none;">
+        <div class="section-title">공대 만들기</div>
+        <div class="row two">
+          <input id="raidName" placeholder="공대 이름 예: 8시 1공대">
+          <input id="raidTime" placeholder="공대 시간 예: 저녁 8시">
+        </div>
+        <button onclick="createRaid()">공대 생성</button>
+      </div>
+
+      <div class="box">
+        <div class="section-title">파티 신청</div>
+        <div class="row two">
+          <select id="raidSelect">
+            <option value="">신청할 공대 선택</option>
+          </select>
+
+          <select id="partySelect">
+            <option value="party1">1파티</option>
+            <option value="party2">2파티</option>
+          </select>
+        </div>
+
+        <div class="row two">
+          <select id="job">
+            <option value="">직업 선택</option>
+            <option value="수호">수호</option>
+            <option value="치유성">치유성</option>
+            <option value="궁성">궁성</option>
+            <option value="살성">살성</option>
+            <option value="검성">검성</option>
+            <option value="마도성">마도성</option>
+            <option value="정령성">정령성</option>
+            <option value="호법성">호법성</option>
+          </select>
+
+          <select id="roleSelect" style="display:none;">
+            <option value="">역할 선택</option>
+          </select>
+        </div>
+
+        <button onclick="addMember()">신청하기</button>
+        <div class="notice">파티당 4명 / 탱1 / 힐1 / 딜2</div>
+      </div>
+
+      <div class="box">
+        <div class="section-title">공대 목록</div>
+        <div id="raidList"></div>
+      </div>
     </div>
   </div>
 
@@ -376,6 +470,8 @@
     let db;
     let isAdmin = localStorage.getItem("raid_admin") === "1";
     let raids = {};
+    let users = {};
+    let myId = localStorage.getItem("raid_user_name") || "";
     const ADMIN_PASSWORD = "1234";
 
     try {
@@ -415,9 +511,101 @@
       }
     });
 
+    function normalizeName(name) {
+      return (name || "").trim().toLowerCase();
+    }
+
     function renderAdminStatus() {
       adminStatusEl.textContent = isAdmin ? "현재 관리자 로그인 상태" : "현재 관리자 아님";
-      raidCreateBoxEl.style.display = isAdmin ? "block" : "none";
+      raidCreateBoxEl.style.display = isAdmin && isApprovedUser() ? "block" : "none";
+      document.getElementById("pendingManageBox").style.display = isAdmin ? "block" : "none";
+    }
+
+    function isApprovedUser() {
+      if (!myId) return false;
+      const user = users[myId];
+      return !!(user && user.approved && !user.banned);
+    }
+
+    function getMyUserRecord() {
+      if (!myId) return null;
+      return users[myId] || null;
+    }
+
+    function updateGateUI() {
+      const entryBox = document.getElementById("entryBox");
+      const waitingBox = document.getElementById("waitingBox");
+      const bannedBox = document.getElementById("bannedBox");
+      const appWrap = document.getElementById("appWrap");
+      const currentUserLabel = document.getElementById("currentUserLabel");
+
+      entryBox.style.display = "none";
+      waitingBox.style.display = "none";
+      bannedBox.style.display = "none";
+      appWrap.style.display = "none";
+
+      if (!myId) {
+        entryBox.style.display = "block";
+        return;
+      }
+
+      const user = users[myId];
+
+      if (!user) {
+        entryBox.style.display = "block";
+        return;
+      }
+
+      if (user.banned) {
+        bannedBox.style.display = "block";
+        return;
+      }
+
+      if (!user.approved) {
+        waitingBox.style.display = "block";
+        return;
+      }
+
+      currentUserLabel.textContent = "현재 아이디: " + user.name;
+      appWrap.style.display = "block";
+    }
+
+    function requestEntry() {
+      const entered = document.getElementById("entryName").value.trim();
+      if (!entered) {
+        alert("아이디 입력");
+        return;
+      }
+
+      const key = normalizeName(entered);
+
+      db.ref("users/" + key).once("value").then(snapshot => {
+        const existing = snapshot.val();
+
+        if (existing && existing.banned) {
+          alert("이 아이디는 입장이 제한되어 있어");
+          return;
+        }
+
+        localStorage.setItem("raid_user_name", key);
+        myId = key;
+
+        db.ref("users/" + key).set({
+          name: entered,
+          approved: existing ? !!existing.approved : false,
+          banned: false
+        }).then(() => {
+          document.getElementById("entryName").value = "";
+          debug("입장 신청 완료");
+        });
+      });
+    }
+
+    function changeMyId() {
+      if (!confirm("현재 아이디 상태를 지우고 다시 신청할까?")) return;
+      localStorage.removeItem("raid_user_name");
+      myId = "";
+      updateGateUI();
     }
 
     function loginAdmin() {
@@ -427,6 +615,7 @@
         localStorage.setItem("raid_admin", "1");
         document.getElementById("adminPassword").value = "";
         renderAdminStatus();
+        renderApprovalLists();
         renderRaids();
         alert("관리자 로그인 완료");
         debug("관리자 로그인");
@@ -439,6 +628,7 @@
       isAdmin = false;
       localStorage.removeItem("raid_admin");
       renderAdminStatus();
+      renderApprovalLists();
       renderRaids();
       alert("로그아웃 완료");
       debug("관리자 로그아웃");
@@ -452,19 +642,109 @@
 
       if (!confirm("정말 전체 초기화할까?")) return;
 
-      db.ref("raids").set(null)
-        .then(() => {
-          debug("전체 초기화 완료");
-          alert("전체 초기화 완료");
-        })
-        .catch((err) => {
-          debug("초기화 실패: " + err.message);
-          alert("초기화 실패");
+      Promise.all([
+        db.ref("raids").set(null),
+        db.ref("users").set(null)
+      ]).then(() => {
+        debug("전체 초기화 완료");
+        alert("전체 초기화 완료");
+      }).catch((err) => {
+        debug("초기화 실패: " + err.message);
+        alert("초기화 실패");
+      });
+    }
+
+    function approveUser(userKey) {
+      if (!isAdmin) return;
+      db.ref("users/" + userKey + "/approved").set(true);
+      db.ref("users/" + userKey + "/banned").set(false);
+    }
+
+    function rejectUser(userKey) {
+      if (!isAdmin) return;
+      db.ref("users/" + userKey).remove();
+    }
+
+    function removeUserApplicationsByName(userName) {
+      const updates = {};
+      Object.entries(raids).forEach(([raidId, raid]) => {
+        ["party1", "party2"].forEach(partyName => {
+          const members = raid[partyName] || {};
+          Object.entries(members).forEach(([memberKey, member]) => {
+            if (normalizeName(member.name) === normalizeName(userName)) {
+              updates["raids/" + raidId + "/" + partyName + "/" + memberKey] = null;
+            }
+          });
         });
+      });
+
+      if (Object.keys(updates).length > 0) {
+        return db.ref().update(updates);
+      }
+      return Promise.resolve();
+    }
+
+    function expelUser(userKey) {
+      if (!isAdmin) return;
+      const user = users[userKey];
+      if (!user) return;
+
+      if (!confirm(user.name + " 을(를) 추방할까?")) return;
+
+      db.ref("users/" + userKey).update({
+        approved: false,
+        banned: true
+      }).then(() => {
+        return removeUserApplicationsByName(user.name);
+      }).then(() => {
+        debug("추방 완료");
+      }).catch(err => {
+        debug("추방 실패: " + err.message);
+      });
+    }
+
+    function renderApprovalLists() {
+      const pendingBox = document.getElementById("pendingUsers");
+      const approvedBox = document.getElementById("approvedUsers");
+
+      const pending = Object.entries(users).filter(([_, user]) => !user.approved && !user.banned);
+      const approved = Object.entries(users).filter(([_, user]) => user.approved && !user.banned);
+
+      if (!isAdmin) {
+        pendingBox.innerHTML = "";
+        approvedBox.innerHTML = "";
+        return;
+      }
+
+      pendingBox.innerHTML = pending.length ? "" : `<div class="empty-text">대기 없음</div>`;
+      approvedBox.innerHTML = approved.length ? "" : `<div class="empty-text">승인된 사용자 없음</div>`;
+
+      pending.forEach(([key, user]) => {
+        pendingBox.innerHTML += `
+          <div class="user-card">
+            <div class="user-name">${user.name}</div>
+            <div class="inline-buttons">
+              <button class="green" onclick="approveUser('${key}')">승인</button>
+              <button class="danger" onclick="rejectUser('${key}')">거절</button>
+            </div>
+          </div>
+        `;
+      });
+
+      approved.forEach(([key, user]) => {
+        approvedBox.innerHTML += `
+          <div class="user-card">
+            <div class="user-name">${user.name}</div>
+            <div class="inline-buttons">
+              <button class="danger" onclick="expelUser('${key}')">추방</button>
+            </div>
+          </div>
+        `;
+      });
     }
 
     function createRaid() {
-      if (!isAdmin) {
+      if (!isAdmin || !isApprovedUser()) {
         alert("관리자만 공대 생성 가능");
         return;
       }
@@ -570,9 +850,14 @@
     function addMember() {
       debug("신청 버튼 클릭");
 
+      if (!isApprovedUser()) {
+        alert("관리자 승인 후 이용 가능");
+        return;
+      }
+
+      const myUser = getMyUserRecord();
       const raidId = document.getElementById("raidSelect").value;
       const party = document.getElementById("partySelect").value;
-      const name = document.getElementById("name").value.trim();
       const job = document.getElementById("job").value;
       const role = getRole(job);
 
@@ -581,8 +866,8 @@
         return;
       }
 
-      if (!name) {
-        alert("이름 입력");
+      if (!myUser) {
+        alert("사용자 정보 없음");
         return;
       }
 
@@ -603,20 +888,20 @@
           return;
         }
 
-        if (partyMembers.length >= 4) {
-          alert("이 파티는 4명이 가득 찼어");
-          return;
-        }
-
-        const sameName = partyMembers.some(m => (m.name || "").toLowerCase() === name.toLowerCase());
+        const sameName = partyMembers.some(m => normalizeName(m.name) === normalizeName(myUser.name));
         if (sameName) {
-          alert("같은 파티에 같은 이름은 안 돼");
+          alert("같은 파티에 이미 신청돼 있어");
           return;
         }
 
         const tanks = partyMembers.filter(m => m.role === "tank").length;
         const heals = partyMembers.filter(m => m.role === "heal").length;
         const dps = partyMembers.filter(m => m.role === "dps").length;
+
+        if (partyMembers.length >= 4) {
+          alert("이 파티는 4명이 가득 찼어");
+          return;
+        }
 
         if (role === "tank" && tanks >= 1) {
           alert("탱 자리는 이미 있어");
@@ -634,13 +919,12 @@
         }
 
         db.ref("raids/" + raidId + "/" + party).push({
-          name: name,
+          name: myUser.name,
           job: job,
           role: role,
           leader: false
         });
 
-        document.getElementById("name").value = "";
         document.getElementById("job").value = "";
         roleSelectEl.style.display = "none";
         roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
@@ -648,6 +932,32 @@
       }).catch(err => {
         debug("저장 실패: " + err.message);
         alert("저장 실패");
+      });
+    }
+
+    function cancelMy(raidId, partyName, key) {
+      if (!isApprovedUser()) {
+        alert("승인된 사용자만 가능");
+        return;
+      }
+
+      const myUser = getMyUserRecord();
+      if (!myUser) return;
+
+      db.ref("raids/" + raidId + "/" + partyName + "/" + key).once("value").then(snapshot => {
+        const member = snapshot.val();
+        if (!member) return;
+
+        if (normalizeName(member.name) !== normalizeName(myUser.name)) {
+          alert("본인 신청만 취소 가능");
+          return;
+        }
+
+        if (!confirm("신청 취소할까?")) return;
+
+        db.ref("raids/" + raidId + "/" + partyName + "/" + key).remove().then(() => {
+          debug("본인 신청 취소 완료");
+        });
       });
     }
 
@@ -753,6 +1063,9 @@
       const moveTo = partyName === "party1" ? "party2" : "party1";
       const moveLabel = partyName === "party1" ? "2파티로 이동" : "1파티로 이동";
 
+      const myUser = getMyUserRecord();
+      const isMine = myUser && normalizeName(member.name) === normalizeName(myUser.name);
+
       return `
         <div class="slot">
           <div class="role ${roleClass}">${label}</div>
@@ -761,13 +1074,14 @@
             ${member.leader ? '<span class="tag leader">👑 파티장</span>' : ''}
           </div>
           <div class="member-job">${member.job}</div>
-          ${isAdmin ? `
-            <div class="inline-buttons" style="margin-top:10px;">
+          <div class="inline-buttons" style="margin-top:10px;">
+            ${isMine ? `<button class="danger" onclick="cancelMy('${raidId}', '${partyName}', '${member.key}')">신청취소</button>` : ""}
+            ${isAdmin ? `
               <button class="gray" onclick="toggleLeader('${raidId}', '${partyName}', '${member.key}')">파티장</button>
               <button class="gray" onclick="moveMember('${raidId}', '${partyName}', '${moveTo}', '${member.key}')">${moveLabel}</button>
               <button class="danger" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>
-            </div>
-          ` : ""}
+            ` : ""}
+          </div>
         </div>
       `;
     }
@@ -830,6 +1144,13 @@
     }
 
     function load() {
+      db.ref("users").on("value", snapshot => {
+        users = snapshot.val() || {};
+        updateGateUI();
+        renderApprovalLists();
+        renderAdminStatus();
+      });
+
       db.ref("raids").on("value", snapshot => {
         raids = snapshot.val() || {};
         renderRaidSelect();
@@ -841,14 +1162,21 @@
     }
 
     renderAdminStatus();
+    updateGateUI();
     load();
 
+    window.requestEntry = requestEntry;
+    window.changeMyId = changeMyId;
     window.loginAdmin = loginAdmin;
     window.logoutAdmin = logoutAdmin;
     window.resetAll = resetAll;
+    window.approveUser = approveUser;
+    window.rejectUser = rejectUser;
+    window.expelUser = expelUser;
     window.createRaid = createRaid;
     window.deleteRaid = deleteRaid;
     window.addMember = addMember;
+    window.cancelMy = cancelMy;
     window.deleteMember = deleteMember;
     window.toggleLeader = toggleLeader;
     window.moveMember = moveMember;
