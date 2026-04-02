@@ -6,7 +6,6 @@
   <title>아이온2 레이드 파티 신청</title>
   <style>
     :root {
-      --bg: #0a0f18;
       --panel: rgba(22, 28, 40, 0.96);
       --panel-2: rgba(29, 37, 54, 0.96);
       --text: #f5f7fb;
@@ -49,7 +48,7 @@
     .subtitle {
       text-align: center;
       color: var(--muted);
-      margin-bottom: 24px;
+      margin-bottom: 18px;
       font-size: 15px;
     }
 
@@ -299,6 +298,26 @@
       margin-bottom: 8px;
     }
 
+    .admin-toggle-box {
+      padding: 12px 16px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .admin-toggle-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--gold);
+    }
+
+    .admin-panel {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
     #debugBox { display: none; }
 
     @media (min-width: 820px) {
@@ -313,15 +332,44 @@
     <div class="subtitle">입장 승인형 · 같은 링크로 같은 데이터를 봄</div>
 
     <div class="box">
-      <div class="section-title">관리자</div>
-      <input id="adminPassword" type="password" placeholder="관리자 비밀번호 입력">
-      <div class="inline-buttons">
-        <button onclick="loginAdmin()">관리자 로그인</button>
-        <button class="gray" onclick="logoutAdmin()">로그아웃</button>
-        <button class="danger" onclick="resetAll()">전체 초기화</button>
+      <div class="admin-toggle-box" onclick="toggleAdminPanel()">
+        <div class="admin-toggle-title">관리자 메뉴</div>
+        <div id="adminToggleIcon">▶</div>
       </div>
-      <div id="adminStatus" class="admin-status">현재 관리자 아님</div>
-      <div class="notice">예시 관리자 비밀번호: 1234</div>
+
+      <div id="adminPanel" class="admin-panel" style="display:none;">
+        <input id="adminPassword" type="password" placeholder="관리자 비밀번호 입력">
+        <div class="inline-buttons">
+          <button onclick="loginAdmin()">관리자 로그인</button>
+          <button class="gray" onclick="logoutAdmin()">로그아웃</button>
+          <button class="danger" onclick="resetAll()">전체 초기화</button>
+        </div>
+        <div id="adminStatus" class="admin-status">현재 관리자 아님</div>
+        <div class="notice">예시 관리자 비밀번호: 1234</div>
+
+        <div id="pendingManageBox" style="display:none; margin-top:16px;">
+          <div class="section-title" style="font-size:18px;">입장 승인 관리</div>
+          <div class="row admin-two">
+            <div>
+              <div class="sub-title">승인 대기</div>
+              <div id="pendingUsers"></div>
+            </div>
+            <div>
+              <div class="sub-title">승인된 사용자</div>
+              <div id="approvedUsers"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="raidCreateBox" style="display:none; margin-top:16px;">
+          <div class="section-title" style="font-size:18px;">공대 만들기</div>
+          <div class="row two">
+            <input id="raidName" placeholder="공대 이름 예: 8시 1공대">
+            <input id="raidTime" placeholder="공대 시간 예: 저녁 8시">
+          </div>
+          <button onclick="createRaid()">공대 생성</button>
+        </div>
+      </div>
     </div>
 
     <div class="box" id="entryBox" style="display:none;">
@@ -349,20 +397,6 @@
       </div>
     </div>
 
-    <div class="box" id="pendingManageBox" style="display:none;">
-      <div class="section-title">입장 승인 관리</div>
-      <div class="row admin-two">
-        <div>
-          <div class="sub-title">승인 대기</div>
-          <div id="pendingUsers"></div>
-        </div>
-        <div>
-          <div class="sub-title">승인된 사용자</div>
-          <div id="approvedUsers"></div>
-        </div>
-      </div>
-    </div>
-
     <div id="appWrap" style="display:none;">
       <div class="box">
         <div class="section-title">내 상태</div>
@@ -370,15 +404,6 @@
         <div class="inline-buttons" style="margin-top:12px;">
           <button class="gray" onclick="changeMyId()">아이디 변경</button>
         </div>
-      </div>
-
-      <div class="box" id="raidCreateBox" style="display:none;">
-        <div class="section-title">공대 만들기</div>
-        <div class="row two">
-          <input id="raidName" placeholder="공대 이름 예: 8시 1공대">
-          <input id="raidTime" placeholder="공대 시간 예: 저녁 8시">
-        </div>
-        <button onclick="createRaid()">공대 생성</button>
       </div>
 
       <div class="box">
@@ -446,6 +471,7 @@
     let users = {};
     let myId = localStorage.getItem("raid_user_name") || "";
     let openedRaid = null;
+    let adminPanelOpen = false;
     const ADMIN_PASSWORD = "1234";
 
     firebase.initializeApp(firebaseConfig);
@@ -479,6 +505,12 @@
         roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
       }
     });
+
+    function toggleAdminPanel() {
+      adminPanelOpen = !adminPanelOpen;
+      document.getElementById("adminPanel").style.display = adminPanelOpen ? "block" : "none";
+      document.getElementById("adminToggleIcon").textContent = adminPanelOpen ? "▼" : "▶";
+    }
 
     function normalizeName(name) {
       return (name || "").trim().toLowerCase();
@@ -1003,33 +1035,8 @@
       `;
     }
 
-    function renderMemberActions(member, raidId, partyName) {
-      const moveTo = partyName === "party1" ? "party2" : "party1";
-      const moveLabel = partyName === "party1" ? "2파티로 이동" : "1파티로 이동";
-      const myUser = getMyUserRecord();
-      const isMine = myUser && normalizeName(member.name) === normalizeName(myUser.name);
-
-      return `
-        <div class="inline-buttons" style="margin-top:8px;">
-          ${isMine ? `<button class="danger" onclick="cancelMy('${raidId}', '${partyName}', '${member.key}')">신청취소</button>` : ""}
-          ${isAdmin ? `
-            <button class="gray" onclick="toggleLeader('${raidId}', '${partyName}', '${member.key}')">파티장</button>
-            <button class="gray" onclick="moveMember('${raidId}', '${partyName}', '${moveTo}', '${member.key}')">${moveLabel}</button>
-            <button class="danger" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>
-          ` : ""}
-        </div>
-      `;
-    }
-
     function renderManageList(title, members, raidId, partyName) {
-      if (!members.length) {
-        return `
-          <div class="detail-block">
-            <div class="detail-title">${title}</div>
-            <div class="empty-text">신청자 없음</div>
-          </div>
-        `;
-      }
+      if (!members.length || !isAdmin) return "";
 
       let html = `
         <div class="detail-block">
@@ -1038,22 +1045,25 @@
       `;
 
       members.forEach(member => {
+        const moveTo = partyName === "party1" ? "party2" : "party1";
+        const moveLabel = partyName === "party1" ? "2파티로 이동" : "1파티로 이동";
+
         html += `
           <div class="manage-item">
             <div class="manage-top">
               ${getJobIcon(member.job)} ${member.name}
               ${member.leader ? '<span class="tag leader">👑 파티장</span>' : ''}
             </div>
-            ${renderMemberActions(member, raidId, partyName)}
+            <div class="inline-buttons">
+              <button class="gray" onclick="toggleLeader('${raidId}', '${partyName}', '${member.key}')">파티장</button>
+              <button class="gray" onclick="moveMember('${raidId}', '${partyName}', '${moveTo}', '${member.key}')">${moveLabel}</button>
+              <button class="danger" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>
+            </div>
           </div>
         `;
       });
 
-      html += `
-          </div>
-        </div>
-      `;
-
+      html += `</div></div>`;
       return html;
     }
 
@@ -1102,9 +1112,10 @@
                   <div class="party-line">${renderSimpleParty(party2, raidId, "party2")}</div>
                 </div>
 
+                ${renderManageList("1파티 관리", party1, raidId, "party1")}
+                ${renderManageList("2파티 관리", party2, raidId, "party2")}
+
                 ${isAdmin ? `
-                  ${renderManageList("1파티 관리", party1, raidId, "party1")}
-                  ${renderManageList("2파티 관리", party2, raidId, "party2")}
                   <div class="inline-buttons" style="margin-top:10px;">
                     <button class="danger" onclick="deleteRaid('${raidId}')">공대 삭제</button>
                   </div>
@@ -1137,6 +1148,7 @@
     updateGateUI();
     load();
 
+    window.toggleAdminPanel = toggleAdminPanel;
     window.requestEntry = requestEntry;
     window.changeMyId = changeMyId;
     window.loginAdmin = loginAdmin;
