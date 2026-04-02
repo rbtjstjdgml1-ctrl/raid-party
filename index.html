@@ -112,8 +112,8 @@
       background: linear-gradient(135deg, #16a34a, #15803d);
     }
 
-    .mini-cancel {
-      padding: 4px 8px;
+    .mini-btn {
+      padding: 6px 10px;
       font-size: 12px;
       margin: 0 0 0 6px;
       border-radius: 8px;
@@ -234,6 +234,10 @@
     }
 
     .detail-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
       font-size: 15px;
       font-weight: 800;
       margin-bottom: 8px;
@@ -437,7 +441,7 @@
           </select>
         </div>
 
-        <button onclick="addMember()">신청하기</button>
+        <button onclick="addMemberFromForm()">신청하기</button>
         <div class="notice">파티당 4명 / 탱1 / 힐1 / 딜2</div>
       </div>
 
@@ -769,6 +773,14 @@
       db.ref("raids/" + raidId).remove();
     }
 
+    function getRoleFromJob(job, selectedRole) {
+      if (job === "수호") return "tank";
+      if (job === "치유성") return "heal";
+      if (job === "검성") return selectedRole;
+      if (job === "호법성") return selectedRole;
+      return "dps";
+    }
+
     function getRole(job) {
       const selectedRole = roleSelectEl.value;
 
@@ -827,34 +839,17 @@
       return getMembers(raid, "party1").length + getMembers(raid, "party2").length;
     }
 
-    function addMember() {
+    function validateAndJoin(raidId, party, job, role) {
       if (!isApprovedUser()) {
         alert("관리자 승인 후 이용 가능");
         return;
       }
 
       const myUser = getMyUserRecord();
-      const raidId = document.getElementById("raidSelect").value;
-      const party = document.getElementById("partySelect").value;
-      const job = document.getElementById("job").value;
-      const role = getRole(job);
-
-      if (!raidId) {
-        alert("공대 선택");
-        return;
-      }
-
       if (!myUser) {
         alert("사용자 정보 없음");
         return;
       }
-
-      if (!job) {
-        alert("직업 선택");
-        return;
-      }
-
-      if (!role) return;
 
       db.ref("raids/" + raidId).once("value").then(snapshot => {
         const raid = snapshot.val() || {};
@@ -863,6 +858,11 @@
 
         if (totalMembers >= 8) {
           alert("이 공대는 마감이야");
+          return;
+        }
+
+        if (partyMembers.length >= 4) {
+          alert("이 파티는 4명이 가득 찼어");
           return;
         }
 
@@ -875,11 +875,6 @@
         const tanks = partyMembers.filter(m => m.role === "tank").length;
         const heals = partyMembers.filter(m => m.role === "heal").length;
         const dps = partyMembers.filter(m => m.role === "dps").length;
-
-        if (partyMembers.length >= 4) {
-          alert("이 파티는 4명이 가득 찼어");
-          return;
-        }
 
         if (role === "tank" && tanks >= 1) {
           alert("탱 자리는 이미 있어");
@@ -902,11 +897,72 @@
           role: role,
           leader: false
         });
-
-        document.getElementById("job").value = "";
-        roleSelectEl.style.display = "none";
-        roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
       });
+    }
+
+    function addMemberFromForm() {
+      const raidId = document.getElementById("raidSelect").value;
+      const party = document.getElementById("partySelect").value;
+      const job = document.getElementById("job").value;
+      const role = getRole(job);
+
+      if (!raidId) {
+        alert("공대 선택");
+        return;
+      }
+
+      if (!job) {
+        alert("직업 선택");
+        return;
+      }
+
+      if (!role) return;
+
+      validateAndJoin(raidId, party, job, role);
+
+      document.getElementById("job").value = "";
+      roleSelectEl.style.display = "none";
+      roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
+    }
+
+    function quickJoin(raidId, party) {
+      if (!isApprovedUser()) {
+        alert("관리자 승인 후 이용 가능");
+        return;
+      }
+
+      const job = prompt("직업 입력 (수호/치유성/궁성/살성/검성/마도성/정령성/호법성)");
+      if (!job) return;
+
+      const allowedJobs = ["수호", "치유성", "궁성", "살성", "검성", "마도성", "정령성", "호법성"];
+      if (!allowedJobs.includes(job)) {
+        alert("직업명을 정확히 입력해줘");
+        return;
+      }
+
+      let role = "dps";
+
+      if (job === "수호") role = "tank";
+      else if (job === "치유성") role = "heal";
+      else if (job === "검성") {
+        const r = prompt("검성 역할 입력 (tank 또는 dps)");
+        if (!r) return;
+        if (r !== "tank" && r !== "dps") {
+          alert("tank 또는 dps 만 입력");
+          return;
+        }
+        role = r;
+      } else if (job === "호법성") {
+        const r = prompt("호법성 역할 입력 (heal 또는 dps)");
+        if (!r) return;
+        if (r !== "heal" && r !== "dps") {
+          alert("heal 또는 dps 만 입력");
+          return;
+        }
+        role = r;
+      }
+
+      validateAndJoin(raidId, party, job, role);
     }
 
     function cancelMy(raidId, partyName, key) {
@@ -1022,7 +1078,7 @@
           <span class="member-chip">
             ${getJobIcon(member.job)} ${member.name}
             ${member.leader ? '<span class="tag leader">👑</span>' : ''}
-            ${isMine ? `<button class="danger mini-cancel" onclick="event.stopPropagation(); cancelMy('${raidId}','${partyName}','${member.key}')">취소</button>` : ""}
+            ${isMine ? `<button class="danger mini-btn" onclick="event.stopPropagation(); cancelMy('${raidId}','${partyName}','${member.key}')">취소</button>` : ""}
           </span>
         `;
       }
@@ -1103,12 +1159,18 @@
             ${opened ? `
               <div class="raid-detail">
                 <div class="detail-block">
-                  <div class="detail-title">1파티</div>
+                  <div class="detail-title">
+                    <span>1파티</span>
+                    <button class="gray" onclick="event.stopPropagation(); quickJoin('${raidId}','party1')">신청</button>
+                  </div>
                   <div class="party-line">${renderSimpleParty(party1, raidId, "party1")}</div>
                 </div>
 
                 <div class="detail-block">
-                  <div class="detail-title">2파티</div>
+                  <div class="detail-title">
+                    <span>2파티</span>
+                    <button class="gray" onclick="event.stopPropagation(); quickJoin('${raidId}','party2')">신청</button>
+                  </div>
                   <div class="party-line">${renderSimpleParty(party2, raidId, "party2")}</div>
                 </div>
 
@@ -1159,7 +1221,8 @@
     window.expelUser = expelUser;
     window.createRaid = createRaid;
     window.deleteRaid = deleteRaid;
-    window.addMember = addMember;
+    window.addMemberFromForm = addMemberFromForm;
+    window.quickJoin = quickJoin;
     window.cancelMy = cancelMy;
     window.deleteMember = deleteMember;
     window.toggleLeader = toggleLeader;
