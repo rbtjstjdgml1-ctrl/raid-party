@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
@@ -262,7 +262,7 @@
         <button class="gray" onclick="logoutAdmin()">로그아웃</button>
       </div>
       <div id="adminStatus" class="empty-text">현재 관리자 아님</div>
-      <div class="notice">현재 예시 비밀번호: 1234</div>
+      <div class="notice">예시 관리자 비밀번호: 1234</div>
     </div>
 
     <div class="box" id="adminPartyBox" style="display:none;">
@@ -316,17 +316,12 @@
     </div>
   </div>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import {
-      getDatabase,
-      ref,
-      set,
-      onValue
-    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
+  <script>
     // =========================
-    // 1) 여기만 네 Firebase 값으로 교체
+    // Firebase 설정값 교체
     // =========================
     const firebaseConfig = {
       apiKey: "AIzaSyBfOXxM4tT6UBvqVSJv64zwX3qsfsMVuvw",
@@ -339,8 +334,8 @@
       measurementId: "G-Q5RTBBG0PJ"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
 
     let parties = [];
     let isAdmin = false;
@@ -393,7 +388,7 @@
     });
 
     function save() {
-      set(ref(db, "raidParties"), parties);
+      db.ref("raidParties").set(parties);
     }
 
     function loginAdmin() {
@@ -712,7 +707,6 @@
 
     function renderManageMembers(party, teamKey, teamTitle, targetMoveKey) {
       const arr = party[teamKey];
-
       let html = `<div style="margin-top:12px;"><strong>${teamTitle} 관리</strong></div>`;
 
       if (arr.length === 0) {
@@ -809,14 +803,12 @@
       renderParties();
     }
 
-    // Firebase 실시간 동기화
-    onValue(ref(db, "raidParties"), (snapshot) => {
+    db.ref("raidParties").on("value", (snapshot) => {
       const data = snapshot.val();
       parties = data || [];
       render();
     });
 
-    // 버튼 함수 전역 연결
     window.loginAdmin = loginAdmin;
     window.logoutAdmin = logoutAdmin;
     window.addParty = addParty;
