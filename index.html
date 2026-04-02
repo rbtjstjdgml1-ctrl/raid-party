@@ -9,7 +9,6 @@
       --bg: #0a0f18;
       --panel: rgba(22, 28, 40, 0.96);
       --panel-2: rgba(29, 37, 54, 0.96);
-      --slot: #151b28;
       --text: #f5f7fb;
       --muted: #aab4c8;
       --gold: #f4d27a;
@@ -219,11 +218,43 @@
       border-top: 1px solid rgba(255,255,255,0.08);
     }
 
-    .party-line {
+    .detail-block {
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .detail-title {
+      font-size: 15px;
+      font-weight: 800;
       margin-bottom: 8px;
+      color: var(--gold);
+    }
+
+    .party-line {
+      margin-bottom: 6px;
       line-height: 1.8;
       color: #e5e7eb;
       font-size: 15px;
+    }
+
+    .member-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-right: 10px;
+      margin-bottom: 6px;
+      padding: 5px 8px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      font-size: 14px;
+      white-space: nowrap;
+    }
+
+    .member-chip.empty {
+      opacity: 0.7;
     }
 
     .tag {
@@ -240,6 +271,24 @@
       background: rgba(244, 210, 122, 0.15);
       color: var(--gold);
       border: 1px solid rgba(244, 210, 122, 0.35);
+    }
+
+    .manage-list {
+      margin-top: 10px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .manage-item {
+      background: rgba(255,255,255,0.04);
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .manage-top {
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 8px;
     }
 
     #debugBox { display: none; }
@@ -375,7 +424,7 @@
     const debugBox = document.getElementById("debugBox");
     function debug(msg) {
       console.log(msg);
-      if (debugBox) debugBox.textContent += "\\n" + msg;
+      if (debugBox) debugBox.textContent += "\n" + msg;
     }
 
     window.onerror = (m) => debug("ERROR: " + m);
@@ -933,13 +982,12 @@
       const heal = members.find(m => m.role === "heal");
       const dps = members.filter(m => m.role === "dps");
 
-      const parts = [];
-      parts.push(tank ? `🛡️${tank.name}` : `🛡️-`);
-      parts.push(heal ? `💚${heal.name}` : `💚-`);
-      parts.push(dps[0] ? `${getJobIcon(dps[0].job)}${dps[0].name}` : `⚔️-`);
-      parts.push(dps[1] ? `${getJobIcon(dps[1].job)}${dps[1].name}` : `🏹-`);
-
-      return parts.join("  ");
+      return `
+        <span class="member-chip ${tank ? "" : "empty"}">${tank ? `🛡️ ${tank.name}` : `🛡️ -`}</span>
+        <span class="member-chip ${heal ? "" : "empty"}">${heal ? `💚 ${heal.name}` : `💚 -`}</span>
+        <span class="member-chip ${dps[0] ? "" : "empty"}">${dps[0] ? `${getJobIcon(dps[0].job)} ${dps[0].name}` : `⚔️ -`}</span>
+        <span class="member-chip ${dps[1] ? "" : "empty"}">${dps[1] ? `${getJobIcon(dps[1].job)} ${dps[1].name}` : `🏹 -`}</span>
+      `;
     }
 
     function renderMemberActions(member, raidId, partyName) {
@@ -949,7 +997,7 @@
       const isMine = myUser && normalizeName(member.name) === normalizeName(myUser.name);
 
       return `
-        <div class="inline-buttons" style="margin-top:10px;">
+        <div class="inline-buttons" style="margin-top:8px;">
           ${isMine ? `<button class="danger" onclick="cancelMy('${raidId}', '${partyName}', '${member.key}')">신청취소</button>` : ""}
           ${isAdmin ? `
             <button class="gray" onclick="toggleLeader('${raidId}', '${partyName}', '${member.key}')">파티장</button>
@@ -960,35 +1008,40 @@
       `;
     }
 
-    function renderDetailedParty(title, members, raidId, partyName) {
-      const tank = members.find(m => m.role === "tank");
-      const heal = members.find(m => m.role === "heal");
-      const dps = members.filter(m => m.role === "dps");
-
-      function block(label, member, iconDefault) {
-        if (!member) {
-          return `${label}: ${iconDefault}-`;
-        }
+    function renderManageList(title, members, raidId, partyName) {
+      if (!members.length) {
         return `
-          <div style="margin-bottom:8px;">
-            <div>
-              ${label}: ${getJobIcon(member.job)}${member.name}
+          <div class="detail-block">
+            <div class="detail-title">${title}</div>
+            <div class="empty-text">신청자 없음</div>
+          </div>
+        `;
+      }
+
+      let html = `
+        <div class="detail-block">
+          <div class="detail-title">${title}</div>
+          <div class="manage-list">
+      `;
+
+      members.forEach(member => {
+        html += `
+          <div class="manage-item">
+            <div class="manage-top">
+              ${getJobIcon(member.job)} ${member.name}
               ${member.leader ? '<span class="tag leader">👑 파티장</span>' : ''}
             </div>
             ${renderMemberActions(member, raidId, partyName)}
           </div>
         `;
-      }
+      });
 
-      return `
-        <div style="margin-bottom:10px;">
-          <div style="font-weight:800; margin-bottom:6px;">${title}</div>
-          <div class="party-line">${block("탱", tank, "🛡️")}</div>
-          <div class="party-line">${block("힐", heal, "💚")}</div>
-          <div class="party-line">${block("딜1", dps[0], "⚔️")}</div>
-          <div class="party-line">${block("딜2", dps[1], "🏹")}</div>
+      html += `
+          </div>
         </div>
       `;
+
+      return html;
     }
 
     function toggleRaid(raidId) {
@@ -1026,15 +1079,19 @@
 
             ${opened ? `
               <div class="raid-detail">
-                <div class="party-line"><b>1파티:</b> ${renderSimpleParty(party1)}</div>
-                <div class="party-line"><b>2파티:</b> ${renderSimpleParty(party2)}</div>
+                <div class="detail-block">
+                  <div class="detail-title">1파티</div>
+                  <div class="party-line">${renderSimpleParty(party1)}</div>
+                </div>
 
-                <div style="margin-top:14px;">
-                  ${renderDetailedParty("1파티 상세", party1, raidId, "party1")}
-                  ${renderDetailedParty("2파티 상세", party2, raidId, "party2")}
+                <div class="detail-block">
+                  <div class="detail-title">2파티</div>
+                  <div class="party-line">${renderSimpleParty(party2)}</div>
                 </div>
 
                 ${isAdmin ? `
+                  ${renderManageList("1파티 관리", party1, raidId, "party1")}
+                  ${renderManageList("2파티 관리", party2, raidId, "party2")}
                   <div class="inline-buttons" style="margin-top:10px;">
                     <button class="danger" onclick="deleteRaid('${raidId}')">공대 삭제</button>
                   </div>
