@@ -551,7 +551,7 @@ function requestEntry() {
   const agreeEl = document.getElementById("agreeNotice");
   const entered = document.getElementById("entryName").value.trim();
 
-  if (!agreeEl || !agreeEl.checked) {
+  if (agreeEl && !agreeEl.checked) {
     alert("공지 확인 후 체크해주세요");
     return;
   }
@@ -566,16 +566,25 @@ function requestEntry() {
   db.ref("users/" + key).once("value").then(snapshot => {
     const existing = snapshot.val();
 
+    // 추방된 아이디면 다시 신청 가능하게 초기화
     if (existing && existing.banned) {
-      alert("이 아이디는 입장이 제한되어 있어");
-      return;
+      localStorage.setItem("raid_user_name", key);
+      myId = key;
+
+      return db.ref("users/" + key).set({
+        name: entered,
+        approved: false,
+        banned: false
+      });
     }
 
+    // 이미 사용 중인 아이디면 막기
     if (existing && existing.name) {
       alert("이미 사용중인 아이디야. 다른 아이디를 써줘");
       return;
     }
 
+    // 새 아이디 신청
     localStorage.setItem("raid_user_name", key);
     myId = key;
 
