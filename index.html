@@ -798,7 +798,12 @@ function requestEntry() {
       if (job === "호법성") return "✨";
       return "🎮";
     }
-
+function formatDate(dateStr) {
+  if (!dateStr) return "";
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return dateStr;
+  return `${d.getMonth() + 1}월 ${d.getDate()}일`;
+}
     function resolveRole(job, roleInput) {
       if (job === "수호") return "tank";
       if (job === "치유성") return "heal";
