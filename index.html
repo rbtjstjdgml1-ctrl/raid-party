@@ -1,139 +1,529 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>레이드 파티 신청</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>레이드 파티 신청</title>
+  <style>
+    body {
+      margin: 0;
+      background: #0b0f17;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
 
-<style>
-body { font-family: sans-serif; background:#111; color:#fff; padding:20px; }
-.box { background:#222; padding:15px; border-radius:10px; margin-bottom:15px; }
-button { padding:10px; border:none; background:#4CAF50; color:#fff; border-radius:6px; }
-select, input { padding:8px; margin:5px 0; width:100%; }
-.member { padding:5px; border-bottom:1px solid #444; }
-</style>
+    .wrap {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      margin-bottom: 20px;
+      font-size: 42px;
+      font-weight: 800;
+    }
+
+    .box {
+      background: #1b1d22;
+      border-radius: 20px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+
+    input, select, button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 16px;
+      border-radius: 16px;
+      border: none;
+      font-size: 18px;
+      margin-bottom: 14px;
+    }
+
+    input, select {
+      background: #f4f4f4;
+      color: #111;
+    }
+
+    button {
+      width: auto;
+      padding: 14px 22px;
+      border-radius: 12px;
+      background: #50b84f;
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .gray {
+      background: #555;
+    }
+
+    .danger {
+      background: #b91c1c;
+    }
+
+    .party-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    .party-card {
+      background: #1b1d22;
+      border-radius: 20px;
+      padding: 20px;
+    }
+
+    .party-title {
+      font-size: 22px;
+      font-weight: 800;
+      margin-bottom: 14px;
+    }
+
+    .party-meta {
+      color: #bbb;
+      margin-bottom: 14px;
+    }
+
+    .slot {
+      background: #262a31;
+      border-radius: 14px;
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+
+    .slot.empty {
+      opacity: 0.7;
+      border: 1px dashed #666;
+    }
+
+    .role {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .tank { background: #2563eb; }
+    .heal { background: #16a34a; }
+    .dps  { background: #ea580c; }
+
+    .member-name {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .member-job {
+      color: #ccc;
+      margin-top: 4px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    #debugBox {
+      position: fixed;
+      left: 10px;
+      right: 10px;
+      bottom: 10px;
+      background: #000;
+      color: #00ff66;
+      padding: 10px;
+      font-size: 12px;
+      max-height: 180px;
+      overflow: auto;
+      z-index: 99999;
+      white-space: pre-wrap;
+    }
+
+    .notice {
+      color: #bbb;
+      font-size: 14px;
+      margin-top: -4px;
+      margin-bottom: 12px;
+    }
+
+    .admin-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .admin-row button {
+      margin-bottom: 0;
+    }
+
+    .admin-status {
+      font-size: 14px;
+      color: #bbb;
+      margin-top: 6px;
+    }
+
+    @media (min-width: 800px) {
+      .party-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="wrap">
+    <h1>레이드 파티 신청</h1>
 
-<h2>레이드 파티 신청</h2>
+    <div class="box">
+      <div class="section-title">관리자</div>
+      <input id="adminPassword" type="password" placeholder="관리자 비밀번호 입력" />
+      <div class="admin-row">
+        <button onclick="loginAdmin()">관리자 로그인</button>
+        <button class="gray" onclick="logoutAdmin()">로그아웃</button>
+        <button class="danger" onclick="resetAll()">전체 초기화</button>
+      </div>
+      <div id="adminStatus" class="admin-status">현재 관리자 아님</div>
+      <div class="notice">예시 관리자 비밀번호: 1234</div>
+    </div>
 
-<div class="box">
-  <input id="name" placeholder="이름">
+    <div class="box">
+      <input id="name" placeholder="이름" />
 
-  <select id="job">
-    <option value="수호">수호</option>
-    <option value="치유성">치유성</option>
-    <option value="궁성">궁성</option>
-    <option value="살성">살성</option>
-  </select>
+      <select id="job">
+        <option value="">직업 선택</option>
+        <option value="수호">수호</option>
+        <option value="치유성">치유성</option>
+        <option value="궁성">궁성</option>
+        <option value="살성">살성</option>
+        <option value="검성">검성</option>
+        <option value="마도성">마도성</option>
+        <option value="정령성">정령성</option>
+        <option value="호법성">호법성</option>
+      </select>
 
-  <select id="party">
-    <option value="party1">1파티</option>
-    <option value="party2">2파티</option>
-  </select>
+      <select id="roleSelect" style="display:none;">
+        <option value="">역할 선택</option>
+      </select>
 
-  <button onclick="addMember()">신청하기</button>
-</div>
+      <select id="party">
+        <option value="party1">1파티</option>
+        <option value="party2">2파티</option>
+      </select>
 
-<div class="box">
-  <h3>파티 목록</h3>
-  <div id="list"></div>
-</div>
+      <button onclick="addMember()">신청하기</button>
+      <div class="notice">파티당 4명 / 탱1 힐1 딜2</div>
+    </div>
 
-<!-- 🔥 디버그 -->
-<div id="debugBox" style="position:fixed;left:10px;right:10px;bottom:10px;background:#000;color:#0f0;padding:10px;font-size:12px;max-height:200px;overflow:auto;">
-debug...
-</div>
+    <div class="box">
+      <div class="section-title">파티 목록</div>
+      <div class="party-grid" id="list"></div>
+    </div>
+  </div>
 
-<!-- 🔥 Firebase (중요: compat) -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
+  <div id="debugBox">debug...</div>
 
-<script>
-const debugBox = document.getElementById("debugBox");
-function debug(msg){
-  console.log(msg);
-  debugBox.textContent += "\n" + msg;
-}
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-window.onerror = (m)=>debug("ERROR: "+m);
-window.onunhandledrejection = ()=>debug("PROMISE ERROR");
+  <script>
+    const debugBox = document.getElementById("debugBox");
+    function debug(msg) {
+      console.log(msg);
+      debugBox.textContent += "\n" + msg;
+    }
 
-debug("스크립트 시작");
+    window.onerror = (m) => debug("ERROR: " + m);
+    window.onunhandledrejection = () => debug("PROMISE ERROR");
+    debug("스크립트 시작");
 
+    const firebaseConfig = {
+      apiKey: "AIzaSyBfOXxM4tT6UBvqVSJv64zwX3qsfsMVuvw",
+      authDomain: "raid-party-shared.firebaseapp.com",
+      databaseURL: "https://raid-party-shared-default-rtdb.firebaseio.com",
+      projectId: "raid-party-shared",
+      storageBucket: "raid-party-shared.firebasestorage.app",
+      messagingSenderId: "661883999004",
+      appId: "1:661883999004:web:e783a090e54e6ae4a760d9",
+      measurementId: "G-Q5RTBBG0PJ"
+    };
 
-// 🔥 너 Firebase 설정 (완료)
-const firebaseConfig = {
-  apiKey: "AIzaSyBfOXxM4tT6UBvqVSJv64zwX3qsfsMVuvw",
-  authDomain: "raid-party-shared.firebaseapp.com",
-  databaseURL: "https://raid-party-shared-default-rtdb.firebaseio.com",
-  projectId: "raid-party-shared",
-  storageBucket: "raid-party-shared.firebasestorage.app",
-  messagingSenderId: "661883999004",
-  appId: "1:661883999004:web:e783a090e54e6ae4a760d9",
-  measurementId: "G-Q5RTBBG0PJ"
-};
+    let db;
+    let isAdmin = false;
+    const ADMIN_PASSWORD = "1234";
 
-let db;
+    try {
+      firebase.initializeApp(firebaseConfig);
+      db = firebase.database();
+      debug("firebase 연결 성공");
+    } catch (e) {
+      debug("firebase 실패: " + e.message);
+    }
 
-try{
-  firebase.initializeApp(firebaseConfig);
-  db = firebase.database();
-  debug("firebase 연결 성공");
-}catch(e){
-  debug("firebase 실패: "+e.message);
-}
+    const jobEl = document.getElementById("job");
+    const roleSelectEl = document.getElementById("roleSelect");
+    const adminStatusEl = document.getElementById("adminStatus");
 
+    jobEl.addEventListener("change", function () {
+      const job = this.value;
 
-// 🔥 신청 기능
-function addMember(){
-  debug("신청 버튼 클릭");
-
-  const name = document.getElementById("name").value;
-  const job = document.getElementById("job").value;
-  const party = document.getElementById("party").value;
-
-  if(!name){
-    alert("이름 입력");
-    return;
-  }
-
-  db.ref("parties/"+party).push({
-    name:name,
-    job:job
-  });
-
-  debug("저장 완료");
-}
-
-
-// 🔥 실시간 불러오기
-function load(){
-  db.ref("parties").on("value", snapshot=>{
-    const data = snapshot.val() || {};
-    const list = document.getElementById("list");
-
-    list.innerHTML = "";
-
-    ["party1","party2"].forEach(p=>{
-      list.innerHTML += `<h4>${p}</h4>`;
-
-      if(data[p]){
-        Object.values(data[p]).forEach(m=>{
-          list.innerHTML += `<div class="member">${m.name} (${m.job})</div>`;
-        });
+      if (job === "검성") {
+        roleSelectEl.style.display = "block";
+        roleSelectEl.innerHTML = `
+          <option value="">검성 역할 선택</option>
+          <option value="tank">탱</option>
+          <option value="dps">딜</option>
+        `;
+      } else if (job === "호법성") {
+        roleSelectEl.style.display = "block";
+        roleSelectEl.innerHTML = `
+          <option value="">호법성 역할 선택</option>
+          <option value="heal">힐</option>
+          <option value="dps">딜</option>
+        `;
       } else {
-        list.innerHTML += `<div>없음</div>`;
+        roleSelectEl.style.display = "none";
+        roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
       }
     });
 
-    debug("데이터 불러옴");
-  });
-}
+    function renderAdminStatus() {
+      adminStatusEl.textContent = isAdmin ? "현재 관리자 로그인 상태" : "현재 관리자 아님";
+    }
 
-load();
-</script>
+    function loginAdmin() {
+      const pw = document.getElementById("adminPassword").value.trim();
+      if (pw === ADMIN_PASSWORD) {
+        isAdmin = true;
+        document.getElementById("adminPassword").value = "";
+        renderAdminStatus();
+        alert("관리자 로그인 완료");
+        debug("관리자 로그인");
+      } else {
+        alert("비밀번호가 틀렸어");
+      }
+    }
 
+    function logoutAdmin() {
+      isAdmin = false;
+      renderAdminStatus();
+      alert("로그아웃 완료");
+      debug("관리자 로그아웃");
+    }
+
+    function resetAll() {
+      if (!isAdmin) {
+        alert("관리자만 전체 초기화 가능");
+        return;
+      }
+
+      if (!confirm("정말 전체 초기화할까?")) return;
+
+      db.ref("parties").set(null)
+        .then(() => {
+          debug("전체 초기화 완료");
+          alert("전체 초기화 완료");
+        })
+        .catch((err) => {
+          debug("초기화 실패: " + err.message);
+          alert("초기화 실패");
+        });
+    }
+
+    function getRole(job) {
+      const selectedRole = roleSelectEl.value;
+
+      if (job === "수호") return "tank";
+      if (job === "치유성") return "heal";
+
+      if (job === "검성") {
+        if (!selectedRole) {
+          alert("검성 역할 선택해줘");
+          return null;
+        }
+        return selectedRole;
+      }
+
+      if (job === "호법성") {
+        if (!selectedRole) {
+          alert("호법성 역할 선택해줘");
+          return null;
+        }
+        return selectedRole;
+      }
+
+      return "dps";
+    }
+
+    function getRoleLabel(role) {
+      if (role === "tank") return "탱";
+      if (role === "heal") return "힐";
+      return "딜";
+    }
+
+    function getRoleClass(role) {
+      if (role === "tank") return "tank";
+      if (role === "heal") return "heal";
+      return "dps";
+    }
+
+    function addMember() {
+      debug("신청 버튼 클릭");
+
+      const name = document.getElementById("name").value.trim();
+      const job = document.getElementById("job").value;
+      const party = document.getElementById("party").value;
+      const role = getRole(job);
+
+      if (!name) {
+        alert("이름 입력");
+        return;
+      }
+
+      if (!job) {
+        alert("직업 선택");
+        return;
+      }
+
+      if (!role) return;
+
+      db.ref("parties/" + party).once("value").then(snapshot => {
+        const current = snapshot.val() || {};
+        const members = Object.entries(current).map(([key, value]) => ({
+          key,
+          ...value
+        }));
+
+        if (members.length >= 4) {
+          alert("이 파티는 4명이 가득 찼어");
+          return;
+        }
+
+        const sameName = members.some(m => (m.name || "").toLowerCase() === name.toLowerCase());
+        if (sameName) {
+          alert("같은 파티에 같은 이름은 안 돼");
+          return;
+        }
+
+        const tanks = members.filter(m => m.role === "tank").length;
+        const heals = members.filter(m => m.role === "heal").length;
+        const dps = members.filter(m => m.role === "dps").length;
+
+        if (role === "tank" && tanks >= 1) {
+          alert("탱 자리는 이미 있어");
+          return;
+        }
+
+        if (role === "heal" && heals >= 1) {
+          alert("힐 자리는 이미 있어");
+          return;
+        }
+
+        if (role === "dps" && dps >= 2) {
+          alert("딜 자리는 이미 꽉 찼어");
+          return;
+        }
+
+        db.ref("parties/" + party).push({
+          name: name,
+          job: job,
+          role: role
+        });
+
+        document.getElementById("name").value = "";
+        document.getElementById("job").value = "";
+        roleSelectEl.style.display = "none";
+        roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
+        debug("저장 완료");
+      }).catch(err => {
+        debug("저장 전 검사 실패: " + err.message);
+        alert("저장 실패");
+      });
+    }
+
+    function deleteMember(party, key) {
+      if (!isAdmin) {
+        alert("관리자만 삭제 가능");
+        return;
+      }
+
+      db.ref("parties/" + party + "/" + key).remove()
+        .then(() => {
+          debug("삭제 완료");
+        })
+        .catch((err) => {
+          debug("삭제 실패: " + err.message);
+        });
+    }
+
+    function renderSlot(label, member, roleClass, partyName) {
+      if (!member) {
+        return `
+          <div class="slot empty">
+            <div class="role ${roleClass}">${label}</div>
+            <div class="member-name">모집중</div>
+          </div>
+        `;
+      }
+
+      return `
+        <div class="slot">
+          <div class="role ${roleClass}">${label}</div>
+          <div class="member-name">${member.name}</div>
+          <div class="member-job">${member.job}</div>
+          ${isAdmin ? `<button class="danger" style="margin-top:10px;" onclick="deleteMember('${partyName}', '${member.key}')">삭제</button>` : ""}
+        </div>
+      `;
+    }
+
+    function renderParty(title, members, partyName) {
+      const tank = members.find(m => m.role === "tank");
+      const heal = members.find(m => m.role === "heal");
+      const dps = members.filter(m => m.role === "dps");
+
+      return `
+        <div class="party-card">
+          <div class="party-title">${title}</div>
+          <div class="party-meta">${members.length}/4</div>
+          ${renderSlot("탱", tank, "tank", partyName)}
+          ${renderSlot("힐", heal, "heal", partyName)}
+          ${renderSlot("딜1", dps[0], "dps", partyName)}
+          ${renderSlot("딜2", dps[1], "dps", partyName)}
+        </div>
+      `;
+    }
+
+    function load() {
+      db.ref("parties").on("value", snapshot => {
+        const data = snapshot.val() || {};
+        const party1 = data.party1
+          ? Object.entries(data.party1).map(([key, value]) => ({ key, ...value }))
+          : [];
+        const party2 = data.party2
+          ? Object.entries(data.party2).map(([key, value]) => ({ key, ...value }))
+          : [];
+
+        const list = document.getElementById("list");
+        list.innerHTML =
+          renderParty("1파티", party1, "party1") +
+          renderParty("2파티", party2, "party2");
+
+        debug("데이터 불러옴");
+      }, err => {
+        debug("불러오기 실패: " + err.message);
+      });
+    }
+
+    renderAdminStatus();
+    load();
+
+    window.loginAdmin = loginAdmin;
+    window.logoutAdmin = logoutAdmin;
+    window.resetAll = resetAll;
+    window.addMember = addMember;
+    window.deleteMember = deleteMember;
+  </script>
 </body>
 </html>
