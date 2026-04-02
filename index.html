@@ -1,1233 +1,179 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>아이온2 레이드 파티 신청</title>
-  <style>
-    :root {
-      --panel: rgba(22, 28, 40, 0.96);
-      --panel-2: rgba(29, 37, 54, 0.96);
-      --text: #f5f7fb;
-      --muted: #aab4c8;
-      --gold: #f4d27a;
-      --gold-line: rgba(244, 210, 122, 0.2);
-      --purple: #7c3aed;
-      --purple-2: #5b21b6;
-      --red: #dc2626;
-      --green: #16a34a;
-      --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아이온2 레이드</title>
 
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top, rgba(124, 58, 237, 0.15), transparent 30%),
-        radial-gradient(circle at right top, rgba(37, 99, 235, 0.12), transparent 28%),
-        linear-gradient(180deg, #08101b 0%, #0a0f18 100%);
-      padding: 20px;
-    }
-
-    .wrap {
-      max-width: 1150px;
-      margin: 0 auto;
-    }
-
-    h1 {
-      margin: 0 0 8px;
-      text-align: center;
-      font-size: 34px;
-      color: var(--gold);
-      text-shadow: 0 0 16px rgba(244, 210, 122, 0.2);
-    }
-
-    .subtitle {
-      text-align: center;
-      color: var(--muted);
-      margin-bottom: 18px;
-      font-size: 15px;
-    }
-
-    .box {
-      background: var(--panel);
-      border: 1px solid var(--gold-line);
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 18px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-    }
-
-    .section-title {
-      font-size: 22px;
-      font-weight: 800;
-      margin-bottom: 14px;
-      color: var(--gold);
-    }
-
-    .sub-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 10px;
-      color: #fff;
-    }
-
-    input, select, button {
-      width: 100%;
-      box-sizing: border-box;
-      padding: 14px 16px;
-      border-radius: 14px;
-      border: none;
-      font-size: 16px;
-      margin-bottom: 10px;
-    }
-
-    input, select {
-      background: #f4f4f4;
-      color: #111;
-    }
-
-    button {
-      width: auto;
-      background: linear-gradient(135deg, var(--purple), var(--purple-2));
-      color: #fff;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 8px 18px rgba(91, 33, 182, 0.25);
-    }
-
-    button.gray {
-      background: linear-gradient(135deg, #64748b, #475569);
-    }
-
-    button.danger {
-      background: linear-gradient(135deg, #dc2626, #991b1b);
-    }
-
-    button.green {
-      background: linear-gradient(135deg, #16a34a, #15803d);
-    }
-
-    .mini-btn {
-      padding: 6px 10px;
-      font-size: 12px;
-      margin: 0 0 0 6px;
-      border-radius: 8px;
-      vertical-align: middle;
-    }
-
-    .row {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .inline-buttons {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-
-    .inline-buttons button {
-      margin-bottom: 0;
-    }
-
-    .admin-status, .notice {
-      color: var(--muted);
-      font-size: 13px;
-      margin-top: 4px;
-    }
-
-    .current-user {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 6px 12px;
-      border-radius: 999px;
-      font-size: 13px;
-      font-weight: 800;
-      background: rgba(244, 210, 122, 0.12);
-      color: var(--gold);
-      border: 1px solid rgba(244, 210, 122, 0.25);
-    }
-
-    .gate-message {
-      font-size: 18px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .muted {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .empty-text {
-      color: var(--muted);
-    }
-
-    .user-card {
-      background: rgba(20, 26, 38, 0.95);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 16px;
-      padding: 14px;
-      margin-bottom: 10px;
-    }
-
-    .user-name {
-      font-size: 17px;
-      font-weight: 800;
-      margin-bottom: 6px;
-    }
-
-    .raid-row {
-      background: linear-gradient(180deg, var(--panel-2), #121826);
-      border: 1px solid var(--gold-line);
-      border-radius: 16px;
-      padding: 14px 16px;
-      margin-bottom: 10px;
-      box-shadow: var(--shadow);
-    }
-
-    .raid-summary {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      cursor: pointer;
-      font-weight: 800;
-      font-size: 17px;
-    }
-
-    .raid-summary-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .raid-meta {
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 400;
-    }
-
-    .raid-state {
-      font-size: 18px;
-    }
-
-    .raid-detail {
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-    }
-
-    .detail-block {
-      background: rgba(15, 23, 42, 0.65);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 10px;
-    }
-
-    .detail-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      font-size: 15px;
-      font-weight: 800;
-      margin-bottom: 8px;
-      color: var(--gold);
-    }
-
-    .party-line {
-      margin-bottom: 6px;
-      line-height: 1.8;
-      color: #e5e7eb;
-      font-size: 15px;
-    }
-
-    .member-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      margin-right: 10px;
-      margin-bottom: 6px;
-      padding: 5px 8px;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.05);
-      font-size: 14px;
-      white-space: nowrap;
-    }
-
-    .member-chip.empty {
-      opacity: 0.7;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      margin-left: 8px;
-      vertical-align: middle;
-    }
-
-    .leader {
-      background: rgba(244, 210, 122, 0.15);
-      color: var(--gold);
-      border: 1px solid rgba(244, 210, 122, 0.35);
-    }
-
-    .manage-list {
-      margin-top: 10px;
-      display: grid;
-      gap: 8px;
-    }
-
-    .manage-item {
-      background: rgba(255,255,255,0.04);
-      border-radius: 12px;
-      padding: 10px;
-    }
-
-    .manage-top {
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
-
-    .admin-toggle-box {
-      padding: 12px 16px;
-      cursor: pointer;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .admin-toggle-title {
-      font-size: 16px;
-      font-weight: 800;
-      color: var(--gold);
-    }
-
-    .admin-panel {
-      margin-top: 12px;
-      padding-top: 12px;
-      border-top: 1px solid rgba(255,255,255,0.08);
-    }
-
-    #debugBox { display: none; }
-
-    @media (min-width: 820px) {
-      .row.two { grid-template-columns: 1fr 1fr; }
-      .row.admin-two { grid-template-columns: 1fr 1fr; }
-    }
-  </style>
+<style>
+body { background:#0a0f18; color:#fff; font-family:Arial; padding:20px; }
+.box { background:#1a2233; padding:15px; border-radius:12px; margin-bottom:15px; }
+button { padding:10px; border:none; border-radius:8px; background:#6d28d9; color:#fff; cursor:pointer; }
+select { padding:10px; border-radius:8px; width:100%; margin-bottom:6px; }
+.raid { background:#111827; padding:12px; margin-bottom:10px; border-radius:10px; }
+.title { font-weight:bold; cursor:pointer; }
+.member { font-size:14px; margin:2px 0; }
+.inline { display:flex; gap:6px; }
+</style>
 </head>
+
 <body>
-  <div class="wrap">
-    <h1>아이온2 레이드 파티 신청</h1>
-    <div class="subtitle">입장 승인형 · 같은 링크로 같은 데이터를 봄</div>
 
-    <div class="box">
-      <div class="admin-toggle-box" onclick="toggleAdminPanel()">
-        <div class="admin-toggle-title">관리자 메뉴</div>
-        <div id="adminToggleIcon">▶</div>
-      </div>
+<h2>아이온2 레이드</h2>
 
-      <div id="adminPanel" class="admin-panel" style="display:none;">
-        <input id="adminPassword" type="password" placeholder="관리자 비밀번호 입력">
-        <div class="inline-buttons">
-          <button onclick="loginAdmin()">관리자 로그인</button>
-          <button class="gray" onclick="logoutAdmin()">로그아웃</button>
-          <button class="danger" onclick="resetAll()">전체 초기화</button>
-        </div>
-        <div id="adminStatus" class="admin-status">현재 관리자 아님</div>
-        <div class="notice">예시 관리자 비밀번호: 1234</div>
+<div class="box">
+  <input id="adminPw" placeholder="관리자 비밀번호">
+  <button onclick="loginAdmin()">관리자 로그인</button>
+</div>
 
-        <div id="pendingManageBox" style="display:none; margin-top:16px;">
-          <div class="section-title" style="font-size:18px;">입장 승인 관리</div>
-          <div class="row admin-two">
-            <div>
-              <div class="sub-title">승인 대기</div>
-              <div id="pendingUsers"></div>
-            </div>
-            <div>
-              <div class="sub-title">승인된 사용자</div>
-              <div id="approvedUsers"></div>
-            </div>
-          </div>
-        </div>
+<div id="raidList"></div>
 
-        <div id="raidCreateBox" style="display:none; margin-top:16px;">
-          <div class="section-title" style="font-size:18px;">공대 만들기</div>
-          <div class="row two">
-            <input id="raidName" placeholder="공대 이름 예: 8시 1공대">
-            <input id="raidTime" placeholder="공대 시간 예: 저녁 8시">
-          </div>
-          <button onclick="createRaid()">공대 생성</button>
-        </div>
-      </div>
-    </div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
-    <div class="box" id="entryBox" style="display:none;">
-      <div class="section-title">입장 신청</div>
-      <div class="gate-message">처음 들어오는 사람은 아이디를 입력하고 입장 신청해야 해.</div>
-      <input id="entryName" placeholder="사용할 아이디 입력">
-      <button onclick="requestEntry()">입장 신청</button>
-      <div class="notice">관리자가 승인해야 사용 가능</div>
-    </div>
+<script>
+const firebaseConfig = {
+ apiKey: "AIzaSy...",
+ databaseURL: "https://raid-party-shared-default-rtdb.firebaseio.com"
+};
 
-    <div class="box" id="waitingBox" style="display:none;">
-      <div class="section-title">승인 대기</div>
-      <div class="gate-message">입장 승인 대기중입니다.</div>
-      <div class="muted">관리자가 승인하면 자동으로 입장 가능해져.</div>
-      <div class="inline-buttons" style="margin-top:12px;">
-        <button class="gray" onclick="changeMyId()">아이디 변경</button>
-      </div>
-    </div>
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
 
-    <div class="box" id="bannedBox" style="display:none;">
-      <div class="section-title">입장 불가</div>
-      <div class="gate-message">관리자에 의해 추방되었거나 입장이 제한된 상태야.</div>
-      <div class="inline-buttons" style="margin-top:12px;">
-        <button class="gray" onclick="changeMyId()">다른 아이디로 다시 신청</button>
-      </div>
-    </div>
+let raids = {};
+let isAdmin = false;
+let myName = localStorage.getItem("name") || prompt("닉네임 입력");
 
-    <div id="appWrap" style="display:none;">
-      <div class="box">
-        <div class="section-title">내 상태</div>
-        <div class="current-user" id="currentUserLabel">현재 아이디: -</div>
-        <div class="inline-buttons" style="margin-top:12px;">
-          <button class="gray" onclick="changeMyId()">아이디 변경</button>
-        </div>
-      </div>
+localStorage.setItem("name", myName);
 
-      <div class="box">
-        <div class="section-title">파티 신청</div>
-        <div class="row two">
-          <select id="raidSelect">
-            <option value="">신청할 공대 선택</option>
-          </select>
+function loginAdmin(){
+ if(document.getElementById("adminPw").value==="1234"){
+  isAdmin=true;
+  alert("관리자됨");
+ }
+}
 
-          <select id="partySelect">
-            <option value="party1">1파티</option>
-            <option value="party2">2파티</option>
-          </select>
-        </div>
+function getMembers(raid, party){
+ return raid[party] ? Object.entries(raid[party]).map(([k,v])=>({key:k,...v})) : [];
+}
 
-        <div class="row two">
-          <select id="job">
-            <option value="">직업 선택</option>
-            <option value="수호">수호</option>
-            <option value="치유성">치유성</option>
-            <option value="궁성">궁성</option>
-            <option value="살성">살성</option>
-            <option value="검성">검성</option>
-            <option value="마도성">마도성</option>
-            <option value="정령성">정령성</option>
-            <option value="호법성">호법성</option>
-          </select>
+function render(){
+ let html = "";
 
-          <select id="roleSelect" style="display:none;">
-            <option value="">역할 선택</option>
-          </select>
-        </div>
+ Object.entries(raids).forEach(([id, r])=>{
+  const p1 = getMembers(r,"party1");
+  const p2 = getMembers(r,"party2");
 
-        <button onclick="addMemberFromForm()">신청하기</button>
-        <div class="notice">파티당 4명 / 탱1 / 힐1 / 딜2</div>
-      </div>
+  html += `
+  <div class="raid">
+   <div class="title">${r.name} (${p1.length+p2.length}/8)</div>
 
-      <div class="box">
-        <div class="section-title">공대 목록</div>
-        <div id="raidList"></div>
-      </div>
-    </div>
+   <div>
+    <h4>1파티</h4>
+
+    <select id="job1-${id}" onchange="roleUI('${id}',1)">
+     <option value="">직업</option>
+     <option>수호</option><option>치유성</option><option>궁성</option>
+     <option>살성</option><option>검성</option><option>마도성</option>
+     <option>정령성</option><option>호법성</option>
+    </select>
+
+    <select id="role1-${id}" style="display:none;"></select>
+
+    <button onclick="join('${id}','party1',1)">신청</button>
+
+    ${p1.map(m=>`
+     <div class="member">
+      ${m.name} (${m.job})
+      ${m.name===myName ? `<button onclick="cancel('${id}','party1','${m.key}')">취소</button>` : ""}
+      ${isAdmin ? `<button onclick="del('${id}','party1','${m.key}')">삭제</button>` : ""}
+     </div>
+    `).join("")}
+   </div>
+
+   <div>
+    <h4>2파티</h4>
+
+    <select id="job2-${id}" onchange="roleUI('${id}',2)">
+     <option value="">직업</option>
+     <option>수호</option><option>치유성</option><option>궁성</option>
+     <option>살성</option><option>검성</option><option>마도성</option>
+     <option>정령성</option><option>호법성</option>
+    </select>
+
+    <select id="role2-${id}" style="display:none;"></select>
+
+    <button onclick="join('${id}','party2',2)">신청</button>
+
+    ${p2.map(m=>`
+     <div class="member">
+      ${m.name} (${m.job})
+      ${m.name===myName ? `<button onclick="cancel('${id}','party2','${m.key}')">취소</button>` : ""}
+      ${isAdmin ? `<button onclick="del('${id}','party2','${m.key}')">삭제</button>` : ""}
+     </div>
+    `).join("")}
+   </div>
   </div>
+  `;
+ });
+
+ document.getElementById("raidList").innerHTML = html;
+}
+
+function roleUI(id,num){
+ const job = document.getElementById(`job${num}-${id}`).value;
+ const role = document.getElementById(`role${num}-${id}`);
+
+ if(job==="검성"){
+  role.style.display="block";
+  role.innerHTML=`<option value="tank">탱</option><option value="dps">딜</option>`;
+ }
+ else if(job==="호법성"){
+  role.style.display="block";
+  role.innerHTML=`<option value="heal">힐</option><option value="dps">딜</option>`;
+ }
+ else{
+  role.style.display="none";
+ }
+}
+
+function join(id,party,num){
+ const job = document.getElementById(`job${num}-${id}`).value;
+ const roleEl = document.getElementById(`role${num}-${id}`);
+
+ let role="dps";
+
+ if(!job) return alert("직업 선택");
+
+ if(job==="수호") role="tank";
+ if(job==="치유성") role="heal";
+
+ if(job==="검성"||job==="호법성"){
+  role=roleEl.value;
+  if(!role) return alert("역할 선택");
+ }
+
+ db.ref("raids/"+id+"/"+party).push({
+  name: myName,
+  job,
+  role
+ });
+}
+
+function cancel(id,party,key){
+ db.ref("raids/"+id+"/"+party+"/"+key).remove();
+}
+
+function del(id,party,key){
+ if(!isAdmin) return;
+ db.ref("raids/"+id+"/"+party+"/"+key).remove();
+}
+
+db.ref("raids").on("value", s=>{
+ raids=s.val()||{};
+ render();
+});
+</script>
 
-  <div id="debugBox">debug...</div>
-
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyBfOXxM4tT6UBvqVSJv64zwX3qsfsMVuvw",
-      authDomain: "raid-party-shared.firebaseapp.com",
-      databaseURL: "https://raid-party-shared-default-rtdb.firebaseio.com",
-      projectId: "raid-party-shared",
-      storageBucket: "raid-party-shared.firebasestorage.app",
-      messagingSenderId: "661883999004",
-      appId: "1:661883999004:web:e783a090e54e6ae4a760d9",
-      measurementId: "G-Q5RTBBG0PJ"
-    };
-
-    let db;
-    let isAdmin = localStorage.getItem("raid_admin") === "1";
-    let raids = {};
-    let users = {};
-    let myId = localStorage.getItem("raid_user_name") || "";
-    let openedRaid = null;
-    let adminPanelOpen = false;
-    const ADMIN_PASSWORD = "1234";
-
-    firebase.initializeApp(firebaseConfig);
-    db = firebase.database();
-
-    const jobEl = document.getElementById("job");
-    const roleSelectEl = document.getElementById("roleSelect");
-    const adminStatusEl = document.getElementById("adminStatus");
-    const raidCreateBoxEl = document.getElementById("raidCreateBox");
-    const raidSelectEl = document.getElementById("raidSelect");
-
-    jobEl.addEventListener("change", function () {
-      const job = this.value;
-
-      if (job === "검성") {
-        roleSelectEl.style.display = "block";
-        roleSelectEl.innerHTML = `
-          <option value="">검성 역할 선택</option>
-          <option value="tank">탱</option>
-          <option value="dps">딜</option>
-        `;
-      } else if (job === "호법성") {
-        roleSelectEl.style.display = "block";
-        roleSelectEl.innerHTML = `
-          <option value="">호법성 역할 선택</option>
-          <option value="heal">힐</option>
-          <option value="dps">딜</option>
-        `;
-      } else {
-        roleSelectEl.style.display = "none";
-        roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
-      }
-    });
-
-    function toggleAdminPanel() {
-      adminPanelOpen = !adminPanelOpen;
-      document.getElementById("adminPanel").style.display = adminPanelOpen ? "block" : "none";
-      document.getElementById("adminToggleIcon").textContent = adminPanelOpen ? "▼" : "▶";
-    }
-
-    function normalizeName(name) {
-      return (name || "").trim().toLowerCase();
-    }
-
-    function renderAdminStatus() {
-      adminStatusEl.textContent = isAdmin ? "현재 관리자 로그인 상태" : "현재 관리자 아님";
-      raidCreateBoxEl.style.display = isAdmin && isApprovedUser() ? "block" : "none";
-      document.getElementById("pendingManageBox").style.display = isAdmin ? "block" : "none";
-    }
-
-    function isApprovedUser() {
-      if (!myId) return false;
-      const user = users[myId];
-      return !!(user && user.approved && !user.banned);
-    }
-
-    function getMyUserRecord() {
-      if (!myId) return null;
-      return users[myId] || null;
-    }
-
-    function updateGateUI() {
-      const entryBox = document.getElementById("entryBox");
-      const waitingBox = document.getElementById("waitingBox");
-      const bannedBox = document.getElementById("bannedBox");
-      const appWrap = document.getElementById("appWrap");
-      const currentUserLabel = document.getElementById("currentUserLabel");
-
-      entryBox.style.display = "none";
-      waitingBox.style.display = "none";
-      bannedBox.style.display = "none";
-      appWrap.style.display = "none";
-
-      if (!myId) {
-        entryBox.style.display = "block";
-        return;
-      }
-
-      const user = users[myId];
-
-      if (!user) {
-        entryBox.style.display = "block";
-        return;
-      }
-
-      if (user.banned) {
-        bannedBox.style.display = "block";
-        return;
-      }
-
-      if (!user.approved) {
-        waitingBox.style.display = "block";
-        return;
-      }
-
-      currentUserLabel.textContent = "현재 아이디: " + user.name;
-      appWrap.style.display = "block";
-    }
-
-    function requestEntry() {
-      const entered = document.getElementById("entryName").value.trim();
-      if (!entered) {
-        alert("아이디 입력");
-        return;
-      }
-
-      const key = normalizeName(entered);
-
-      db.ref("users/" + key).once("value").then(snapshot => {
-        const existing = snapshot.val();
-
-        if (existing && existing.banned) {
-          alert("이 아이디는 입장이 제한되어 있어");
-          return;
-        }
-
-        localStorage.setItem("raid_user_name", key);
-        myId = key;
-
-        db.ref("users/" + key).set({
-          name: entered,
-          approved: existing ? !!existing.approved : false,
-          banned: false
-        }).then(() => {
-          document.getElementById("entryName").value = "";
-        });
-      });
-    }
-
-    function changeMyId() {
-      if (!confirm("현재 아이디 상태를 지우고 다시 신청할까?")) return;
-      localStorage.removeItem("raid_user_name");
-      myId = "";
-      updateGateUI();
-    }
-
-    function loginAdmin() {
-      const pw = document.getElementById("adminPassword").value.trim();
-      if (pw === ADMIN_PASSWORD) {
-        isAdmin = true;
-        localStorage.setItem("raid_admin", "1");
-        document.getElementById("adminPassword").value = "";
-        renderAdminStatus();
-        renderApprovalLists();
-        renderRaids();
-        alert("관리자 로그인 완료");
-      } else {
-        alert("비밀번호가 틀렸어");
-      }
-    }
-
-    function logoutAdmin() {
-      isAdmin = false;
-      localStorage.removeItem("raid_admin");
-      renderAdminStatus();
-      renderApprovalLists();
-      renderRaids();
-      alert("로그아웃 완료");
-    }
-
-    function resetAll() {
-      if (!isAdmin) {
-        alert("관리자만 전체 초기화 가능");
-        return;
-      }
-
-      if (!confirm("정말 전체 초기화할까?")) return;
-
-      Promise.all([
-        db.ref("raids").set(null),
-        db.ref("users").set(null)
-      ]).then(() => {
-        alert("전체 초기화 완료");
-      }).catch(() => {
-        alert("초기화 실패");
-      });
-    }
-
-    function approveUser(userKey) {
-      if (!isAdmin) return;
-      db.ref("users/" + userKey + "/approved").set(true);
-      db.ref("users/" + userKey + "/banned").set(false);
-    }
-
-    function rejectUser(userKey) {
-      if (!isAdmin) return;
-      db.ref("users/" + userKey).remove();
-    }
-
-    function removeUserApplicationsByName(userName) {
-      const updates = {};
-      Object.entries(raids).forEach(([raidId, raid]) => {
-        ["party1", "party2"].forEach(partyName => {
-          const members = raid[partyName] || {};
-          Object.entries(members).forEach(([memberKey, member]) => {
-            if (normalizeName(member.name) === normalizeName(userName)) {
-              updates["raids/" + raidId + "/" + partyName + "/" + memberKey] = null;
-            }
-          });
-        });
-      });
-
-      if (Object.keys(updates).length > 0) {
-        return db.ref().update(updates);
-      }
-      return Promise.resolve();
-    }
-
-    function expelUser(userKey) {
-      if (!isAdmin) return;
-      const user = users[userKey];
-      if (!user) return;
-
-      if (!confirm(user.name + " 을(를) 추방할까?")) return;
-
-      db.ref("users/" + userKey).update({
-        approved: false,
-        banned: true
-      }).then(() => removeUserApplicationsByName(user.name));
-    }
-
-    function renderApprovalLists() {
-      const pendingBox = document.getElementById("pendingUsers");
-      const approvedBox = document.getElementById("approvedUsers");
-
-      const pending = Object.entries(users).filter(([_, user]) => !user.approved && !user.banned);
-      const approved = Object.entries(users).filter(([_, user]) => user.approved && !user.banned);
-
-      if (!isAdmin) {
-        pendingBox.innerHTML = "";
-        approvedBox.innerHTML = "";
-        return;
-      }
-
-      pendingBox.innerHTML = pending.length ? "" : `<div class="empty-text">대기 없음</div>`;
-      approvedBox.innerHTML = approved.length ? "" : `<div class="empty-text">승인된 사용자 없음</div>`;
-
-      pending.forEach(([key, user]) => {
-        pendingBox.innerHTML += `
-          <div class="user-card">
-            <div class="user-name">${user.name}</div>
-            <div class="inline-buttons">
-              <button class="green" onclick="approveUser('${key}')">승인</button>
-              <button class="danger" onclick="rejectUser('${key}')">거절</button>
-            </div>
-          </div>
-        `;
-      });
-
-      approved.forEach(([key, user]) => {
-        approvedBox.innerHTML += `
-          <div class="user-card">
-            <div class="user-name">${user.name}</div>
-            <div class="inline-buttons">
-              <button class="danger" onclick="expelUser('${key}')">추방</button>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function createRaid() {
-      if (!isAdmin || !isApprovedUser()) {
-        alert("관리자만 공대 생성 가능");
-        return;
-      }
-
-      const raidName = document.getElementById("raidName").value.trim();
-      const raidTime = document.getElementById("raidTime").value.trim();
-
-      if (!raidName || !raidTime) {
-        alert("공대 이름과 시간 입력");
-        return;
-      }
-
-      const newRef = db.ref("raids").push();
-      newRef.set({
-        name: raidName,
-        time: raidTime,
-        party1: {},
-        party2: {}
-      }).then(() => {
-        document.getElementById("raidName").value = "";
-        document.getElementById("raidTime").value = "";
-      });
-    }
-
-    function deleteRaid(raidId) {
-      if (!isAdmin) {
-        alert("관리자만 공대 삭제 가능");
-        return;
-      }
-
-      if (!confirm("이 공대를 삭제할까?")) return;
-      db.ref("raids/" + raidId).remove();
-    }
-
-    function getRoleFromJob(job, selectedRole) {
-      if (job === "수호") return "tank";
-      if (job === "치유성") return "heal";
-      if (job === "검성") return selectedRole;
-      if (job === "호법성") return selectedRole;
-      return "dps";
-    }
-
-    function getRole(job) {
-      const selectedRole = roleSelectEl.value;
-
-      if (job === "수호") return "tank";
-      if (job === "치유성") return "heal";
-
-      if (job === "검성") {
-        if (!selectedRole) {
-          alert("검성 역할 선택해줘");
-          return null;
-        }
-        return selectedRole;
-      }
-
-      if (job === "호법성") {
-        if (!selectedRole) {
-          alert("호법성 역할 선택해줘");
-          return null;
-        }
-        return selectedRole;
-      }
-
-      return "dps";
-    }
-
-    function getJobIcon(job) {
-      if (job === "수호") return "🛡️";
-      if (job === "검성") return "⚔️";
-      if (job === "살성") return "🗡️";
-      if (job === "궁성") return "🏹";
-      if (job === "마도성") return "🔥";
-      if (job === "정령성") return "🌪️";
-      if (job === "치유성") return "💚";
-      if (job === "호법성") return "✨";
-      return "🎮";
-    }
-
-    function renderRaidSelect() {
-      raidSelectEl.innerHTML = `<option value="">신청할 공대 선택</option>`;
-      Object.entries(raids).forEach(([raidId, raid]) => {
-        raidSelectEl.innerHTML += `
-          <option value="${raidId}">
-            ${raid.name} / ${raid.time}
-          </option>
-        `;
-      });
-    }
-
-    function getMembers(raid, partyName) {
-      return raid[partyName]
-        ? Object.entries(raid[partyName]).map(([key, value]) => ({ key, ...value }))
-        : [];
-    }
-
-    function getTotalRaidCount(raid) {
-      return getMembers(raid, "party1").length + getMembers(raid, "party2").length;
-    }
-
-    function validateAndJoin(raidId, party, job, role) {
-      if (!isApprovedUser()) {
-        alert("관리자 승인 후 이용 가능");
-        return;
-      }
-
-      const myUser = getMyUserRecord();
-      if (!myUser) {
-        alert("사용자 정보 없음");
-        return;
-      }
-
-      db.ref("raids/" + raidId).once("value").then(snapshot => {
-        const raid = snapshot.val() || {};
-        const partyMembers = getMembers(raid, party);
-        const totalMembers = getTotalRaidCount(raid);
-
-        if (totalMembers >= 8) {
-          alert("이 공대는 마감이야");
-          return;
-        }
-
-        if (partyMembers.length >= 4) {
-          alert("이 파티는 4명이 가득 찼어");
-          return;
-        }
-
-        const sameName = partyMembers.some(m => normalizeName(m.name) === normalizeName(myUser.name));
-        if (sameName) {
-          alert("같은 파티에 이미 신청돼 있어");
-          return;
-        }
-
-        const tanks = partyMembers.filter(m => m.role === "tank").length;
-        const heals = partyMembers.filter(m => m.role === "heal").length;
-        const dps = partyMembers.filter(m => m.role === "dps").length;
-
-        if (role === "tank" && tanks >= 1) {
-          alert("탱 자리는 이미 있어");
-          return;
-        }
-
-        if (role === "heal" && heals >= 1) {
-          alert("힐 자리는 이미 있어");
-          return;
-        }
-
-        if (role === "dps" && dps >= 2) {
-          alert("딜 자리는 이미 꽉 찼어");
-          return;
-        }
-
-        db.ref("raids/" + raidId + "/" + party).push({
-          name: myUser.name,
-          job: job,
-          role: role,
-          leader: false
-        });
-      });
-    }
-
-    function addMemberFromForm() {
-      const raidId = document.getElementById("raidSelect").value;
-      const party = document.getElementById("partySelect").value;
-      const job = document.getElementById("job").value;
-      const role = getRole(job);
-
-      if (!raidId) {
-        alert("공대 선택");
-        return;
-      }
-
-      if (!job) {
-        alert("직업 선택");
-        return;
-      }
-
-      if (!role) return;
-
-      validateAndJoin(raidId, party, job, role);
-
-      document.getElementById("job").value = "";
-      roleSelectEl.style.display = "none";
-      roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
-    }
-
-    function quickJoin(raidId, party) {
-      if (!isApprovedUser()) {
-        alert("관리자 승인 후 이용 가능");
-        return;
-      }
-
-      const job = prompt("직업 입력 (수호/치유성/궁성/살성/검성/마도성/정령성/호법성)");
-      if (!job) return;
-
-      const allowedJobs = ["수호", "치유성", "궁성", "살성", "검성", "마도성", "정령성", "호법성"];
-      if (!allowedJobs.includes(job)) {
-        alert("직업명을 정확히 입력해줘");
-        return;
-      }
-
-      let role = "dps";
-
-      if (job === "수호") role = "tank";
-      else if (job === "치유성") role = "heal";
-      else if (job === "검성") {
-        const r = prompt("검성 역할 입력 (tank 또는 dps)");
-        if (!r) return;
-        if (r !== "tank" && r !== "dps") {
-          alert("tank 또는 dps 만 입력");
-          return;
-        }
-        role = r;
-      } else if (job === "호법성") {
-        const r = prompt("호법성 역할 입력 (heal 또는 dps)");
-        if (!r) return;
-        if (r !== "heal" && r !== "dps") {
-          alert("heal 또는 dps 만 입력");
-          return;
-        }
-        role = r;
-      }
-
-      validateAndJoin(raidId, party, job, role);
-    }
-
-    function cancelMy(raidId, partyName, key) {
-      if (!isApprovedUser()) {
-        alert("승인된 사용자만 가능");
-        return;
-      }
-
-      const myUser = getMyUserRecord();
-      if (!myUser) return;
-
-      db.ref("raids/" + raidId + "/" + partyName + "/" + key).once("value").then(snapshot => {
-        const member = snapshot.val();
-        if (!member) return;
-
-        if (normalizeName(member.name) !== normalizeName(myUser.name)) {
-          alert("본인 신청만 취소 가능");
-          return;
-        }
-
-        if (!confirm("신청 취소할까?")) return;
-        db.ref("raids/" + raidId + "/" + partyName + "/" + key).remove();
-      });
-    }
-
-    function deleteMember(raidId, partyName, key) {
-      if (!isAdmin) {
-        alert("관리자만 삭제 가능");
-        return;
-      }
-      db.ref("raids/" + raidId + "/" + partyName + "/" + key).remove();
-    }
-
-    function toggleLeader(raidId, partyName, key) {
-      if (!isAdmin) {
-        alert("관리자만 파티장 지정 가능");
-        return;
-      }
-
-      db.ref("raids/" + raidId + "/" + partyName).once("value").then(snapshot => {
-        const current = snapshot.val() || {};
-        const updates = {};
-
-        Object.keys(current).forEach(memberKey => {
-          updates[memberKey + "/leader"] = (memberKey === key);
-        });
-
-        db.ref("raids/" + raidId + "/" + partyName).update(updates);
-      });
-    }
-
-    function moveMember(raidId, fromParty, toParty, key) {
-      if (!isAdmin) {
-        alert("관리자만 이동 가능");
-        return;
-      }
-
-      db.ref("raids/" + raidId).once("value").then(snapshot => {
-        const raid = snapshot.val() || {};
-        const fromMembers = getMembers(raid, fromParty);
-        const toMembers = getMembers(raid, toParty);
-
-        const member = fromMembers.find(m => m.key === key);
-        if (!member) return;
-
-        if (toMembers.length >= 4) {
-          alert("옮길 파티가 이미 4명이야");
-          return;
-        }
-
-        const roleCount = toMembers.filter(m => m.role === member.role).length;
-        if (member.role === "tank" && roleCount >= 1) {
-          alert("옮길 파티의 탱 자리가 이미 있어");
-          return;
-        }
-        if (member.role === "heal" && roleCount >= 1) {
-          alert("옮길 파티의 힐 자리가 이미 있어");
-          return;
-        }
-        if (member.role === "dps" && roleCount >= 2) {
-          alert("옮길 파티의 딜 자리가 이미 꽉 찼어");
-          return;
-        }
-
-        const data = {
-          name: member.name,
-          job: member.job,
-          role: member.role,
-          leader: member.leader || false
-        };
-
-        db.ref("raids/" + raidId + "/" + fromParty + "/" + key).remove().then(() => {
-          db.ref("raids/" + raidId + "/" + toParty).push(data);
-        });
-      });
-    }
-
-    function renderSimpleParty(members, raidId, partyName) {
-      const myUser = getMyUserRecord();
-
-      const tank = members.find(m => m.role === "tank");
-      const heal = members.find(m => m.role === "heal");
-      const dps = members.filter(m => m.role === "dps");
-
-      function chip(member, fallback) {
-        if (!member) {
-          return `<span class="member-chip empty">${fallback}</span>`;
-        }
-
-        const isMine = myUser && normalizeName(member.name) === normalizeName(myUser.name);
-
-        return `
-          <span class="member-chip">
-            ${getJobIcon(member.job)} ${member.name}
-            ${member.leader ? '<span class="tag leader">👑</span>' : ''}
-            ${isMine ? `<button class="danger mini-btn" onclick="event.stopPropagation(); cancelMy('${raidId}','${partyName}','${member.key}')">취소</button>` : ""}
-          </span>
-        `;
-      }
-
-      return `
-        ${chip(tank, "🛡️ -")}
-        ${chip(heal, "💚 -")}
-        ${chip(dps[0], "⚔️ -")}
-        ${chip(dps[1], "🏹 -")}
-      `;
-    }
-
-    function renderManageList(title, members, raidId, partyName) {
-      if (!members.length || !isAdmin) return "";
-
-      let html = `
-        <div class="detail-block">
-          <div class="detail-title">${title}</div>
-          <div class="manage-list">
-      `;
-
-      members.forEach(member => {
-        const moveTo = partyName === "party1" ? "party2" : "party1";
-        const moveLabel = partyName === "party1" ? "2파티로 이동" : "1파티로 이동";
-
-        html += `
-          <div class="manage-item">
-            <div class="manage-top">
-              ${getJobIcon(member.job)} ${member.name}
-              ${member.leader ? '<span class="tag leader">👑 파티장</span>' : ''}
-            </div>
-            <div class="inline-buttons">
-              <button class="gray" onclick="toggleLeader('${raidId}', '${partyName}', '${member.key}')">파티장</button>
-              <button class="gray" onclick="moveMember('${raidId}', '${partyName}', '${moveTo}', '${member.key}')">${moveLabel}</button>
-              <button class="danger" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>
-            </div>
-          </div>
-        `;
-      });
-
-      html += `</div></div>`;
-      return html;
-    }
-
-    function toggleRaid(raidId) {
-      openedRaid = openedRaid === raidId ? null : raidId;
-      renderRaids();
-    }
-
-    function renderRaids() {
-      const raidListEl = document.getElementById("raidList");
-
-      if (!raids || Object.keys(raids).length === 0) {
-        raidListEl.innerHTML = `<div class="empty-text">아직 만든 공대가 없어</div>`;
-        return;
-      }
-
-      let html = "";
-
-      Object.entries(raids).forEach(([raidId, raid]) => {
-        const party1 = getMembers(raid, "party1");
-        const party2 = getMembers(raid, "party2");
-        const total = party1.length + party2.length;
-        const closed = total >= 8;
-        const opened = openedRaid === raidId;
-
-        html += `
-          <div class="raid-row">
-            <div class="raid-summary" onclick="toggleRaid('${raidId}')">
-              <div class="raid-summary-left">
-                <span>${opened ? "▼" : "▶"}</span>
-                <span>${raid.name} (${total}/8)</span>
-                <span class="raid-state">${closed ? "🔴" : "🟢"}</span>
-              </div>
-              <div class="raid-meta">${raid.time}</div>
-            </div>
-
-            ${opened ? `
-              <div class="raid-detail">
-                <div class="detail-block">
-                  <div class="detail-title">
-                    <span>1파티</span>
-                    <button class="gray" onclick="event.stopPropagation(); quickJoin('${raidId}','party1')">신청</button>
-                  </div>
-                  <div class="party-line">${renderSimpleParty(party1, raidId, "party1")}</div>
-                </div>
-
-                <div class="detail-block">
-                  <div class="detail-title">
-                    <span>2파티</span>
-                    <button class="gray" onclick="event.stopPropagation(); quickJoin('${raidId}','party2')">신청</button>
-                  </div>
-                  <div class="party-line">${renderSimpleParty(party2, raidId, "party2")}</div>
-                </div>
-
-                ${renderManageList("1파티 관리", party1, raidId, "party1")}
-                ${renderManageList("2파티 관리", party2, raidId, "party2")}
-
-                ${isAdmin ? `
-                  <div class="inline-buttons" style="margin-top:10px;">
-                    <button class="danger" onclick="deleteRaid('${raidId}')">공대 삭제</button>
-                  </div>
-                ` : ""}
-              </div>
-            ` : ""}
-          </div>
-        `;
-      });
-
-      raidListEl.innerHTML = html;
-    }
-
-    function load() {
-      db.ref("users").on("value", snapshot => {
-        users = snapshot.val() || {};
-        updateGateUI();
-        renderApprovalLists();
-        renderAdminStatus();
-      });
-
-      db.ref("raids").on("value", snapshot => {
-        raids = snapshot.val() || {};
-        renderRaidSelect();
-        renderRaids();
-      });
-    }
-
-    renderAdminStatus();
-    updateGateUI();
-    load();
-
-    window.toggleAdminPanel = toggleAdminPanel;
-    window.requestEntry = requestEntry;
-    window.changeMyId = changeMyId;
-    window.loginAdmin = loginAdmin;
-    window.logoutAdmin = logoutAdmin;
-    window.resetAll = resetAll;
-    window.approveUser = approveUser;
-    window.rejectUser = rejectUser;
-    window.expelUser = expelUser;
-    window.createRaid = createRaid;
-    window.deleteRaid = deleteRaid;
-    window.addMemberFromForm = addMemberFromForm;
-    window.quickJoin = quickJoin;
-    window.cancelMy = cancelMy;
-    window.deleteMember = deleteMember;
-    window.toggleLeader = toggleLeader;
-    window.moveMember = moveMember;
-    window.toggleRaid = toggleRaid;
-  </script>
 </body>
 </html>
