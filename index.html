@@ -1,800 +1,831 @@
-<div class="wrap">
-  <h1>아이온2 레이드 파티 신청</h1>
-  <p class="sub">판타지 레이드 스타일 파티 모집판</p>
+ <!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>아이온2 레이드 파티 신청</title>
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #0b0f17 0%, #111827 100%);
+      color: #f3f4f6;
+      font-family: Arial, sans-serif;
+    }
 
-  <div class="box">
-    <h2>관리자 인증</h2>
-    <input id="adminPassword" type="password" placeholder="관리자 비밀번호 입력">
-    <div class="btns">
-      <button onclick="loginAdmin()">관리자 로그인</button>
-      <button class="gray" onclick="logoutAdmin()">로그아웃</button>
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 8px;
+      font-size: 32px;
+      color: #f8d66d;
+      text-shadow: 0 0 12px rgba(248, 214, 109, 0.25);
+    }
+
+    .sub {
+      text-align: center;
+      color: #cbd5e1;
+      margin-bottom: 24px;
+    }
+
+    .box {
+      background: rgba(23, 31, 49, 0.95);
+      border: 1px solid rgba(248, 214, 109, 0.18);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
+      padding: 16px;
+      margin-bottom: 16px;
+      border-radius: 16px;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: #f8d66d;
+      font-size: 20px;
+    }
+
+    input, select, button {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 12px;
+      margin: 6px 0;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+    }
+
+    input, select {
+      background: #111827;
+      color: #f9fafb;
+      border: 1px solid #374151;
+    }
+
+    input::placeholder {
+      color: #9ca3af;
+    }
+
+    button {
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      color: #fff;
+      font-weight: bold;
+      box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
+      cursor: pointer;
+    }
+
+    .gray {
+      background: linear-gradient(135deg, #475569, #334155);
+    }
+
+    .danger {
+      background: linear-gradient(135deg, #dc2626, #991b1b);
+    }
+
+    .party-card {
+      background: linear-gradient(180deg, #182235 0%, #111827 100%);
+      border: 1px solid rgba(248, 214, 109, 0.16);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
+      padding: 16px;
+      margin: 14px 0;
+      border-radius: 16px;
+    }
+
+    .party-title {
+      font-size: 22px;
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #f8d66d;
+    }
+
+    .party-top {
+      margin-bottom: 12px;
+      color: #d1d5db;
+      line-height: 1.8;
+    }
+
+    .party-status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+      margin-top: 8px;
+    }
+
+    .status-open {
+      background: rgba(34, 197, 94, 0.18);
+      color: #86efac;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .status-full {
+      background: rgba(239, 68, 68, 0.18);
+      color: #fda4af;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .slot-wrap {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .slot-box {
+      background: rgba(31, 41, 55, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 14px;
+      height: 100%;
+    }
+
+    .slot-title {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #f3f4f6;
+      font-size: 17px;
+    }
+
+    .slot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .slot {
+      background: #0f172a;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 10px;
+      min-height: 120px;
+    }
+
+    .slot.empty {
+      opacity: 0.9;
+      border: 1px dashed #f8d66d;
+      background: rgba(15, 23, 42, 0.45);
+      color: #f8d66d;
+    }
+
+    .slot-label {
+      font-weight: bold;
+      margin-bottom: 8px;
+      color: #e5e7eb;
+    }
+
+    .recruiting {
+      font-size: 13px;
+      margin-top: 10px;
+      color: #f8d66d;
+    }
+
+    .member {
+      background: #1f2937;
+      border: 1px solid #374151;
+      padding: 12px;
+      border-radius: 12px;
+      margin-top: 8px;
+    }
+
+    .member-line {
+      margin: 4px 0;
+    }
+
+    .btns {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    .small {
+      flex: 1;
+      padding: 8px;
+      min-width: 90px;
+      font-size: 13px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin-right: 6px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+
+    .tank {
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    }
+
+    .heal {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+    }
+
+    .dps {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+    }
+
+    .empty-text {
+      color: #94a3b8;
+      padding: 8px 0;
+    }
+
+    .star {
+      color: #facc15;
+      font-weight: bold;
+    }
+
+    .job-icon {
+      margin-right: 6px;
+    }
+
+    .notice {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>아이온2 레이드 파티 신청</h1>
+    <p class="sub">공유 버전 · 같은 링크로 같은 데이터를 봄</p>
+
+    <div class="box">
+      <h2>관리자 인증</h2>
+      <input id="adminPassword" type="password" placeholder="관리자 비밀번호 입력" />
+      <div class="btns">
+        <button onclick="loginAdmin()">관리자 로그인</button>
+        <button class="gray" onclick="logoutAdmin()">로그아웃</button>
+      </div>
+      <div id="adminStatus" class="empty-text">현재 관리자 아님</div>
+      <div class="notice">현재 예시 비밀번호: 1234</div>
     </div>
-    <div id="adminStatus" class="empty">현재 관리자 아님</div>
+
+    <div class="box" id="adminPartyBox" style="display:none;">
+      <h2>1. 공대 만들기</h2>
+      <input id="partyName" placeholder="공대 이름 예: 8시 1공대" />
+      <select id="partyTime">
+        <option value="">공대 시간 선택</option>
+        <option value="저녁 8시">저녁 8시</option>
+        <option value="저녁 9시">저녁 9시</option>
+        <option value="저녁 10시">저녁 10시</option>
+      </select>
+      <button onclick="addParty()">공대 만들기</button>
+    </div>
+
+    <div class="box">
+      <h2>2. 파티 신청</h2>
+      <select id="applyParty">
+        <option value="">신청할 공대 선택</option>
+      </select>
+
+      <select id="teamSelect">
+        <option value="">신청할 파티 선택</option>
+        <option value="team1">1파티</option>
+        <option value="team2">2파티</option>
+      </select>
+
+      <input id="name" placeholder="캐릭터명" />
+
+      <select id="job">
+        <option value="">직업 선택</option>
+        <option value="수호">수호</option>
+        <option value="검성">검성</option>
+        <option value="살성">살성</option>
+        <option value="궁성">궁성</option>
+        <option value="마도성">마도성</option>
+        <option value="정령성">정령성</option>
+        <option value="치유성">치유성</option>
+        <option value="호법성">호법성</option>
+      </select>
+
+      <select id="roleSelect" style="display:none;">
+        <option value="">역할 선택</option>
+      </select>
+
+      <button onclick="addMember()">신청하기</button>
+    </div>
+
+    <div class="box">
+      <h2>공대 목록</h2>
+      <div id="partyList"></div>
+    </div>
   </div>
 
-  <div class="box" id="adminPartyBox" style="display:none;">
-    <h2>1. 공대 만들기</h2>
-    <input id="partyName" placeholder="공대 이름 예: 8시 1공대">
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getDatabase,
+      ref,
+      set,
+      onValue
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
-    <select id="partyTime">
-      <option value="">공대 시간 선택</option>
-      <option value="저녁 8시">저녁 8시</option>
-      <option value="저녁 9시">저녁 9시</option>
-      <option value="저녁 10시">저녁 10시</option>
-    </select>
+    // =========================
+    // 1) 여기만 네 Firebase 값으로 교체
+    // =========================
+    const firebaseConfig = {
+      apiKey: "여기에 apiKey 붙여넣기",
+      authDomain: "여기에 authDomain 붙여넣기",
+      databaseURL: "여기에 databaseURL 붙여넣기",
+      projectId: "여기에 projectId 붙여넣기",
+      storageBucket: "여기에 storageBucket 붙여넣기",
+      messagingSenderId: "여기에 messagingSenderId 붙여넣기",
+      appId: "여기에 appId 붙여넣기",
+      measurementId: "여기에 measurementId 붙여넣기"
+    };
 
-    <button onclick="addParty()">공대 만들기</button>
-  </div>
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
 
-  <div class="box">
-    <h2>2. 파티 신청</h2>
+    let parties = [];
+    let isAdmin = false;
+    let showManage = {};
 
-    <select id="applyParty">
-      <option value="">신청할 공대 선택</option>
-    </select>
+    const ADMIN_PASSWORD = "1234";
+    const TOTAL_LIMIT = 8;
+    const TEAM_LIMIT = 4;
+    const TEAM_ROLE_LIMITS = {
+      "탱": 1,
+      "힐": 1,
+      "딜": 2
+    };
 
-    <select id="teamSelect">
-      <option value="">신청할 파티 선택</option>
-      <option value="team1">1파티</option>
-      <option value="team2">2파티</option>
-    </select>
+    const adminPasswordEl = document.getElementById("adminPassword");
+    const adminStatusEl = document.getElementById("adminStatus");
+    const adminPartyBoxEl = document.getElementById("adminPartyBox");
 
-    <input id="name" placeholder="캐릭터명">
+    const partyNameEl = document.getElementById("partyName");
+    const partyTimeEl = document.getElementById("partyTime");
+    const applyPartyEl = document.getElementById("applyParty");
+    const teamSelectEl = document.getElementById("teamSelect");
+    const nameEl = document.getElementById("name");
+    const jobEl = document.getElementById("job");
+    const roleSelectEl = document.getElementById("roleSelect");
+    const partyListEl = document.getElementById("partyList");
 
-    <select id="job">
-      <option value="">직업 선택</option>
-      <option value="수호">수호</option>
-      <option value="검성">검성</option>
-      <option value="살성">살성</option>
-      <option value="궁성">궁성</option>
-      <option value="마도성">마도성</option>
-      <option value="정령성">정령성</option>
-      <option value="치유성">치유성</option>
-      <option value="호법성">호법성</option>
-    </select>
+    jobEl.addEventListener("change", function () {
+      const job = this.value;
 
-    <select id="roleSelect" style="display:none;">
-      <option value="">역할 선택</option>
-    </select>
+      if (job === "검성") {
+        roleSelectEl.style.display = "block";
+        roleSelectEl.innerHTML = `
+          <option value="">검성 역할 선택</option>
+          <option value="탱">탱</option>
+          <option value="딜">딜</option>
+        `;
+      } else if (job === "호법성") {
+        roleSelectEl.style.display = "block";
+        roleSelectEl.innerHTML = `
+          <option value="">호법성 역할 선택</option>
+          <option value="힐">힐</option>
+          <option value="딜">딜</option>
+        `;
+      } else {
+        roleSelectEl.style.display = "none";
+        roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
+        roleSelectEl.value = "";
+      }
+    });
 
-    <button onclick="addMember()">신청하기</button>
-  </div>
+    function save() {
+      set(ref(db, "raidParties"), parties);
+    }
 
-  <div class="box">
-    <h2>공대 목록</h2>
-    <div id="partyList"></div>
-  </div>
-</div>
+    function loginAdmin() {
+      const pw = adminPasswordEl.value.trim();
+      if (pw === ADMIN_PASSWORD) {
+        isAdmin = true;
+        adminPasswordEl.value = "";
+        render();
+        alert("관리자 로그인 완료");
+      } else {
+        alert("비밀번호가 틀렸어");
+      }
+    }
 
-<style>
-  body {
-    margin: 0;
-    background: linear-gradient(180deg, #0b0f17 0%, #111827 100%);
-    color: #f3f4f6;
-    font-family: Arial, sans-serif;
-  }
+    function logoutAdmin() {
+      isAdmin = false;
+      render();
+      alert("로그아웃 완료");
+    }
 
-  .wrap {
-    max-width: 1080px;
-    margin: 0 auto;
-    padding: 24px;
-  }
+    function renderAdminUI() {
+      adminStatusEl.textContent = isAdmin ? "현재 관리자 로그인 상태" : "현재 관리자 아님";
+      adminPartyBoxEl.style.display = isAdmin ? "block" : "none";
+    }
 
-  h1 {
-    text-align: center;
-    margin-bottom: 8px;
-    font-size: 32px;
-    color: #f8d66d;
-    text-shadow: 0 0 12px rgba(248, 214, 109, 0.25);
-  }
+    function getRole(job) {
+      const selectedRole = roleSelectEl.value;
 
-  .sub {
-    text-align: center;
-    color: #cbd5e1;
-    margin-bottom: 24px;
-  }
+      if (job === "수호") return "탱";
+      if (job === "치유성") return "힐";
 
-  .box {
-    background: rgba(23, 31, 49, 0.95);
-    border: 1px solid rgba(248, 214, 109, 0.18);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
-    padding: 16px;
-    margin-bottom: 16px;
-    border-radius: 16px;
-  }
+      if (job === "검성") {
+        if (!selectedRole) {
+          alert("검성은 역할을 선택해야 해");
+          return null;
+        }
+        return selectedRole;
+      }
 
-  h2 {
-    margin-top: 0;
-    color: #f8d66d;
-    font-size: 20px;
-  }
+      if (job === "호법성") {
+        if (!selectedRole) {
+          alert("호법성은 역할을 선택해야 해");
+          return null;
+        }
+        return selectedRole;
+      }
 
-  input, select, button {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 12px;
-    margin: 6px 0;
-    border-radius: 10px;
-    border: none;
-    font-size: 15px;
-  }
+      return "딜";
+    }
 
-  input, select {
-    background: #111827;
-    color: #f9fafb;
-    border: 1px solid #374151;
-  }
+    function getJobIcon(job) {
+      if (job === "수호") return "🛡️";
+      if (job === "검성") return "⚔️";
+      if (job === "살성") return "🗡️";
+      if (job === "궁성") return "🏹";
+      if (job === "마도성") return "🔥";
+      if (job === "정령성") return "🌪️";
+      if (job === "치유성") return "💚";
+      if (job === "호법성") return "✨";
+      return "🎮";
+    }
 
-  input::placeholder {
-    color: #9ca3af;
-  }
+    function getTotalCount(party) {
+      return (party.team1?.length || 0) + (party.team2?.length || 0);
+    }
 
-  button {
-    background: linear-gradient(135deg, #7c3aed, #4f46e5);
-    color: #fff;
-    font-weight: bold;
-    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.35);
-  }
+    function getRoleCount(teamArr, role) {
+      return teamArr.filter(m => m.role === role).length;
+    }
 
-  .gray {
-    background: linear-gradient(135deg, #475569, #334155);
-  }
+    function isDuplicateNameInParty(party, name) {
+      const allMembers = [...(party.team1 || []), ...(party.team2 || [])];
+      return allMembers.some(m => m.name.trim().toLowerCase() === name.trim().toLowerCase());
+    }
 
-  .danger {
-    background: linear-gradient(135deg, #dc2626, #991b1b);
-  }
+    function addParty() {
+      if (!isAdmin) {
+        alert("관리자만 공대를 만들 수 있어");
+        return;
+      }
 
-  .party-card {
-    background: linear-gradient(180deg, #182235 0%, #111827 100%);
-    border: 1px solid rgba(248, 214, 109, 0.16);
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.3);
-    padding: 16px;
-    margin: 14px 0;
-    border-radius: 16px;
-  }
+      const partyName = partyNameEl.value.trim();
+      const partyTime = partyTimeEl.value;
 
-  .party-title {
-    font-size: 22px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #f8d66d;
-  }
+      if (!partyName || !partyTime) {
+        alert("공대 이름과 시간을 입력해줘");
+        return;
+      }
 
-  .party-top {
-    margin-bottom: 12px;
-    color: #d1d5db;
-    line-height: 1.8;
-  }
+      parties.push({
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        name: partyName,
+        time: partyTime,
+        team1: [],
+        team2: []
+      });
 
-  .party-status {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 999px;
-    font-size: 12px;
-    font-weight: bold;
-    margin-top: 8px;
-  }
+      partyNameEl.value = "";
+      partyTimeEl.value = "";
+      save();
+    }
 
-  .status-open {
-    background: rgba(34, 197, 94, 0.18);
-    color: #86efac;
-    border: 1px solid rgba(34, 197, 94, 0.3);
-  }
+    function addMember() {
+      const partyId = applyPartyEl.value;
+      const targetTeamKey = teamSelectEl.value;
+      const name = nameEl.value.trim();
+      const job = jobEl.value;
+      const role = getRole(job);
 
-  .status-full {
-    background: rgba(239, 68, 68, 0.18);
-    color: #fda4af;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-  }
+      if (!partyId || !targetTeamKey || !name || !job || !role) {
+        alert("항목을 모두 입력해줘");
+        return;
+      }
 
-  .slot-wrap {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
-    gap: 14px;
-    margin-top: 14px;
-  }
+      const party = parties.find(p => String(p.id) === String(partyId));
+      if (!party) {
+        alert("공대를 찾을 수 없어");
+        return;
+      }
 
-  .slot-box {
-    background: rgba(31, 41, 55, 0.95);
-    border: 1px solid rgba(255, 255, 255, 0.06);
-    border-radius: 14px;
-    padding: 14px;
-    height: 100%;
-  }
+      if (getTotalCount(party) >= TOTAL_LIMIT) {
+        alert("이 공대는 이미 8명이 가득 찼어");
+        return;
+      }
 
-  .slot-title {
-    font-weight: bold;
-    margin-bottom: 10px;
-    color: #f3f4f6;
-    font-size: 17px;
-  }
+      if (isDuplicateNameInParty(party, name)) {
+        alert("같은 공대에 같은 캐릭터명은 중복 신청할 수 없어");
+        return;
+      }
 
-  .slot-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
+      const targetTeam = party[targetTeamKey];
 
-  .slot {
-    background: #0f172a;
-    border: 1px solid #334155;
-    border-radius: 12px;
-    padding: 10px;
-    min-height: 120px;
-  }
+      if (targetTeam.length >= TEAM_LIMIT) {
+        alert("선택한 파티는 이미 4명이 가득 찼어");
+        return;
+      }
 
-  .slot.empty {
-    opacity: 0.9;
-    border: 1px dashed #f8d66d;
-    background: rgba(15, 23, 42, 0.45);
-    color: #f8d66d;
-  }
+      const roleCount = getRoleCount(targetTeam, role);
+      if (roleCount >= TEAM_ROLE_LIMITS[role]) {
+        if (role === "탱") alert("선택한 파티의 탱 자리는 이미 찼어");
+        if (role === "힐") alert("선택한 파티의 힐 자리는 이미 찼어");
+        if (role === "딜") alert("선택한 파티의 딜 자리는 이미 2명이야");
+        return;
+      }
 
-  .slot-label {
-    font-weight: bold;
-    margin-bottom: 8px;
-    color: #e5e7eb;
-  }
+      targetTeam.push({
+        id: Date.now() + Math.floor(Math.random() * 1000),
+        name,
+        job,
+        role,
+        leader: false
+      });
 
-  .recruiting {
-    font-size: 13px;
-    margin-top: 10px;
-    color: #f8d66d;
-  }
+      clearApplyForm();
+      save();
+    }
 
-  .member {
-    background: #1f2937;
-    border: 1px solid #374151;
-    padding: 12px;
-    border-radius: 12px;
-    margin-top: 8px;
-  }
-
-  .member-line {
-    margin: 4px 0;
-  }
-
-  .btns {
-    display: flex;
-    gap: 8px;
-    margin-top: 10px;
-    flex-wrap: wrap;
-  }
-
-  .small {
-    flex: 1;
-    padding: 8px;
-    min-width: 90px;
-    font-size: 13px;
-  }
-
-  .badge {
-    display: inline-block;
-    padding: 4px 10px;
-    border-radius: 999px;
-    margin-right: 6px;
-    font-size: 12px;
-    font-weight: bold;
-  }
-
-  .tank {
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-  }
-
-  .heal {
-    background: linear-gradient(135deg, #16a34a, #15803d);
-  }
-
-  .dps {
-    background: linear-gradient(135deg, #f97316, #ea580c);
-  }
-
-  .empty {
-    color: #94a3b8;
-    padding: 8px 0;
-  }
-
-  .star {
-    color: #facc15;
-    font-weight: bold;
-  }
-
-  .job-icon {
-    margin-right: 6px;
-  }
-</style>
-
-<script>
-  let parties = JSON.parse(localStorage.getItem("raidPartiesManual")) || [];
-  let isAdmin = false;
-  let showManage = {};
-
-  const ADMIN_PASSWORD = "1234";
-  const TOTAL_LIMIT = 8;
-  const TEAM_LIMIT = 4;
-  const TEAM_ROLE_LIMITS = {
-    "탱": 1,
-    "힐": 1,
-    "딜": 2
-  };
-
-  const adminPasswordEl = document.getElementById("adminPassword");
-  const adminStatusEl = document.getElementById("adminStatus");
-  const adminPartyBoxEl = document.getElementById("adminPartyBox");
-
-  const partyNameEl = document.getElementById("partyName");
-  const partyTimeEl = document.getElementById("partyTime");
-  const applyPartyEl = document.getElementById("applyParty");
-  const teamSelectEl = document.getElementById("teamSelect");
-  const nameEl = document.getElementById("name");
-  const jobEl = document.getElementById("job");
-  const roleSelectEl = document.getElementById("roleSelect");
-  const partyListEl = document.getElementById("partyList");
-
-  jobEl.addEventListener("change", function () {
-    const job = this.value;
-
-    if (job === "검성") {
-      roleSelectEl.style.display = "block";
-      roleSelectEl.innerHTML = `
-        <option value="">검성 역할 선택</option>
-        <option value="탱">탱</option>
-        <option value="딜">딜</option>
-      `;
-    } else if (job === "호법성") {
-      roleSelectEl.style.display = "block";
-      roleSelectEl.innerHTML = `
-        <option value="">호법성 역할 선택</option>
-        <option value="힐">힐</option>
-        <option value="딜">딜</option>
-      `;
-    } else {
-      roleSelectEl.style.display = "none";
+    function clearApplyForm() {
+      applyPartyEl.value = "";
+      teamSelectEl.value = "";
+      nameEl.value = "";
+      jobEl.value = "";
       roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
       roleSelectEl.value = "";
+      roleSelectEl.style.display = "none";
     }
-  });
 
-  function save() {
-    localStorage.setItem("raidPartiesManual", JSON.stringify(parties));
-  }
-
-  function loginAdmin() {
-    const pw = adminPasswordEl.value.trim();
-    if (pw === ADMIN_PASSWORD) {
-      isAdmin = true;
-      adminPasswordEl.value = "";
+    function toggleManage(partyId) {
+      if (!isAdmin) {
+        alert("관리자만 신청자 관리를 볼 수 있어");
+        return;
+      }
+      showManage[partyId] = !showManage[partyId];
       render();
-      alert("관리자 로그인 완료");
-    } else {
-      alert("비밀번호가 틀렸어");
     }
-  }
 
-  function logoutAdmin() {
-    isAdmin = false;
-    render();
-    alert("로그아웃 완료");
-  }
-
-  function renderAdminUI() {
-    adminStatusEl.textContent = isAdmin ? "현재 관리자 로그인 상태" : "현재 관리자 아님";
-    adminPartyBoxEl.style.display = isAdmin ? "block" : "none";
-  }
-
-  function getRole(job) {
-    const selectedRole = roleSelectEl.value;
-
-    if (job === "수호") return "탱";
-    if (job === "치유성") return "힐";
-
-    if (job === "검성") {
-      if (!selectedRole) {
-        alert("검성은 역할을 선택해야 해");
-        return null;
+    function deleteParty(partyId) {
+      if (!isAdmin) {
+        alert("관리자만 공대를 삭제할 수 있어");
+        return;
       }
-      return selectedRole;
+      parties = parties.filter(p => p.id !== partyId);
+      delete showManage[partyId];
+      save();
     }
 
-    if (job === "호법성") {
-      if (!selectedRole) {
-        alert("호법성은 역할을 선택해야 해");
-        return null;
+    function deleteMember(partyId, teamKey, memberId) {
+      if (!isAdmin) {
+        alert("관리자만 삭제할 수 있어");
+        return;
       }
-      return selectedRole;
+
+      const party = parties.find(p => p.id === partyId);
+      if (!party) return;
+
+      party[teamKey] = party[teamKey].filter(m => m.id !== memberId);
+      save();
     }
 
-    return "딜";
-  }
+    function moveMember(partyId, fromTeam, toTeam, memberId) {
+      if (!isAdmin) {
+        alert("관리자만 이동할 수 있어");
+        return;
+      }
 
-  function getJobIcon(job) {
-    if (job === "수호") return "🛡️";
-    if (job === "검성") return "⚔️";
-    if (job === "살성") return "🗡️";
-    if (job === "궁성") return "🏹";
-    if (job === "마도성") return "🔥";
-    if (job === "정령성") return "🌪️";
-    if (job === "치유성") return "💚";
-    if (job === "호법성") return "✨";
-    return "🎮";
-  }
+      const party = parties.find(p => p.id === partyId);
+      if (!party) return;
 
-  function getTotalCount(party) {
-    return party.team1.length + party.team2.length;
-  }
+      const fromArr = party[fromTeam];
+      const toArr = party[toTeam];
+      const member = fromArr.find(m => m.id === memberId);
+      if (!member) return;
 
-  function getRoleCount(teamArr, role) {
-    return teamArr.filter(m => m.role === role).length;
-  }
+      if (toArr.length >= TEAM_LIMIT) {
+        alert("옮길 파티가 이미 4명이야");
+        return;
+      }
 
-  function isDuplicateNameInParty(party, name) {
-    const allMembers = [...party.team1, ...party.team2];
-    return allMembers.some(m => m.name.trim().toLowerCase() === name.trim().toLowerCase());
-  }
+      const roleCount = getRoleCount(toArr, member.role);
+      if (roleCount >= TEAM_ROLE_LIMITS[member.role]) {
+        alert("옮길 파티에 같은 역할 자리가 이미 찼어");
+        return;
+      }
 
-  function addParty() {
-    if (!isAdmin) {
-      alert("관리자만 공대를 만들 수 있어");
-      return;
+      party[fromTeam] = fromArr.filter(m => m.id !== memberId);
+      toArr.push(member);
+      save();
     }
 
-    const partyName = partyNameEl.value.trim();
-    const partyTime = partyTimeEl.value;
+    function toggleLeader(partyId, teamKey, memberId) {
+      if (!isAdmin) {
+        alert("관리자만 파티장을 지정할 수 있어");
+        return;
+      }
 
-    if (!partyName || !partyTime) {
-      alert("공대 이름과 시간을 입력해줘");
-      return;
+      const party = parties.find(p => p.id === partyId);
+      if (!party) return;
+
+      party[teamKey].forEach(m => {
+        m.leader = (m.id === memberId) ? !m.leader : false;
+      });
+
+      save();
     }
 
-    parties.push({
-      id: Date.now() + Math.floor(Math.random() * 1000),
-      name: partyName,
-      time: partyTime,
-      team1: [],
-      team2: []
-    });
-
-    partyNameEl.value = "";
-    partyTimeEl.value = "";
-    save();
-    render();
-  }
-
-  function addMember() {
-    const partyId = applyPartyEl.value;
-    const targetTeamKey = teamSelectEl.value;
-    const name = nameEl.value.trim();
-    const job = jobEl.value;
-    const role = getRole(job);
-
-    if (!partyId || !targetTeamKey || !name || !job || !role) {
-      alert("항목을 모두 입력해줘");
-      return;
+    function countRolesAll(party) {
+      const all = [...(party.team1 || []), ...(party.team2 || [])];
+      return {
+        tank: all.filter(m => m.role === "탱").length,
+        heal: all.filter(m => m.role === "힐").length,
+        dps: all.filter(m => m.role === "딜").length
+      };
     }
 
-    const party = parties.find(p => String(p.id) === String(partyId));
-    if (!party) {
-      alert("공대를 찾을 수 없어");
-      return;
+    function roleBadge(role) {
+      if (role === "탱") return '<span class="badge tank">탱</span>';
+      if (role === "힐") return '<span class="badge heal">힐</span>';
+      return '<span class="badge dps">딜</span>';
     }
 
-    if (getTotalCount(party) >= TOTAL_LIMIT) {
-      alert("이 공대는 이미 8명이 가득 찼어");
-      return;
+    function renderPartySelect() {
+      applyPartyEl.innerHTML = '<option value="">신청할 공대 선택</option>';
+
+      parties.forEach(party => {
+        const counts = countRolesAll(party);
+        const total = getTotalCount(party);
+        const fullText = total >= TOTAL_LIMIT ? " (마감)" : "";
+
+        applyPartyEl.innerHTML += `
+          <option value="${party.id}">
+            ${party.name} / ${party.time} / ${total}명 / 탱 ${counts.tank}/2 힐 ${counts.heal}/2 딜 ${counts.dps}/4${fullText}
+          </option>
+        `;
+      });
     }
 
-    if (isDuplicateNameInParty(party, name)) {
-      alert("같은 공대에 같은 캐릭터명은 중복 신청할 수 없어");
-      return;
-    }
+    function renderSlot(label, member) {
+      if (!member) {
+        return `
+          <div class="slot empty">
+            <div class="slot-label">${label}</div>
+            <div class="recruiting">🔥 모집중</div>
+          </div>
+        `;
+      }
 
-    const targetTeam = party[targetTeamKey];
-
-    if (targetTeam.length >= TEAM_LIMIT) {
-      alert("선택한 파티는 이미 4명이 가득 찼어");
-      return;
-    }
-
-    const roleCount = getRoleCount(targetTeam, role);
-    if (roleCount >= TEAM_ROLE_LIMITS[role]) {
-      if (role === "탱") alert("선택한 파티의 탱 자리는 이미 찼어");
-      if (role === "힐") alert("선택한 파티의 힐 자리는 이미 찼어");
-      if (role === "딜") alert("선택한 파티의 딜 자리는 이미 2명이야");
-      return;
-    }
-
-    targetTeam.push({
-      id: Date.now() + Math.floor(Math.random() * 1000),
-      name,
-      job,
-      role,
-      leader: false
-    });
-
-    clearApplyForm();
-    save();
-    render();
-  }
-
-  function clearApplyForm() {
-    applyPartyEl.value = "";
-    teamSelectEl.value = "";
-    nameEl.value = "";
-    jobEl.value = "";
-    roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
-    roleSelectEl.value = "";
-    roleSelectEl.style.display = "none";
-  }
-
-  function toggleManage(partyId) {
-    if (!isAdmin) {
-      alert("관리자만 신청자 관리를 볼 수 있어");
-      return;
-    }
-    showManage[partyId] = !showManage[partyId];
-    render();
-  }
-
-  function deleteParty(partyId) {
-    if (!isAdmin) {
-      alert("관리자만 공대를 삭제할 수 있어");
-      return;
-    }
-    parties = parties.filter(p => p.id !== partyId);
-    delete showManage[partyId];
-    save();
-    render();
-  }
-
-  function deleteMember(partyId, teamKey, memberId) {
-    if (!isAdmin) {
-      alert("관리자만 삭제할 수 있어");
-      return;
-    }
-    const party = parties.find(p => p.id === partyId);
-    if (!party) return;
-
-    party[teamKey] = party[teamKey].filter(m => m.id !== memberId);
-    save();
-    render();
-  }
-
-  function moveMember(partyId, fromTeam, toTeam, memberId) {
-    if (!isAdmin) {
-      alert("관리자만 이동할 수 있어");
-      return;
-    }
-
-    const party = parties.find(p => p.id === partyId);
-    if (!party) return;
-
-    const fromArr = party[fromTeam];
-    const toArr = party[toTeam];
-    const member = fromArr.find(m => m.id === memberId);
-    if (!member) return;
-
-    if (toArr.length >= TEAM_LIMIT) {
-      alert("옮길 파티가 이미 4명이야");
-      return;
-    }
-
-    const roleCount = getRoleCount(toArr, member.role);
-    if (roleCount >= TEAM_ROLE_LIMITS[member.role]) {
-      alert("옮길 파티에 같은 역할 자리가 이미 찼어");
-      return;
-    }
-
-    party[fromTeam] = fromArr.filter(m => m.id !== memberId);
-    toArr.push(member);
-
-    save();
-    render();
-  }
-
-  function toggleLeader(partyId, teamKey, memberId) {
-    if (!isAdmin) {
-      alert("관리자만 파티장을 지정할 수 있어");
-      return;
-    }
-
-    const party = parties.find(p => p.id === partyId);
-    if (!party) return;
-
-    party[teamKey].forEach(m => {
-      m.leader = (m.id === memberId) ? !m.leader : false;
-    });
-
-    save();
-    render();
-  }
-
-  function countRolesAll(party) {
-    const all = [...party.team1, ...party.team2];
-    return {
-      tank: all.filter(m => m.role === "탱").length,
-      heal: all.filter(m => m.role === "힐").length,
-      dps: all.filter(m => m.role === "딜").length
-    };
-  }
-
-  function roleBadge(role) {
-    if (role === "탱") return '<span class="badge tank">탱</span>';
-    if (role === "힐") return '<span class="badge heal">힐</span>';
-    return '<span class="badge dps">딜</span>';
-  }
-
-  function renderPartySelect() {
-    applyPartyEl.innerHTML = '<option value="">신청할 공대 선택</option>';
-
-    parties.forEach(party => {
-      const counts = countRolesAll(party);
-      const total = getTotalCount(party);
-      const fullText = total >= TOTAL_LIMIT ? " (마감)" : "";
-
-      applyPartyEl.innerHTML += `
-        <option value="${party.id}">
-          ${party.name} / ${party.time} / ${total}명 / 탱 ${counts.tank}/2 힐 ${counts.heal}/2 딜 ${counts.dps}/4${fullText}
-        </option>
-      `;
-    });
-  }
-
-  function renderSlot(label, member) {
-    if (!member) {
       return `
-        <div class="slot empty">
-          <div class="slot-label">${label}</div>
-          <div class="recruiting">🔥 모집중</div>
+        <div class="slot">
+          <div class="slot-label">
+            ${label} ${member.leader ? '<span class="star">👑 파티장</span>' : ''}
+          </div>
+          <div style="margin-top:6px;"><strong><span class="job-icon">${getJobIcon(member.job)}</span>${member.name}</strong></div>
+          <div style="margin-top:6px;">${roleBadge(member.role)}</div>
+          <div style="margin-top:6px;">직업: ${member.job}</div>
         </div>
       `;
     }
 
-    return `
-      <div class="slot">
-        <div class="slot-label">
-          ${label} ${member.leader ? '<span class="star">👑 파티장</span>' : ''}
+    function renderSubParty(title, teamMembers) {
+      const tank = teamMembers.find(m => m.role === "탱");
+      const heal = teamMembers.find(m => m.role === "힐");
+      const dps = teamMembers.filter(m => m.role === "딜");
+
+      return `
+        <div class="slot-box">
+          <div class="slot-title">${title}</div>
+          <div class="slot-grid">
+            ${renderSlot("탱", tank)}
+            ${renderSlot("힐", heal)}
+            ${renderSlot("딜1", dps[0])}
+            ${renderSlot("딜2", dps[1])}
+          </div>
         </div>
-        <div style="margin-top:6px;"><strong><span class="job-icon">${getJobIcon(member.job)}</span>${member.name}</strong></div>
-        <div style="margin-top:6px;">${roleBadge(member.role)}</div>
-        <div style="margin-top:6px;">직업: ${member.job}</div>
-      </div>
-    `;
-  }
+      `;
+    }
 
-  function renderSubParty(title, teamMembers) {
-    const tank = teamMembers.find(m => m.role === "탱");
-    const heal = teamMembers.find(m => m.role === "힐");
-    const dps = teamMembers.filter(m => m.role === "딜");
+    function renderManageMembers(party, teamKey, teamTitle, targetMoveKey) {
+      const arr = party[teamKey];
 
-    return `
-      <div class="slot-box">
-        <div class="slot-title">${title}</div>
-        <div class="slot-grid">
-          ${renderSlot("탱", tank)}
-          ${renderSlot("힐", heal)}
-          ${renderSlot("딜1", dps[0])}
-          ${renderSlot("딜2", dps[1])}
-        </div>
-      </div>
-    `;
-  }
+      let html = `<div style="margin-top:12px;"><strong>${teamTitle} 관리</strong></div>`;
 
-  function renderManageMembers(party, teamKey, teamTitle, targetMoveKey) {
-    const arr = party[teamKey];
+      if (arr.length === 0) {
+        html += `<div class="empty-text">신청자 없음</div>`;
+        return html;
+      }
 
-    let html = `<div style="margin-top:12px;"><strong>${teamTitle} 관리</strong></div>`;
+      arr.forEach(member => {
+        html += `
+          <div class="member">
+            <div class="member-line">
+              <strong><span class="job-icon">${getJobIcon(member.job)}</span>${member.name}</strong>
+              ${member.leader ? '<span class="star">👑 파티장</span>' : ''}
+            </div>
+            <div class="member-line">${roleBadge(member.role)}</div>
+            <div class="member-line">직업: ${member.job}</div>
 
-    if (arr.length === 0) {
-      html += `<div class="empty">신청자 없음</div>`;
+            <div class="btns">
+              <button class="small gray" onclick="moveMember(${party.id}, '${teamKey}', '${targetMoveKey}', ${member.id})">
+                ${targetMoveKey === 'team1' ? '1파티로 이동' : '2파티로 이동'}
+              </button>
+              <button class="small gray" onclick="toggleLeader(${party.id}, '${teamKey}', ${member.id})">파티장 지정</button>
+              <button class="small danger" onclick="deleteMember(${party.id}, '${teamKey}', ${member.id})">삭제</button>
+            </div>
+          </div>
+        `;
+      });
+
       return html;
     }
 
-    arr.forEach(member => {
-      html += `
-        <div class="member">
-          <div class="member-line">
-            <strong><span class="job-icon">${getJobIcon(member.job)}</span>${member.name}</strong>
-            ${member.leader ? '<span class="star">👑 파티장</span>' : ''}
-          </div>
-          <div class="member-line">${roleBadge(member.role)}</div>
-          <div class="member-line">직업: ${member.job}</div>
+    function renderParties() {
+      partyListEl.innerHTML = "";
 
-          <div class="btns">
-            <button class="small gray" onclick="moveMember(${party.id}, '${teamKey}', '${targetMoveKey}', ${member.id})">
-              ${targetMoveKey === 'team1' ? '1파티로 이동' : '2파티로 이동'}
-            </button>
-            <button class="small gray" onclick="toggleLeader(${party.id}, '${teamKey}', ${member.id})">파티장 지정</button>
-            <button class="small danger" onclick="deleteMember(${party.id}, '${teamKey}', ${member.id})">삭제</button>
-          </div>
-        </div>
-      `;
-    });
+      if (parties.length === 0) {
+        partyListEl.innerHTML = '<div class="empty-text">아직 만들어진 공대가 없어</div>';
+        return;
+      }
 
-    return html;
-  }
+      parties.forEach(party => {
+        const counts = countRolesAll(party);
+        const total = getTotalCount(party);
+        const isFull = total >= TOTAL_LIMIT;
+        const isOpen = showManage[party.id] || false;
 
-  function renderParties() {
-    partyListEl.innerHTML = "";
+        let html = `
+          <div class="party-card">
+            <div class="party-title">${party.name}</div>
+            <div class="party-top">
+              시간: ${party.time}<br>
+              현재 인원: ${total} / 8명<br>
+              역할 현황: 탱 ${counts.tank}/2 · 힐 ${counts.heal}/2 · 딜 ${counts.dps}/4<br>
+              <span class="party-status ${isFull ? 'status-full' : 'status-open'}">
+                ${isFull ? '마감' : '모집중'}
+              </span>
+            </div>
 
-    if (parties.length === 0) {
-      partyListEl.innerHTML = '<div class="empty">아직 만들어진 공대가 없어</div>';
-      return;
+            <div class="btns">
+        `;
+
+        if (isAdmin) {
+          html += `
+              <button class="small gray" onclick="toggleManage(${party.id})">
+                ${isOpen ? "관리 닫기" : "관리 보기"}
+              </button>
+              <button class="small danger" onclick="deleteParty(${party.id})">공대 삭제</button>
+          `;
+        }
+
+        html += `
+            </div>
+
+            <div class="slot-wrap">
+              ${renderSubParty("1파티", party.team1 || [])}
+              ${renderSubParty("2파티", party.team2 || [])}
+            </div>
+        `;
+
+        if (isAdmin && isOpen) {
+          html += `
+            ${renderManageMembers(party, "team1", "1파티", "team2")}
+            ${renderManageMembers(party, "team2", "2파티", "team1")}
+          `;
+        }
+
+        html += `</div>`;
+        partyListEl.innerHTML += html;
+      });
     }
 
-    parties.forEach(party => {
-      const counts = countRolesAll(party);
-      const total = getTotalCount(party);
-      const isFull = total >= TOTAL_LIMIT;
-      const isOpen = showManage[party.id] || false;
+    function render() {
+      renderAdminUI();
+      renderPartySelect();
+      renderParties();
+    }
 
-      let html = `
-        <div class="party-card">
-          <div class="party-title">${party.name}</div>
-          <div class="party-top">
-            시간: ${party.time}<br>
-            현재 인원: ${total} / 8명<br>
-            역할 현황: 탱 ${counts.tank}/2 · 힐 ${counts.heal}/2 · 딜 ${counts.dps}/4<br>
-            <span class="party-status ${isFull ? 'status-full' : 'status-open'}">
-              ${isFull ? '마감' : '모집중'}
-            </span>
-          </div>
-
-          <div class="btns">
-      `;
-
-      if (isAdmin) {
-        html += `
-            <button class="small gray" onclick="toggleManage(${party.id})">
-              ${isOpen ? "관리 닫기" : "관리 보기"}
-            </button>
-            <button class="small danger" onclick="deleteParty(${party.id})">공대 삭제</button>
-        `;
-      }
-
-      html += `
-          </div>
-
-          <div class="slot-wrap">
-            ${renderSubParty("1파티", party.team1)}
-            ${renderSubParty("2파티", party.team2)}
-          </div>
-      `;
-
-      if (isAdmin && isOpen) {
-        html += `
-          ${renderManageMembers(party, "team1", "1파티", "team2")}
-          ${renderManageMembers(party, "team2", "2파티", "team1")}
-        `;
-      }
-
-      html += `</div>`;
-      partyListEl.innerHTML += html;
+    // Firebase 실시간 동기화
+    onValue(ref(db, "raidParties"), (snapshot) => {
+      const data = snapshot.val();
+      parties = data || [];
+      render();
     });
-  }
 
-  function render() {
-    renderAdminUI();
-    renderPartySelect();
-    renderParties();
-  }
-
-  render();
-  <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "...",
-  authDomain: "...",
-  databaseURL: "...",
-  ...
-}
-  
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-
-window.db = db;
-window.ref = ref;
-window.set = set;
-window.onValue = onValue;
-</script>
+    // 버튼 함수 전역 연결
+    window.loginAdmin = loginAdmin;
+    window.logoutAdmin = logoutAdmin;
+    window.addParty = addParty;
+    window.addMember = addMember;
+    window.toggleManage = toggleManage;
+    window.deleteParty = deleteParty;
+    window.deleteMember = deleteMember;
+    window.moveMember = moveMember;
+    window.toggleLeader = toggleLeader;
+  </script>
+</body>
+</html>
