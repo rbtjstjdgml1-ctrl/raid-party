@@ -390,16 +390,25 @@
           </div>
         </div>
 
-        <div id="raidCreateBox" style="display:none; margin-top:16px;">
-          <div class="section-title" style="font-size:18px;">공대 만들기</div>
-          <div class="row two">
-            <input id="raidName" placeholder="공대 이름 예: 8시 1공대" />
-            <input id="raidTime" placeholder="공대 시간 예: 저녁 8시" />
-          </div>
-          <button onclick="createRaid()">공대 생성</button>
-        </div>
-      </div>
-    </div>
+<div id="raidCreateBox" style="display:none; margin-top:16px;">
+  <div class="section-title" style="font-size:18px;">공대 만들기</div>
+  <div class="row two">
+    
+    <select id="raidName">
+      <option value="">공대 선택</option>
+      <option value="루드라">루드라</option>
+      <option value="침식의 정화소">침식의 정화소</option>
+    </select>
+
+    <select id="raidTime">
+      <option value="">시간 선택</option>
+      <option value="저녁 9시">저녁 9시</option>
+      <option value="저녁 10시">저녁 10시</option>
+    </select>
+
+  </div>
+  <button onclick="createRaid()">공대 생성</button>
+</div>
 
 <div class="box" id="entryBox" style="display:none;">
   <div class="section-title">입장 신청</div>
