@@ -548,36 +548,49 @@
       appWrap.style.display = "block";
     }
 
-    function requestEntry() {
-      const entered = document.getElementById("entryName").value.trim();
-      if (!entered) {
-        alert("아이디 입력");
-        return;
-      }
+function requestEntry() {
+  const agreeEl = document.getElementById("agreeNotice");
+  const entered = document.getElementById("entryName").value.trim();
 
-      const key = normalizeName(entered);
+  if (!agreeEl || !agreeEl.checked) {
+    alert("공지 확인 후 체크해주세요");
+    return;
+  }
 
-      db.ref("users/" + key).once("value").then(snapshot => {
-        const existing = snapshot.val();
+  if (!entered) {
+    alert("아이디 입력");
+    return;
+  }
 
-        if (existing && existing.banned) {
-          alert("이 아이디는 입장이 제한되어 있어");
-          return;
-        }
+  const key = normalizeName(entered);
 
-        localStorage.setItem("raid_user_name", key);
-        myId = key;
+  db.ref("users/" + key).once("value").then(snapshot => {
+    const existing = snapshot.val();
 
-        return db.ref("users/" + key).set({
-          name: entered,
-          approved: existing ? !!existing.approved : false,
-          banned: false
-        });
-      }).then(() => {
-        document.getElementById("entryName").value = "";
-      });
+    if (existing && existing.banned) {
+      alert("이 아이디는 입장이 제한되어 있어");
+      return;
     }
 
+    if (existing && existing.name) {
+      alert("이미 사용중인 아이디야. 다른 아이디를 써줘");
+      return;
+    }
+
+    localStorage.setItem("raid_user_name", key);
+    myId = key;
+
+    return db.ref("users/" + key).set({
+      name: entered,
+      approved: false,
+      banned: false
+    });
+  }).then(() => {
+    document.getElementById("entryName").value = "";
+    if (agreeEl) agreeEl.checked = false;
+  });
+}
+    
     function changeMyId() {
       if (!confirm("현재 아이디 상태를 지우고 다시 신청할까?")) return;
       localStorage.removeItem("raid_user_name");
