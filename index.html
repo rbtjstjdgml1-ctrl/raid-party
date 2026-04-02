@@ -23,9 +23,7 @@
       --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
@@ -353,14 +351,6 @@
       .join-ui {
         grid-template-columns: 1fr 1fr auto;
         align-items: center;
-      }
-
-      .join-ui.has-role {
-        grid-template-columns: 1fr 1fr auto;
-      }
-
-      .join-ui.no-role {
-        grid-template-columns: 1fr auto;
       }
     }
   </style>
@@ -769,6 +759,11 @@
       return "dps";
     }
 
+    function isAlreadyInRaid(raid, userName) {
+      const allMembers = [...getMembers(raid, "party1"), ...getMembers(raid, "party2")];
+      return allMembers.some(m => normalizeName(m.name) === normalizeName(userName));
+    }
+
     function validateAndJoin(raidId, partyName, job, role) {
       if (!isApprovedUser()) {
         alert("관리자 승인 후 이용 가능");
@@ -796,9 +791,8 @@
           return;
         }
 
-        const sameName = partyMembers.some(m => normalizeName(m.name) === normalizeName(myUser.name));
-        if (sameName) {
-          alert("같은 파티에 이미 신청돼 있어");
+        if (isAlreadyInRaid(raid, myUser.name)) {
+          alert("같은 공대에는 한 번만 신청할 수 있어");
           return;
         }
 
@@ -1020,7 +1014,7 @@
       const jobOptions = JOBS.map(job => `<option value="${job}">${job}</option>`).join("");
 
       return `
-        <div class="join-ui no-role" id="join-ui-${raidId}-${partyName}">
+        <div class="join-ui">
           <select id="job-${raidId}-${partyName}" onchange="updatePartyRoleSelect('${raidId}','${partyName}')">
             <option value="">직업 선택</option>
             ${jobOptions}
