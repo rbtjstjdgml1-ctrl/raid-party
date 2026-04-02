@@ -159,144 +159,6 @@
       font-size: 14px;
     }
 
-    .raid-card {
-      background: linear-gradient(180deg, var(--panel-2), #121826);
-      border: 1px solid var(--gold-line);
-      border-radius: 20px;
-      padding: 18px;
-      margin-bottom: 18px;
-      box-shadow: var(--shadow);
-    }
-
-    .raid-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .raid-title {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--gold);
-    }
-
-    .raid-time {
-      color: var(--muted);
-      font-size: 14px;
-      margin-top: 6px;
-    }
-
-    .raid-status {
-      display: inline-block;
-      margin-top: 8px;
-      padding: 5px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .open {
-      background: rgba(34,197,94,0.15);
-      color: #86efac;
-      border: 1px solid rgba(34,197,94,0.35);
-    }
-
-    .closed {
-      background: rgba(220,38,38,0.15);
-      color: #fca5a5;
-      border: 1px solid rgba(220,38,38,0.35);
-    }
-
-    .party-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
-      margin-top: 12px;
-    }
-
-    .party-card {
-      background: rgba(20, 26, 38, 0.95);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 18px;
-      padding: 16px;
-    }
-
-    .party-title {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .party-meta {
-      color: var(--muted);
-      font-size: 14px;
-      margin-bottom: 12px;
-    }
-
-    .slot {
-      background: var(--slot);
-      border: 1px solid rgba(255,255,255,0.05);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 10px;
-      min-height: 118px;
-    }
-
-    .slot.empty {
-      opacity: 0.85;
-      border: 1px dashed rgba(244, 210, 122, 0.45);
-    }
-
-    .role {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      margin-bottom: 8px;
-    }
-
-    .tank { background: linear-gradient(135deg, #2563eb, #1d4ed8); }
-    .heal { background: linear-gradient(135deg, #16a34a, #15803d); }
-    .dps  { background: linear-gradient(135deg, #f97316, #ea580c); }
-
-    .member-name {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 4px;
-    }
-
-    .member-job {
-      color: #d5d9e2;
-      font-size: 14px;
-    }
-
-    .slot-note {
-      color: var(--gold);
-      font-size: 14px;
-      font-weight: 700;
-      margin-top: 8px;
-    }
-
-    .tag {
-      display: inline-block;
-      padding: 4px 10px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 800;
-      margin-left: 8px;
-      vertical-align: middle;
-    }
-
-    .leader {
-      background: rgba(244, 210, 122, 0.15);
-      color: var(--gold);
-      border: 1px solid rgba(244, 210, 122, 0.35);
-    }
-
     .empty-text {
       color: var(--muted);
     }
@@ -315,11 +177,75 @@
       margin-bottom: 6px;
     }
 
+    .raid-row {
+      background: linear-gradient(180deg, var(--panel-2), #121826);
+      border: 1px solid var(--gold-line);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+      box-shadow: var(--shadow);
+    }
+
+    .raid-summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      font-weight: 800;
+      font-size: 17px;
+    }
+
+    .raid-summary-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .raid-meta {
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 400;
+    }
+
+    .raid-state {
+      font-size: 18px;
+    }
+
+    .raid-detail {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .party-line {
+      margin-bottom: 8px;
+      line-height: 1.8;
+      color: #e5e7eb;
+      font-size: 15px;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      margin-left: 8px;
+      vertical-align: middle;
+    }
+
+    .leader {
+      background: rgba(244, 210, 122, 0.15);
+      color: var(--gold);
+      border: 1px solid rgba(244, 210, 122, 0.35);
+    }
+
     #debugBox { display: none; }
 
     @media (min-width: 820px) {
       .row.two { grid-template-columns: 1fr 1fr; }
-      .party-grid { grid-template-columns: 1fr 1fr; }
       .row.admin-two { grid-template-columns: 1fr 1fr; }
     }
   </style>
@@ -449,12 +375,11 @@
     const debugBox = document.getElementById("debugBox");
     function debug(msg) {
       console.log(msg);
-      if (debugBox) debugBox.textContent += "\n" + msg;
+      if (debugBox) debugBox.textContent += "\\n" + msg;
     }
 
     window.onerror = (m) => debug("ERROR: " + m);
     window.onunhandledrejection = () => debug("PROMISE ERROR");
-    debug("스크립트 시작");
 
     const firebaseConfig = {
       apiKey: "AIzaSyBfOXxM4tT6UBvqVSJv64zwX3qsfsMVuvw",
@@ -472,12 +397,12 @@
     let raids = {};
     let users = {};
     let myId = localStorage.getItem("raid_user_name") || "";
+    let openedRaid = null;
     const ADMIN_PASSWORD = "1234";
 
     try {
       firebase.initializeApp(firebaseConfig);
       db = firebase.database();
-      debug("firebase 연결 성공");
     } catch (e) {
       debug("firebase 실패: " + e.message);
     }
@@ -596,7 +521,6 @@
           banned: false
         }).then(() => {
           document.getElementById("entryName").value = "";
-          debug("입장 신청 완료");
         });
       });
     }
@@ -618,7 +542,6 @@
         renderApprovalLists();
         renderRaids();
         alert("관리자 로그인 완료");
-        debug("관리자 로그인");
       } else {
         alert("비밀번호가 틀렸어");
       }
@@ -631,7 +554,6 @@
       renderApprovalLists();
       renderRaids();
       alert("로그아웃 완료");
-      debug("관리자 로그아웃");
     }
 
     function resetAll() {
@@ -646,10 +568,8 @@
         db.ref("raids").set(null),
         db.ref("users").set(null)
       ]).then(() => {
-        debug("전체 초기화 완료");
         alert("전체 초기화 완료");
-      }).catch((err) => {
-        debug("초기화 실패: " + err.message);
+      }).catch(() => {
         alert("초기화 실패");
       });
     }
@@ -694,13 +614,7 @@
       db.ref("users/" + userKey).update({
         approved: false,
         banned: true
-      }).then(() => {
-        return removeUserApplicationsByName(user.name);
-      }).then(() => {
-        debug("추방 완료");
-      }).catch(err => {
-        debug("추방 실패: " + err.message);
-      });
+      }).then(() => removeUserApplicationsByName(user.name));
     }
 
     function renderApprovalLists() {
@@ -766,9 +680,6 @@
       }).then(() => {
         document.getElementById("raidName").value = "";
         document.getElementById("raidTime").value = "";
-        debug("공대 생성 완료");
-      }).catch((err) => {
-        debug("공대 생성 실패: " + err.message);
       });
     }
 
@@ -779,14 +690,7 @@
       }
 
       if (!confirm("이 공대를 삭제할까?")) return;
-
-      db.ref("raids/" + raidId).remove()
-        .then(() => {
-          debug("공대 삭제 완료");
-        })
-        .catch((err) => {
-          debug("공대 삭제 실패: " + err.message);
-        });
+      db.ref("raids/" + raidId).remove();
     }
 
     function getRole(job) {
@@ -848,8 +752,6 @@
     }
 
     function addMember() {
-      debug("신청 버튼 클릭");
-
       if (!isApprovedUser()) {
         alert("관리자 승인 후 이용 가능");
         return;
@@ -928,10 +830,6 @@
         document.getElementById("job").value = "";
         roleSelectEl.style.display = "none";
         roleSelectEl.innerHTML = `<option value="">역할 선택</option>`;
-        debug("저장 완료");
-      }).catch(err => {
-        debug("저장 실패: " + err.message);
-        alert("저장 실패");
       });
     }
 
@@ -954,10 +852,7 @@
         }
 
         if (!confirm("신청 취소할까?")) return;
-
-        db.ref("raids/" + raidId + "/" + partyName + "/" + key).remove().then(() => {
-          debug("본인 신청 취소 완료");
-        });
+        db.ref("raids/" + raidId + "/" + partyName + "/" + key).remove();
       });
     }
 
@@ -966,14 +861,7 @@
         alert("관리자만 삭제 가능");
         return;
       }
-
-      db.ref("raids/" + raidId + "/" + partyName + "/" + key).remove()
-        .then(() => {
-          debug("신청자 삭제 완료");
-        })
-        .catch((err) => {
-          debug("신청자 삭제 실패: " + err.message);
-        });
+      db.ref("raids/" + raidId + "/" + partyName + "/" + key).remove();
     }
 
     function toggleLeader(raidId, partyName, key) {
@@ -990,13 +878,7 @@
           updates[memberKey + "/leader"] = (memberKey === key);
         });
 
-        db.ref("raids/" + raidId + "/" + partyName).update(updates)
-          .then(() => {
-            debug("파티장 지정 완료");
-          })
-          .catch(err => {
-            debug("파티장 지정 실패: " + err.message);
-          });
+        db.ref("raids/" + raidId + "/" + partyName).update(updates);
       });
     }
 
@@ -1042,65 +924,76 @@
 
         db.ref("raids/" + raidId + "/" + fromParty + "/" + key).remove().then(() => {
           db.ref("raids/" + raidId + "/" + toParty).push(data);
-          debug("신청자 이동 완료");
         });
-      }).catch(err => {
-        debug("이동 실패: " + err.message);
       });
     }
 
-    function renderSlot(label, member, roleClass, raidId, partyName) {
-      if (!member) {
-        return `
-          <div class="slot empty">
-            <div class="role ${roleClass}">${label}</div>
-            <div class="member-name">모집중</div>
-            <div class="slot-note">빈 자리</div>
-          </div>
-        `;
-      }
-
-      const moveTo = partyName === "party1" ? "party2" : "party1";
-      const moveLabel = partyName === "party1" ? "2파티로 이동" : "1파티로 이동";
-
-      const myUser = getMyUserRecord();
-      const isMine = myUser && normalizeName(member.name) === normalizeName(myUser.name);
-
-      return `
-        <div class="slot">
-          <div class="role ${roleClass}">${label}</div>
-          <div class="member-name">
-            ${getJobIcon(member.job)} ${member.name}
-            ${member.leader ? '<span class="tag leader">👑 파티장</span>' : ''}
-          </div>
-          <div class="member-job">${member.job}</div>
-          <div class="inline-buttons" style="margin-top:10px;">
-            ${isMine ? `<button class="danger" onclick="cancelMy('${raidId}', '${partyName}', '${member.key}')">신청취소</button>` : ""}
-            ${isAdmin ? `
-              <button class="gray" onclick="toggleLeader('${raidId}', '${partyName}', '${member.key}')">파티장</button>
-              <button class="gray" onclick="moveMember('${raidId}', '${partyName}', '${moveTo}', '${member.key}')">${moveLabel}</button>
-              <button class="danger" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>
-            ` : ""}
-          </div>
-        </div>
-      `;
-    }
-
-    function renderPartyCard(title, members, raidId, partyName) {
+    function renderSimpleParty(members) {
       const tank = members.find(m => m.role === "tank");
       const heal = members.find(m => m.role === "heal");
       const dps = members.filter(m => m.role === "dps");
 
+      const parts = [];
+      parts.push(tank ? `🛡️${tank.name}` : `🛡️-`);
+      parts.push(heal ? `💚${heal.name}` : `💚-`);
+      parts.push(dps[0] ? `${getJobIcon(dps[0].job)}${dps[0].name}` : `⚔️-`);
+      parts.push(dps[1] ? `${getJobIcon(dps[1].job)}${dps[1].name}` : `🏹-`);
+
+      return parts.join("  ");
+    }
+
+    function renderMemberActions(member, raidId, partyName) {
+      const moveTo = partyName === "party1" ? "party2" : "party1";
+      const moveLabel = partyName === "party1" ? "2파티로 이동" : "1파티로 이동";
+      const myUser = getMyUserRecord();
+      const isMine = myUser && normalizeName(member.name) === normalizeName(myUser.name);
+
       return `
-        <div class="party-card">
-          <div class="party-title">${title}</div>
-          <div class="party-meta">${members.length}/4</div>
-          ${renderSlot("탱", tank, "tank", raidId, partyName)}
-          ${renderSlot("힐", heal, "heal", raidId, partyName)}
-          ${renderSlot("딜1", dps[0], "dps", raidId, partyName)}
-          ${renderSlot("딜2", dps[1], "dps", raidId, partyName)}
+        <div class="inline-buttons" style="margin-top:10px;">
+          ${isMine ? `<button class="danger" onclick="cancelMy('${raidId}', '${partyName}', '${member.key}')">신청취소</button>` : ""}
+          ${isAdmin ? `
+            <button class="gray" onclick="toggleLeader('${raidId}', '${partyName}', '${member.key}')">파티장</button>
+            <button class="gray" onclick="moveMember('${raidId}', '${partyName}', '${moveTo}', '${member.key}')">${moveLabel}</button>
+            <button class="danger" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>
+          ` : ""}
         </div>
       `;
+    }
+
+    function renderDetailedParty(title, members, raidId, partyName) {
+      const tank = members.find(m => m.role === "tank");
+      const heal = members.find(m => m.role === "heal");
+      const dps = members.filter(m => m.role === "dps");
+
+      function block(label, member, iconDefault) {
+        if (!member) {
+          return `${label}: ${iconDefault}-`;
+        }
+        return `
+          <div style="margin-bottom:8px;">
+            <div>
+              ${label}: ${getJobIcon(member.job)}${member.name}
+              ${member.leader ? '<span class="tag leader">👑 파티장</span>' : ''}
+            </div>
+            ${renderMemberActions(member, raidId, partyName)}
+          </div>
+        `;
+      }
+
+      return `
+        <div style="margin-bottom:10px;">
+          <div style="font-weight:800; margin-bottom:6px;">${title}</div>
+          <div class="party-line">${block("탱", tank, "🛡️")}</div>
+          <div class="party-line">${block("힐", heal, "💚")}</div>
+          <div class="party-line">${block("딜1", dps[0], "⚔️")}</div>
+          <div class="party-line">${block("딜2", dps[1], "🏹")}</div>
+        </div>
+      `;
+    }
+
+    function toggleRaid(raidId) {
+      openedRaid = openedRaid === raidId ? null : raidId;
+      renderRaids();
     }
 
     function renderRaids() {
@@ -1118,24 +1011,36 @@
         const party2 = getMembers(raid, "party2");
         const total = party1.length + party2.length;
         const closed = total >= 8;
+        const opened = openedRaid === raidId;
 
         html += `
-          <div class="raid-card">
-            <div class="raid-head">
-              <div>
-                <div class="raid-title">${raid.name}</div>
-                <div class="raid-time">${raid.time}</div>
-                <div class="raid-status ${closed ? 'closed' : 'open'}">
-                  ${closed ? '마감' : '모집중'} · ${total}/8
-                </div>
+          <div class="raid-row">
+            <div class="raid-summary" onclick="toggleRaid('${raidId}')">
+              <div class="raid-summary-left">
+                <span>${opened ? "▼" : "▶"}</span>
+                <span>${raid.name} (${total}/8)</span>
+                <span class="raid-state">${closed ? "🔴" : "🟢"}</span>
               </div>
-              ${isAdmin ? `<button class="danger" onclick="deleteRaid('${raidId}')">공대 삭제</button>` : ""}
+              <div class="raid-meta">${raid.time}</div>
             </div>
 
-            <div class="party-grid">
-              ${renderPartyCard("1파티", party1, raidId, "party1")}
-              ${renderPartyCard("2파티", party2, raidId, "party2")}
-            </div>
+            ${opened ? `
+              <div class="raid-detail">
+                <div class="party-line"><b>1파티:</b> ${renderSimpleParty(party1)}</div>
+                <div class="party-line"><b>2파티:</b> ${renderSimpleParty(party2)}</div>
+
+                <div style="margin-top:14px;">
+                  ${renderDetailedParty("1파티 상세", party1, raidId, "party1")}
+                  ${renderDetailedParty("2파티 상세", party2, raidId, "party2")}
+                </div>
+
+                ${isAdmin ? `
+                  <div class="inline-buttons" style="margin-top:10px;">
+                    <button class="danger" onclick="deleteRaid('${raidId}')">공대 삭제</button>
+                  </div>
+                ` : ""}
+              </div>
+            ` : ""}
           </div>
         `;
       });
@@ -1155,9 +1060,6 @@
         raids = snapshot.val() || {};
         renderRaidSelect();
         renderRaids();
-        debug("데이터 불러옴");
-      }, err => {
-        debug("불러오기 실패: " + err.message);
       });
     }
 
@@ -1180,6 +1082,7 @@
     window.deleteMember = deleteMember;
     window.toggleLeader = toggleLeader;
     window.moveMember = moveMember;
+    window.toggleRaid = toggleRaid;
   </script>
 </body>
 </html>
