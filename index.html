@@ -113,6 +113,14 @@
       background: linear-gradient(135deg, #16a34a, #15803d);
     }
 
+    .mini-cancel {
+      padding: 4px 8px;
+      font-size: 12px;
+      margin: 0 0 0 6px;
+      border-radius: 8px;
+      vertical-align: middle;
+    }
+
     .row {
       display: grid;
       grid-template-columns: 1fr;
@@ -421,15 +429,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-database-compat.js"></script>
 
   <script>
-    const debugBox = document.getElementById("debugBox");
-    function debug(msg) {
-      console.log(msg);
-      if (debugBox) debugBox.textContent += "\n" + msg;
-    }
-
-    window.onerror = (m) => debug("ERROR: " + m);
-    window.onunhandledrejection = () => debug("PROMISE ERROR");
-
     const firebaseConfig = {
       apiKey: "AIzaSyBfOXxM4tT6UBvqVSJv64zwX3qsfsMVuvw",
       authDomain: "raid-party-shared.firebaseapp.com",
@@ -449,12 +448,8 @@
     let openedRaid = null;
     const ADMIN_PASSWORD = "1234";
 
-    try {
-      firebase.initializeApp(firebaseConfig);
-      db = firebase.database();
-    } catch (e) {
-      debug("firebase 실패: " + e.message);
-    }
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
 
     const jobEl = document.getElementById("job");
     const roleSelectEl = document.getElementById("roleSelect");
@@ -977,16 +972,34 @@
       });
     }
 
-    function renderSimpleParty(members) {
+    function renderSimpleParty(members, raidId, partyName) {
+      const myUser = getMyUserRecord();
+
       const tank = members.find(m => m.role === "tank");
       const heal = members.find(m => m.role === "heal");
       const dps = members.filter(m => m.role === "dps");
 
+      function chip(member, fallback) {
+        if (!member) {
+          return `<span class="member-chip empty">${fallback}</span>`;
+        }
+
+        const isMine = myUser && normalizeName(member.name) === normalizeName(myUser.name);
+
+        return `
+          <span class="member-chip">
+            ${getJobIcon(member.job)} ${member.name}
+            ${member.leader ? '<span class="tag leader">👑</span>' : ''}
+            ${isMine ? `<button class="danger mini-cancel" onclick="event.stopPropagation(); cancelMy('${raidId}','${partyName}','${member.key}')">취소</button>` : ""}
+          </span>
+        `;
+      }
+
       return `
-        <span class="member-chip ${tank ? "" : "empty"}">${tank ? `🛡️ ${tank.name}` : `🛡️ -`}</span>
-        <span class="member-chip ${heal ? "" : "empty"}">${heal ? `💚 ${heal.name}` : `💚 -`}</span>
-        <span class="member-chip ${dps[0] ? "" : "empty"}">${dps[0] ? `${getJobIcon(dps[0].job)} ${dps[0].name}` : `⚔️ -`}</span>
-        <span class="member-chip ${dps[1] ? "" : "empty"}">${dps[1] ? `${getJobIcon(dps[1].job)} ${dps[1].name}` : `🏹 -`}</span>
+        ${chip(tank, "🛡️ -")}
+        ${chip(heal, "💚 -")}
+        ${chip(dps[0], "⚔️ -")}
+        ${chip(dps[1], "🏹 -")}
       `;
     }
 
@@ -1081,12 +1094,12 @@
               <div class="raid-detail">
                 <div class="detail-block">
                   <div class="detail-title">1파티</div>
-                  <div class="party-line">${renderSimpleParty(party1)}</div>
+                  <div class="party-line">${renderSimpleParty(party1, raidId, "party1")}</div>
                 </div>
 
                 <div class="detail-block">
                   <div class="detail-title">2파티</div>
-                  <div class="party-line">${renderSimpleParty(party2)}</div>
+                  <div class="party-line">${renderSimpleParty(party2, raidId, "party2")}</div>
                 </div>
 
                 ${isAdmin ? `
