@@ -801,13 +801,26 @@ function removeUserApplicationsByName(userName) {
   const approvedGrid = document.getElementById("approvedGrid");
 
   pending.forEach(([key, user]) => {
-    pendingGrid.innerHTML += ...
+    pendingGrid.innerHTML += `
       <div class="user-card">
         <div class="user-card-row">
           <div class="user-name">${user.name}</div>
           <div class="inline-buttons">
             <button class="green small" onclick="approveUser('${key}')">승인</button>
             <button class="danger small" onclick="rejectUser('${key}')">거절</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  approved.forEach(([key, user]) => {
+    approvedGrid.innerHTML += `
+      <div class="user-card">
+        <div class="user-card-row">
+          <div class="user-name">${user.name}</div>
+          <div class="inline-buttons">
+            <button class="danger small" onclick="expelUser('${key}')">추방</button>
           </div>
         </div>
       </div>
