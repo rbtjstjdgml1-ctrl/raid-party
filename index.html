@@ -800,17 +800,22 @@ function removeUserApplicationsByName(userName) {
       pendingBox.innerHTML = pending.length ? `<div class="user-grid" id="pendingGrid"></div>` : `<div class="empty-text">대기 없음</div>`;
 approvedBox.innerHTML = approved.length ? `<div class="user-grid" id="approvedGrid"></div>` : `<div class="empty-text">승인된 사용자 없음</div>`;
 
-      pending.forEach(([key, user]) => {
-        pendingBox.innerHTML += `
-          <div class="user-card">
-            <div class="user-name">${user.name}</div>
-            <div class="inline-buttons">
-              <button class="green small" onclick="approveUser('${key}')">승인</button>
-              <button class="danger small" onclick="rejectUser('${key}')">거절</button>
-            </div>
-          </div>
-        `;
-      });
+      const pendingGrid = document.getElementById("pendingGrid");
+const approvedGrid = document.getElementById("approvedGrid");
+
+pending.forEach(([key, user]) => {
+  pendingGrid.innerHTML += `
+    <div class="user-card">
+      <div class="user-card-row">
+        <div class="user-name">${user.name}</div>
+        <div class="inline-buttons">
+          <button class="green small" onclick="approveUser('${key}')">승인</button>
+          <button class="danger small" onclick="rejectUser('${key}')">거절</button>
+        </div>
+      </div>
+    </div>
+  `;
+});
 
       approved.forEach(([key, user]) => {
         approvedBox.innerHTML += `
