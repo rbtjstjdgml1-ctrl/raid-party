@@ -1472,68 +1472,72 @@ function renderManageList(title, members, raidId, partyName) {
       renderRaids();
     }
 
-    function renderRaids() {
-      const raidListEl = document.getElementById("raidList");
+function renderRaids() {
+  const raidListEl = document.getElementById("raidList");
 
-      if (!raids || Object.keys(raids).length === 0) {
-        raidListEl.innerHTML = `<div class="empty-text">아직 만든 공대가 없어</div>`;
-        return;
-      }
+  if (!raids || Object.keys(raids).length === 0) {
+    raidListEl.innerHTML = `<div class="empty-text">아직 만든 공대가 없어</div>`;
+    return;
+  }
 
-      let html = "";
+  let html = "";
 
-      Object.entries(raids)
-  .sort((a, b) => {
-    const raidA = a[1];
-    const raidB = b[1];
-    return getRaidSortValue(raidA).localeCompare(getRaidSortValue(raidB));
-  })
-  .forEach(([raidId, raid]) => {
-        const party1 = getMembers(raid, "party1");
-        const party2 = getMembers(raid, "party2");
-        const total = party1.length + party2.length;
-        const closed = total >= 8;
-        const opened = openedRaid === raidId;
+  Object.entries(raids)
+    .sort((a, b) => {
+      const raidA = a[1];
+      const raidB = b[1];
+      return getRaidSortValue(raidA).localeCompare(getRaidSortValue(raidB));
+    })
+    .forEach(([raidId, raid]) => {
+      const party1 = getMembers(raid, "party1");
+      const party2 = getMembers(raid, "party2");
+      const total = party1.length + party2.length;
+      const closed = total >= 8;
+      const opened = openedRaid === raidId;
 
-        html += `
-          <div class="raid-row">
-            <div class="raid-summary" onclick="toggleRaid('${raidId}')">
-              <div class="raid-summary-left">
-                <span>${opened ? "▼" : "▶"}</span>
-                <span>${raid.name} (${total}/8)</span>
-                <span class="raid-state">${closed ? "🔴" : "🟢"}</span>
-              </div>
-              <div class="raid-meta">${raid.date ? formatDate(raid.date) + " / " : ""}${raid.time}</div>
+      html += `
+        <div class="raid-row">
+          <div class="raid-summary" onclick="toggleRaid('${raidId}')">
+            <div class="raid-summary-left">
+              <span>${opened ? "▼" : "▶"}</span>
+              <span>${raid.name} (${total}/8)</span>
+              <span class="raid-state">${closed ? "🔴" : "🟢"}</span>
             </div>
-
-            ${opened ? `
-              <div class="raid-detail">
-                <div class="detail-block">
-                  <div class="detail-title"><span>1파티</span></div>
-                  <div class="party-line">${renderSimpleParty(party1, raidId, "party1")}</div>
-                  ${renderJoinUI(raidId, "party1")}
-                </div>
-
-                <div class="detail-block">
-                  <div class="detail-title"><span>2파티</span></div>
-                  <div class="party-line">${renderSimpleParty(party2, raidId, "party2")}</div>
-                  ${renderJoinUI(raidId, "party2")}
-                </div>
-
-                ${renderManageList("1파티 관리", party1, raidId, "party1")}
-                ${renderManageList("2파티 관리", party2, raidId, "party2")}
-
-               ${isAdmin ? `
-  <div class="inline-buttons" style="margin-top:10px;">
-    <button class="danger small" onclick="deleteRaid('${raidId}')">공대 삭제</button>
-  </div>
-` : ""}
+            <div class="raid-meta">${raid.date ? formatDate(raid.date) + " / " : ""}${raid.time}</div>
           </div>
-        `;
-      });
 
-      raidListEl.innerHTML = html;
-    }
+          ${opened ? `
+            <div class="raid-detail">
+
+              <div class="detail-block">
+                <div class="detail-title"><span>1파티</span></div>
+                <div class="party-line">${renderSimpleParty(party1, raidId, "party1")}</div>
+                ${renderJoinUI(raidId, "party1")}
+              </div>
+
+              <div class="detail-block">
+                <div class="detail-title"><span>2파티</span></div>
+                <div class="party-line">${renderSimpleParty(party2, raidId, "party2")}</div>
+                ${renderJoinUI(raidId, "party2")}
+              </div>
+
+              ${renderManageList("1파티 관리", party1, raidId, "party1")}
+              ${renderManageList("2파티 관리", party2, raidId, "party2")}
+
+              ${isAdmin ? `
+                <div class="inline-buttons" style="margin-top:10px;">
+                  <button class="danger small" onclick="deleteRaid('${raidId}')">공대 삭제</button>
+                </div>
+              ` : ""}
+
+            </div>
+          ` : ""}
+        </div>
+      `;
+    });
+
+  raidListEl.innerHTML = html;
+}
 
     function load() {
       const raidDateEl = document.getElementById("raidDate");
