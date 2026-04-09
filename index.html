@@ -1291,7 +1291,7 @@ function removeUserApplicationsByName(userName) {
 }
 
     function renderManageList(title, members, raidId, partyName) {
-      if (!members.length || !isAdmin) return "";
+      if (!isAdmin) return "";
 
       let html = `
         <div class="detail-block">
