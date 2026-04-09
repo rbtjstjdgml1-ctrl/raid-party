@@ -425,14 +425,14 @@ button.locked {
       </div>
 
       <div id="adminPanel" class="admin-panel" style="display:none;">
-        <input id="adminPassword" type="password" placeholder="관리자 비밀번호 입력" />
+        <input id="adminPassword" type="password" placeholder="관리자 인증" />
         <div class="inline-buttons">
           <button onclick="loginAdmin()">관리자 로그인</button>
           <button class="gray" onclick="logoutAdmin()">로그아웃</button>
           <button class="danger" onclick="resetAll()">전체 초기화</button>
         </div>
         <div id="adminStatus" class="admin-status">현재 관리자 아님</div>
-        <div class="notice">예시 관리자 비밀번호: 1234</div>
+        <div class="notice">관리자만 로그인 가능</div>
 
         <div id="pendingManageBox" style="display:none; margin-top:16px;">
           <div class="section-title" style="font-size:18px;">입장 승인 관리</div>
@@ -551,7 +551,7 @@ button.locked {
     let users = {};
     let raids = {};
 
-    const ADMIN_PASSWORD = "1234";
+    const ADMIN_PASSWORD = "942486";
     const JOBS = ["수호", "치유성", "궁성", "살성", "검성", "마도성", "정령성", "호법성"];
 
     function normalizeName(name) {
