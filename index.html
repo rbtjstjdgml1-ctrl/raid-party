@@ -577,13 +577,22 @@ button.locked {
       return `${d.getMonth() + 1}월 ${d.getDate()}일`;
     }
 function getRaidSortValue(raid) {
-  const datePart = raid.date || "9999-12-31";
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const raidDate = new Date(raid.date || "9999-12-31");
+  raidDate.setHours(0, 0, 0, 0);
+
   const timeMap = {
     "저녁 9시": 21,
     "저녁 10시": 22
   };
+
   const hour = timeMap[raid.time] ?? 99;
-  return `${datePart}-${String(hour).padStart(2, "0")}`;
+
+  const diff = raidDate - today;
+
+  return `${String(diff).padStart(6, "0")}-${String(hour).padStart(2, "0")}`;
 }
     function toggleAdminPanel() {
       adminPanelOpen = !adminPanelOpen;
