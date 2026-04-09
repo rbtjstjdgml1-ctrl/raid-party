@@ -729,7 +729,7 @@ function autoDeleteOldRaids() {
 
           return db.ref("users/" + key).set({
   name: entered,
-  job: "", // ⭐ 추가
+  job: job,
   approved: false,
   banned: false
 });
