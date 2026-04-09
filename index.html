@@ -744,10 +744,11 @@ function autoDeleteOldRaids() {
         myId = key;
 
         return db.ref("users/" + key).set({
-          name: entered,
-          approved: false,
-          banned: false
-        });
+  name: entered,
+  job: job,
+  approved: false,
+  banned: false
+});
       }).then(() => {
         document.getElementById("entryName").value = "";
         if (agreeEl) agreeEl.checked = false;
