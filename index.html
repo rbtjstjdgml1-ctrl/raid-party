@@ -1406,13 +1406,17 @@ function adminAddMember(raidId, partyName) {
      <select id="job-${raidId}-${partyName}" ${locked ? "disabled" : ""}>
       </select>
 
-      <select id="role-${raidId}-${partyName}" ${locked ? "disabled" : ""}>
+     <select id="job-${raidId}-${partyName}" ${locked ? "disabled" : ""}>
+  <option value="">직업 선택</option>
+  ${jobOptions}
+</select>
+
+<select id="role-${raidId}-${partyName}" ${locked ? "disabled" : ""}>
   <option value="">역할 선택(검성/호법성만)</option>
   <option value="tank">탱</option>
   <option value="heal">힐</option>
   <option value="dps">딜</option>
-      </select>
-
+</select>
       <button
         class="gray ${locked ? "locked" : ""}"
         onclick="${locked ? "" : `joinFromRaidDetail('${raidId}','${partyName}')`}"
