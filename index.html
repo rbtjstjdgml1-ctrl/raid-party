@@ -1491,9 +1491,12 @@ function renderManageList(title, members, raidId, partyName) {
       });
 
       db.ref("raids").on("value", snapshot => {
-        raids = snapshot.val() || {};
-        renderRaids();
-      });
+  raids = snapshot.val() || {};
+
+  autoDeleteOldRaids(); // ⭐ 추가
+
+  renderRaids();
+});
     }
 
     renderAdminStatus();
