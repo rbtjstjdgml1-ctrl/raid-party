@@ -1067,9 +1067,9 @@ function removeUserApplicationsByName(userName) {
   validateAndJoin(raidId, partyName, job, role);
 }
 
-    function updateAdminRoleSelect(raidId, partyName) {
-  const jobEl = document.getElementById(`admin-job-${raidId}-${partyName}`);
-  const roleEl = document.getElementById(`admin-role-${raidId}-${partyName}`);
+function updateCreatorRoleSelect() {
+  const jobEl = document.getElementById("raidCreatorJob");
+  const roleEl = document.getElementById("raidCreatorRole");
 
   if (!jobEl || !roleEl) return;
 
@@ -1078,20 +1078,20 @@ function removeUserApplicationsByName(userName) {
   if (job === "검성") {
     roleEl.style.display = "block";
     roleEl.innerHTML = `
-      <option value="">역할 선택</option>
+      <option value="">내 역할 선택</option>
       <option value="tank">탱</option>
       <option value="dps">딜</option>
     `;
   } else if (job === "호법성") {
     roleEl.style.display = "block";
     roleEl.innerHTML = `
-      <option value="">역할 선택</option>
+      <option value="">내 역할 선택</option>
       <option value="heal">힐</option>
       <option value="dps">딜</option>
     `;
   } else {
     roleEl.style.display = "none";
-    roleEl.innerHTML = `<option value="">역할 선택</option>`;
+    roleEl.innerHTML = `<option value="">내 역할 선택</option>`;
   }
 }
 
