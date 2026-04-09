@@ -1095,23 +1095,31 @@ function removeUserApplicationsByName(userName) {
     return;
   }
 
-  let role = "dps";
+let role = "dps";
 
-  if (job === "검성") {
-    if (!roleEl.value) {
-      alert("검성 역할 선택");
-      return;
-    }
-    role = roleEl.value;
-  } else if (job === "호법성") {
-    if (!roleEl.value) {
-      alert("호법성 역할 선택");
-      return;
-    }
-    role = roleEl.value;
-  } else {
-    role = resolveRole(job, "");
+if (job === "검성") {
+  if (!roleEl.value) {
+    alert("검성 역할 선택");
+    return;
   }
+  if (roleEl.value !== "tank" && roleEl.value !== "dps") {
+    alert("검성은 탱 또는 딜만 가능");
+    return;
+  }
+  role = roleEl.value;
+} else if (job === "호법성") {
+  if (!roleEl.value) {
+    alert("호법성 역할 선택");
+    return;
+  }
+  if (roleEl.value !== "heal" && roleEl.value !== "dps") {
+    alert("호법성은 힐 또는 딜만 가능");
+    return;
+  }
+  role = roleEl.value;
+} else {
+  role = resolveRole(job, "");
+}
 
   validateAndJoin(raidId, partyName, job, role);
 }
@@ -1550,12 +1558,6 @@ function renderRaids() {
         raidDateEl.value = `${yyyy}-${mm}-${dd}`;
         raidDateEl.min = `${yyyy}-${mm}-${dd}`;
       }
-      
-document.addEventListener("change", function (e) {
-  if (e.target.id && e.target.id.startsWith("job-")) {
-    updatePartyRoleSelect(e.target.dataset.raidId, e.target.dataset.partyName);
-  }
-});
 
   const creatorJobEl = document.getElementById("raidCreatorJob");
 if (creatorJobEl) {
