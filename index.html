@@ -1403,10 +1403,6 @@ function adminAddMember(raidId, partyName) {
 
   return `
     <div class="join-ui join-no-role" id="join-wrap-${raidId}-${partyName}">
-    <select id="job-${raidId}-${partyName}" ${locked ? "disabled" : ""}>
-  <option value="">직업 선택</option>
-  ${jobOptions}
-</select>
 
      <select id="job-${raidId}-${partyName}" ${locked ? "disabled" : ""}>
   <option value="">직업 선택</option>
