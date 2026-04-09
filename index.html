@@ -789,7 +789,9 @@ function removeUserApplicationsByName(userName) {
   }
 
   const pending = Object.entries(users).filter(([_, user]) => !user.approved && !user.banned);
-  const approved = Object.entries(users).filter(([_, user]) => user.approved && !user.banned);
+  const approved = Object.entries(users)
+  .filter(([_, user]) => user.approved && !user.banned)
+  .sort((a, b) => a[1].name.localeCompare(b[1].name));
 
   pendingBox.innerHTML = pending.length
     ? `<div class="user-grid" id="pendingGrid"></div>`
