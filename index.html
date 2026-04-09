@@ -792,37 +792,60 @@ function removeUserApplicationsByName(userName) {
     }
 
     function renderApprovalLists() {
-      const pendingBox = document.getElementById("pendingUsers");
-      const approvedBox = document.getElementById("approvedUsers");
+  const pendingBox = document.getElementById("pendingUsers");
+  const approvedBox = document.getElementById("approvedUsers");
 
-      if (!isAdmin) {
-        pendingBox.innerHTML = "";
-        approvedBox.innerHTML = "";
-        return;
-      }
+  if (!isAdmin) {
+    pendingBox.innerHTML = "";
+    approvedBox.innerHTML = "";
+    return;
+  }
 
-      const pending = Object.entries(users).filter(([_, user]) => !user.approved && !user.banned);
-      const approved = Object.entries(users).filter(([_, user]) => user.approved && !user.banned);
+  const pending = Object.entries(users).filter(([_, u]) => !u.approved && !u.banned);
+  const approved = Object.entries(users).filter(([_, u]) => u.approved && !u.banned);
 
-      pendingBox.innerHTML = pending.length ? `<div class="user-grid" id="pendingGrid"></div>` : `<div class="empty-text">대기 없음</div>`;
-approvedBox.innerHTML = approved.length ? `<div class="user-grid" id="approvedGrid"></div>` : `<div class="empty-text">승인된 사용자 없음</div>`;
+  // ✅ 1. grid 생성
+  pendingBox.innerHTML = pending.length
+    ? `<div class="user-grid" id="pendingGrid"></div>`
+    : `<div class="empty-text">대기 없음</div>`;
 
-      const pendingGrid = document.getElementById("pendingGrid");
-const approvedGrid = document.getElementById("approvedGrid");
+  approvedBox.innerHTML = approved.length
+    ? `<div class="user-grid" id="approvedGrid"></div>`
+    : `<div class="empty-text">승인된 사용자 없음</div>`;
 
-pending.forEach(([key, user]) => {
-  pendingGrid.innerHTML += `
-    <div class="user-card">
-      <div class="user-card-row">
-        <div class="user-name">${user.name}</div>
-        <div class="inline-buttons">
-          <button class="green small" onclick="approveUser('${key}')">승인</button>
-          <button class="danger small" onclick="rejectUser('${key}')">거절</button>
+  // ✅ 2. grid 가져오기
+  const pendingGrid = document.getElementById("pendingGrid");
+  const approvedGrid = document.getElementById("approvedGrid");
+
+  // ✅ 3. 승인 대기
+  pending.forEach(([key, user]) => {
+    pendingGrid.innerHTML += `
+      <div class="user-card">
+        <div class="user-card-row">
+          <div class="user-name">${user.name}</div>
+          <div class="inline-buttons">
+            <button class="green small" onclick="approveUser('${key}')">승인</button>
+            <button class="danger small" onclick="rejectUser('${key}')">거절</button>
+          </div>
         </div>
       </div>
-    </div>
-  `;
-});
+    `;
+  });
+
+  // ✅ 4. 승인된 사용자
+  approved.forEach(([key, user]) => {
+    approvedGrid.innerHTML += `
+      <div class="user-card">
+        <div class="user-card-row">
+          <div class="user-name">${user.name}</div>
+          <div class="inline-buttons">
+            <button class="danger small" onclick="expelUser('${key}')">추방</button>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+}
 
       approved.forEach(([key, user]) => {
   approvedGrid.innerHTML += `
