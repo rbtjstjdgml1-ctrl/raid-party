@@ -717,6 +717,11 @@ function autoDeleteOldRaids() {
         alert("아이디 입력");
         return;
       }
+      
+if (!job) {
+  alert("직업 선택");
+  return;
+}
 
       const key = normalizeName(entered);
 
