@@ -885,30 +885,75 @@ function removeUserApplicationsByName(userName) {
 }
 
     function createRaid() {
-  if (!isAdmin || !isApprovedUser()) {
-    alert("관리자만 공대 생성 가능");
+  if (!isApprovedUser()) {
+    alert("승인된 사용자만 공대 생성 가능");
+    return;
+  }
+
+  const myUser = getMyUserRecord();
+  if (!myUser) {
+    alert("사용자 정보 없음");
     return;
   }
 
   const raidName = document.getElementById("raidName").value;
   const raidDate = document.getElementById("raidDate").value;
   const raidTime = document.getElementById("raidTime").value;
+  const creatorJob = document.getElementById("raidCreatorJob").value;
+  const creatorRoleEl = document.getElementById("raidCreatorRole");
 
   if (!raidName || !raidDate || !raidTime) {
     alert("공대 이름, 날짜, 시간을 선택해줘");
     return;
   }
 
-  db.ref("raids").push({
+  if (!creatorJob) {
+    alert("내 직업 선택");
+    return;
+  }
+
+  let creatorRole = "dps";
+
+  if (creatorJob === "수호") {
+    creatorRole = "tank";
+  } else if (creatorJob === "치유성") {
+    creatorRole = "heal";
+  } else if (creatorJob === "검성") {
+    if (!creatorRoleEl.value) {
+      alert("검성 역할 선택");
+      return;
+    }
+    creatorRole = creatorRoleEl.value;
+  } else if (creatorJob === "호법성") {
+    if (!creatorRoleEl.value) {
+      alert("호법성 역할 선택");
+      return;
+    }
+    creatorRole = creatorRoleEl.value;
+  }
+
+  const newRaidRef = db.ref("raids").push();
+
+  newRaidRef.set({
     name: raidName,
     date: raidDate,
     time: raidTime,
     party1: {},
     party2: {}
   }).then(() => {
+    return newRaidRef.child("party1").push({
+      name: myUser.name,
+      job: creatorJob,
+      role: creatorRole,
+      leader: true
+    });
+  }).then(() => {
     document.getElementById("raidName").value = "";
     document.getElementById("raidDate").value = "";
     document.getElementById("raidTime").value = "";
+    document.getElementById("raidCreatorJob").value = "";
+    creatorRoleEl.value = "";
+    creatorRoleEl.style.display = "none";
   });
 }
 
