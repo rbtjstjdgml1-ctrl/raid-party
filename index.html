@@ -818,15 +818,17 @@ pending.forEach(([key, user]) => {
 });
 
       approved.forEach(([key, user]) => {
-        approvedBox.innerHTML += `
-          <div class="user-card">
-            <div class="user-name">${user.name}</div>
-            <div class="inline-buttons">
-              <button class="danger small" onclick="expelUser('${key}')">추방</button>
-            </div>
-          </div>
-        `;
-      });
+  approvedGrid.innerHTML += `
+    <div class="user-card">
+      <div class="user-card-row">
+        <div class="user-name">${user.name}</div>
+        <div class="inline-buttons">
+          <button class="danger small" onclick="expelUser('${key}')">추방</button>
+        </div>
+      </div>
+    </div>
+  `;
+});
     }
 
     function createRaid() {
