@@ -1087,7 +1087,7 @@
         const isMine = myUser && normalizeName(member.name) === normalizeName(myUser.name);
 
         return `
-          <span class="member-chip">
+          <span class="member-chip ${getRoleClass(member.role)}">
             ${getJobIcon(member.job)} ${member.name}
             ${member.leader ? '<span class="tag leader">👑</span>' : ''}
             ${isMine ? `<button class="danger small" onclick="event.stopPropagation(); cancelMy('${raidId}','${partyName}','${member.key}')">취소</button>` : ""}
