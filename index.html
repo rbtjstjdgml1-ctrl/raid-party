@@ -362,7 +362,18 @@ button.locked {
       display: grid;
       gap: 8px;
     }
+    .admin-add-box {
+  display: grid;
+  gap: 6px;
+  margin-top: 10px;
+}
 
+.admin-add-box input,
+.admin-add-box select,
+.admin-add-box button {
+  width: 100%;
+  margin-bottom: 0;
+}
     .manage-item {
       background: rgba(255,255,255,0.04);
       border-radius: 12px;
@@ -1022,7 +1033,33 @@ function removeUserApplicationsByName(userName) {
   validateAndJoin(raidId, partyName, job, role);
 }
 
-    function updatePartyRoleSelect(raidId, partyName) {
+    function updateAdminRoleSelect(raidId, partyName) {
+  const jobEl = document.getElementById(`admin-job-${raidId}-${partyName}`);
+  const roleEl = document.getElementById(`admin-role-${raidId}-${partyName}`);
+
+  if (!jobEl || !roleEl) return;
+
+  const job = jobEl.value;
+
+  if (job === "검성") {
+    roleEl.style.display = "block";
+    roleEl.innerHTML = `
+      <option value="">역할 선택</option>
+      <option value="tank">탱</option>
+      <option value="dps">딜</option>
+    `;
+  } else if (job === "호법성") {
+    roleEl.style.display = "block";
+    roleEl.innerHTML = `
+      <option value="">역할 선택</option>
+      <option value="heal">힐</option>
+      <option value="dps">딜</option>
+    `;
+  } else {
+    roleEl.style.display = "none";
+    roleEl.innerHTML = `<option value="">역할 선택</option>`;
+  }
+}
       const jobEl = document.getElementById(`job-${raidId}-${partyName}`);
       const roleEl = document.getElementById(`role-${raidId}-${partyName}`);
       const wrapEl = document.getElementById(`join-wrap-${raidId}-${partyName}`);
@@ -1083,9 +1120,28 @@ function removeUserApplicationsByName(userName) {
       }
       db.ref("raids/" + raidId + "/" + partyName + "/" + key).remove();
       }
-    function adminAddMember(raidId, partyName) {
+function adminAddMember(raidId, partyName) {
   if (!isAdmin) {
     alert("관리자만 가능");
+    return;
+  }
+
+  const nameEl = document.getElementById(`admin-name-${raidId}-${partyName}`);
+  const jobEl = document.getElementById(`admin-job-${raidId}-${partyName}`);
+  const roleEl = document.getElementById(`admin-role-${raidId}-${partyName}`);
+
+  if (!nameEl || !jobEl || !roleEl) return;
+
+  const name = nameEl.value.trim();
+  const job = jobEl.value;
+
+  if (!name) {
+    alert("이름 입력");
+    return;
+  }
+
+  if (!job) {
+    alert("직업 선택");
     return;
   }
 
@@ -1097,42 +1153,24 @@ function removeUserApplicationsByName(userName) {
     return;
   }
 
-  const name = prompt("추가할 이름 입력");
-  if (!name || !name.trim()) return;
-
-  const job = prompt("직업 입력: 수호 / 치유성 / 궁성 / 살성 / 검성 / 마도성 / 정령성 / 호법성");
-  if (!job || !job.trim()) return;
-
-  const cleanName = name.trim();
-  const cleanJob = job.trim();
-
-  if (!JOBS.includes(cleanJob)) {
-    alert("직업명이 올바르지 않아");
-    return;
-  }
-
   let role = "dps";
 
-  if (cleanJob === "수호") {
+  if (job === "수호") {
     role = "tank";
-  } else if (cleanJob === "치유성") {
+  } else if (job === "치유성") {
     role = "heal";
-  } else if (cleanJob === "검성") {
-    const r = prompt("검성 역할 입력: tank 또는 dps");
-    if (!r) return;
-    if (r !== "tank" && r !== "dps") {
-      alert("검성 역할은 tank 또는 dps만 가능");
+  } else if (job === "검성") {
+    if (!roleEl.value) {
+      alert("검성 역할 선택");
       return;
     }
-    role = r;
-  } else if (cleanJob === "호법성") {
-    const r = prompt("호법성 역할 입력: heal 또는 dps");
-    if (!r) return;
-    if (r !== "heal" && r !== "dps") {
-      alert("호법성 역할은 heal 또는 dps만 가능");
+    role = roleEl.value;
+  } else if (job === "호법성") {
+    if (!roleEl.value) {
+      alert("호법성 역할 선택");
       return;
     }
-    role = r;
+    role = roleEl.value;
   }
 
   const tanks = partyMembers.filter(m => m.role === "tank").length;
@@ -1155,11 +1193,16 @@ function removeUserApplicationsByName(userName) {
   }
 
   db.ref("raids/" + raidId + "/" + partyName).push({
-    name: cleanName,
-    job: cleanJob,
+    name: name,
+    job: job,
     role: role,
     leader: false
   });
+
+  nameEl.value = "";
+  jobEl.value = "";
+  roleEl.value = "";
+  roleEl.style.display = "none";
 }
 
     function toggleLeader(raidId, partyName, key) {
@@ -1304,18 +1347,24 @@ function removeUserApplicationsByName(userName) {
         const moveLabel = partyName === "party1" ? "2파티로 이동" : "1파티로 이동";
 
         html += `
-          <div class="manage-item">
-            <div class="manage-top">
-              ${getJobIcon(member.job)} ${member.name}
-              ${member.leader ? '<span class="tag leader">👑 파티장</span>' : ''}
-            </div>
-            <div class="inline-buttons">
-              <button class="gray small" onclick="toggleLeader('${raidId}', '${partyName}', '${member.key}')">파티장</button>
-              <button class="gray small" onclick="moveMember('${raidId}', '${partyName}', '${moveTo}', '${member.key}')">${moveLabel}</button>
-              <button class="danger small" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>
-            </div>
-          </div>
-        `;
+      </div>
+
+      <div class="admin-add-box">
+        <input id="admin-name-${raidId}-${partyName}" placeholder="이름 입력" />
+
+        <select id="admin-job-${raidId}-${partyName}" onchange="updateAdminRoleSelect('${raidId}','${partyName}')">
+          <option value="">직업 선택</option>
+          ${JOBS.map(j => `<option value="${j}">${j}</option>`).join("")}
+        </select>
+
+        <select id="admin-role-${raidId}-${partyName}" style="display:none;">
+          <option value="">역할 선택</option>
+        </select>
+
+        <button class="green small" onclick="adminAddMember('${raidId}', '${partyName}')">+ 추가</button>
+      </div>
+    </div>
+`;
       });
 
       html += `
