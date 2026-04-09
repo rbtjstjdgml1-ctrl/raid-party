@@ -699,7 +699,8 @@ function autoDeleteOldRaids() {
         return;
       }
 
-      currentUserLabel.textContent = "현재 아이디: " + user.name;
+      currentUserLabel.textContent =
+  "현재 아이디: " + user.name + (user.job ? " (" + user.job + ")" : "");
       appWrap.style.display = "block";
     }
 
