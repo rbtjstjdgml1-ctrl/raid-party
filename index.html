@@ -706,7 +706,8 @@ function autoDeleteOldRaids() {
 
     function requestEntry() {
       const agreeEl = document.getElementById("agreeNotice");
-      const entered = document.getElementById("entryName").value.trim();
+const entered = document.getElementById("entryName").value.trim();
+const job = document.getElementById("entryJob").value;
 
       if (agreeEl && !agreeEl.checked) {
         alert("공지 확인 후 체크해주세요");
