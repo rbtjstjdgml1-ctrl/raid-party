@@ -466,28 +466,6 @@ button.locked {
           </div>
         </div>
 
-        <div id="raidCreateBox" style="display:none; margin-top:16px;">
-          <div class="section-title" style="font-size:18px;">공대 만들기</div>
-          <div class="row two">
-            <select id="raidName">
-              <option value="">공대 선택</option>
-              <option value="루드라">루드라</option>
-              <option value="침식의 정화소">침식의 정화소</option>
-            </select>
-
-            <input type="date" id="raidDate" />
-
-            <select id="raidTime">
-              <option value="">시간 선택</option>
-              <option value="저녁 9시">저녁 9시</option>
-              <option value="저녁 10시">저녁 10시</option>
-            </select>
-          </div>
-          <button onclick="createRaid()">공대 생성</button>
-        </div>
-      </div>
-    </div>
-
     <div class="box" id="entryBox" style="display:none;">
       <div class="section-title">입장 신청</div>
       <div class="gate-message">처음 들어오는 사람은 아이디를 입력하고 입장 신청해야 해.</div>
@@ -524,18 +502,56 @@ button.locked {
     
     </div>
 
-    <div id="appWrap" style="display:none;">
-      <div class="box">
-        <div class="section-title">내 상태</div>
-        <div class="current-user" id="currentUserLabel">현재 아이디: -</div>
-       
-      </div>
-
-      <div class="box">
-        <div class="section-title">공대 목록</div>
-        <div id="raidList"></div>
-      </div>
+<div id="appWrap" style="display:none;">
+  <div class="box">
+    <div class="section-title">내 상태</div>
+    <div class="current-user" id="currentUserLabel">현재 아이디: -</div>
+    <div class="inline-buttons" style="margin-top:12px;">
+      <button class="gray" onclick="changeMyId()">아이디 변경</button>
     </div>
+  </div>
+
+  <div class="box" id="raidCreateBox" style="display:none;">
+    <div class="section-title">공대 만들기</div>
+    <div class="row two">
+      <select id="raidName">
+        <option value="">공대 선택</option>
+        <option value="루드라">루드라</option>
+        <option value="침식의 정화소">침식의 정화소</option>
+      </select>
+
+      <input type="date" id="raidDate" />
+
+      <select id="raidTime">
+        <option value="">시간 선택</option>
+        <option value="저녁 9시">저녁 9시</option>
+        <option value="저녁 10시">저녁 10시</option>
+      </select>
+
+      <select id="raidCreatorJob" onchange="updateCreatorRoleSelect()">
+        <option value="">내 직업 선택</option>
+        <option value="수호">수호</option>
+        <option value="치유성">치유성</option>
+        <option value="궁성">궁성</option>
+        <option value="살성">살성</option>
+        <option value="검성">검성</option>
+        <option value="마도성">마도성</option>
+        <option value="정령성">정령성</option>
+        <option value="호법성">호법성</option>
+      </select>
+
+      <select id="raidCreatorRole" style="display:none;">
+        <option value="">내 역할 선택</option>
+      </select>
+    </div>
+    <button onclick="createRaid()">공대 생성</button>
+  </div>
+
+  <div class="box">
+    <div class="section-title">공대 목록</div>
+    <div id="raidList"></div>
+  </div>
+</div>
   </div>
 
   <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
