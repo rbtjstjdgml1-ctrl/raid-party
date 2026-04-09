@@ -717,7 +717,13 @@ function getRaidSortValue(raid) {
     function removeUserApplicationsByName(userName) {
       const updates = {};
 
-      Object.entries(raids).forEach(([raidId, raid]) => {
+      Object.entries(raids)
+  .sort((a, b) => {
+    const raidA = a[1];
+    const raidB = b[1];
+    return getRaidSortValue(raidA).localeCompare(getRaidSortValue(raidB));
+  })
+  .forEach(([raidId, raid]) => {
         ["party1", "party2"].forEach(partyName => {
           const members = raid[partyName] || {};
           Object.entries(members).forEach(([memberKey, member]) => {
