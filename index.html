@@ -1261,7 +1261,13 @@ function removeUserApplicationsByName(userName) {
 
       let html = "";
 
-      Object.entries(raids).forEach(([raidId, raid]) => {
+      Object.entries(raids)
+  .sort((a, b) => {
+    const raidA = a[1];
+    const raidB = b[1];
+    return getRaidSortValue(raidA).localeCompare(getRaidSortValue(raidB));
+  })
+  .forEach(([raidId, raid]) => {
         const party1 = getMembers(raid, "party1");
         const party2 = getMembers(raid, "party2");
         const total = party1.length + party2.length;
