@@ -643,10 +643,10 @@ function autoDeleteOldRaids() {
     }
 
     function renderAdminStatus() {
-      document.getElementById("adminStatus").textContent = isAdmin ? "현재 관리자 로그인 상태" : "현재 관리자 아님";
-      document.getElementById("pendingManageBox").style.display = isAdmin ? "block" : "none";
-      document.getElementById("raidCreateBox").style.display = isAdmin && isApprovedUser() ? "block" : "none";
-    }
+  document.getElementById("adminStatus").textContent = isAdmin ? "현재 관리자 로그인 상태" : "현재 관리자 아님";
+  document.getElementById("pendingManageBox").style.display = isAdmin ? "block" : "none";
+  document.getElementById("raidCreateBox").style.display = isApprovedUser() ? "block" : "none";
+}
 
     function updateGateUI() {
       const entryBox = document.getElementById("entryBox");
