@@ -835,7 +835,11 @@
       if (job === "호법성") return "✨";
       return "🎮";
     }
-
+    function getRoleClass(role) {
+  if (role === "tank") return "role-tank";
+  if (role === "heal") return "role-heal";
+  return "role-dps";
+}
     function resolveRole(job, roleInput) {
       if (job === "수호") return "tank";
       if (job === "치유성") return "heal";
