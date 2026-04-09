@@ -1115,15 +1115,10 @@ function removeUserApplicationsByName(userName) {
 }
 
 function updateCreatorRoleSelect() {
-  alert("공대 만들기 역할 함수 실행됨");
-
   const jobEl = document.getElementById("raidCreatorJob");
   const roleEl = document.getElementById("raidCreatorRole");
 
-  if (!jobEl || !roleEl) {
-    alert("raidCreatorJob 또는 raidCreatorRole 못 찾음");
-    return;
-  }
+  if (!jobEl || !roleEl) return;
 
   const job = jobEl.value;
 
