@@ -711,10 +711,11 @@ function autoDeleteOldRaids() {
           myId = key;
 
           return db.ref("users/" + key).set({
-            name: entered,
-            approved: false,
-            banned: false
-          });
+  name: entered,
+  job: "", // ⭐ 추가
+  approved: false,
+  banned: false
+});
         }
 
         if (existing && existing.name) {
