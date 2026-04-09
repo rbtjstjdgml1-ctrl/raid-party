@@ -1082,7 +1082,85 @@ function removeUserApplicationsByName(userName) {
         return;
       }
       db.ref("raids/" + raidId + "/" + partyName + "/" + key).remove();
+      }
+    function adminAddMember(raidId, partyName) {
+  if (!isAdmin) {
+    alert("관리자만 가능");
+    return;
+  }
+
+  const raid = raids[raidId] || {};
+  const partyMembers = getMembers(raid, partyName);
+
+  if (partyMembers.length >= 4) {
+    alert("이 파티는 이미 4명이야");
+    return;
+  }
+
+  const name = prompt("추가할 이름 입력");
+  if (!name || !name.trim()) return;
+
+  const job = prompt("직업 입력: 수호 / 치유성 / 궁성 / 살성 / 검성 / 마도성 / 정령성 / 호법성");
+  if (!job || !job.trim()) return;
+
+  const cleanName = name.trim();
+  const cleanJob = job.trim();
+
+  if (!JOBS.includes(cleanJob)) {
+    alert("직업명이 올바르지 않아");
+    return;
+  }
+
+  let role = "dps";
+
+  if (cleanJob === "수호") {
+    role = "tank";
+  } else if (cleanJob === "치유성") {
+    role = "heal";
+  } else if (cleanJob === "검성") {
+    const r = prompt("검성 역할 입력: tank 또는 dps");
+    if (!r) return;
+    if (r !== "tank" && r !== "dps") {
+      alert("검성 역할은 tank 또는 dps만 가능");
+      return;
     }
+    role = r;
+  } else if (cleanJob === "호법성") {
+    const r = prompt("호법성 역할 입력: heal 또는 dps");
+    if (!r) return;
+    if (r !== "heal" && r !== "dps") {
+      alert("호법성 역할은 heal 또는 dps만 가능");
+      return;
+    }
+    role = r;
+  }
+
+  const tanks = partyMembers.filter(m => m.role === "tank").length;
+  const heals = partyMembers.filter(m => m.role === "heal").length;
+  const dps = partyMembers.filter(m => m.role === "dps").length;
+
+  if (role === "tank" && tanks >= 1) {
+    alert("이 파티는 이미 탱이 있어");
+    return;
+  }
+
+  if (role === "heal" && heals >= 1) {
+    alert("이 파티는 이미 힐이 있어");
+    return;
+  }
+
+  if (role === "dps" && dps >= 2) {
+    alert("이 파티는 이미 딜이 2명이야");
+    return;
+  }
+
+  db.ref("raids/" + raidId + "/" + partyName).push({
+    name: cleanName,
+    job: cleanJob,
+    role: role,
+    leader: false
+  });
+}
 
     function toggleLeader(raidId, partyName, key) {
       if (!isAdmin) {
