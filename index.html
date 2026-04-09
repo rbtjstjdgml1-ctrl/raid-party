@@ -1335,20 +1335,35 @@ function adminAddMember(raidId, partyName) {
   `;
 }
 
-    function renderManageList(title, members, raidId, partyName) {
-      if (!isAdmin) return "";
+function renderManageList(title, members, raidId, partyName) {
+  if (!isAdmin) return "";
 
-      let html = `
-        <div class="detail-block">
-          <div class="detail-title">${title}</div>
-          <div class="manage-list">
-      `;
+  let html = `
+    <div class="detail-block">
+      <div class="detail-title">${title}</div>
+      <div class="manage-list">
+  `;
 
-      members.forEach(member => {
-        const moveTo = partyName === "party1" ? "party2" : "party1";
-        const moveLabel = partyName === "party1" ? "2파티로 이동" : "1파티로 이동";
+  members.forEach(member => {
+    const moveTo = partyName === "party1" ? "party2" : "party1";
+    const moveLabel = partyName === "party1" ? "2파티로 이동" : "1파티로 이동";
 
-        html += `
+    html += `
+      <div class="manage-item">
+        <div class="manage-top">
+          ${getJobIcon(member.job)} ${member.name}
+          ${member.leader ? '<span class="tag leader">👑 파티장</span>' : ''}
+        </div>
+        <div class="inline-buttons">
+          <button class="gray small" onclick="toggleLeader('${raidId}', '${partyName}', '${member.key}')">파티장</button>
+          <button class="gray small" onclick="moveMember('${raidId}', '${partyName}', '${moveTo}', '${member.key}')">${moveLabel}</button>
+          <button class="danger small" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>
+        </div>
+      </div>
+    `;
+  });
+
+  html += `
       </div>
 
       <div class="admin-add-box">
@@ -1366,19 +1381,10 @@ function adminAddMember(raidId, partyName) {
         <button class="green small" onclick="adminAddMember('${raidId}', '${partyName}')">+ 추가</button>
       </div>
     </div>
-`;
-      });
+  `;
 
-      html += `
-      </div>
-
-      <div class="inline-buttons" style="margin-top:8px;">
-        <button class="green small" onclick="adminAddMember('${raidId}', '${partyName}')">+ 추가</button>
-      </div>
-    </div>
-`;
-      return html;
-    }
+  return html;
+}
 
     function toggleRaid(raidId) {
       openedRaid = openedRaid === raidId ? null : raidId;
