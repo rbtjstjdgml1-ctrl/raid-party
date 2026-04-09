@@ -594,6 +594,21 @@ function getRaidSortValue(raid) {
 
   return `${String(diff).padStart(6, "0")}-${String(hour).padStart(2, "0")}`;
 }
+function autoDeleteOldRaids() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  Object.entries(raids).forEach(([raidId, raid]) => {
+    if (!raid.date) return;
+
+    const raidDate = new Date(raid.date);
+    raidDate.setHours(0, 0, 0, 0);
+
+    if (raidDate < today) {
+      db.ref("raids/" + raidId).remove();
+    }
+  });
+}
     function toggleAdminPanel() {
       adminPanelOpen = !adminPanelOpen;
       document.getElementById("adminPanel").style.display = adminPanelOpen ? "block" : "none";
