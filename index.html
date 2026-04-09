@@ -1123,23 +1123,37 @@ function removeUserApplicationsByName(userName) {
     }
 
     function renderJoinUI(raidId, partyName) {
-      const jobOptions = JOBS.map(job => `<option value="${job}">${job}</option>`).join("");
+  const raid = raids[raidId] || {};
+  const partyMembers = getMembers(raid, partyName);
+  const totalMembers = getTotalRaidCount(raid);
 
-      return `
-        <div class="join-ui join-no-role" id="join-wrap-${raidId}-${partyName}">
-          <select id="job-${raidId}-${partyName}" onchange="updatePartyRoleSelect('${raidId}','${partyName}')">
-            <option value="">직업 선택</option>
-            ${jobOptions}
-          </select>
+  const raidClosed = totalMembers >= 8;
+  const partyClosed = partyMembers.length >= 4;
+  const locked = raidClosed || partyClosed;
 
-          <select id="role-${raidId}-${partyName}" style="display:none;">
-            <option value="">역할 선택</option>
-          </select>
+  const jobOptions = JOBS.map(job => `<option value="${job}">${job}</option>`).join("");
 
-          <button class="gray" onclick="joinFromRaidDetail('${raidId}','${partyName}')">${partyName === 'party1' ? '1파티 신청' : '2파티 신청'}</button>
-        </div>
-      `;
-    }
+  return `
+    <div class="join-ui join-no-role" id="join-wrap-${raidId}-${partyName}">
+      <select id="job-${raidId}-${partyName}" onchange="updatePartyRoleSelect('${raidId}','${partyName}')" ${locked ? "disabled" : ""}>
+        <option value="">직업 선택</option>
+        ${jobOptions}
+      </select>
+
+      <select id="role-${raidId}-${partyName}" style="display:none;" ${locked ? "disabled" : ""}>
+        <option value="">역할 선택</option>
+      </select>
+
+      <button
+        class="gray ${locked ? "locked" : ""}"
+        onclick="${locked ? "" : `joinFromRaidDetail('${raidId}','${partyName}')`}"
+        ${locked ? "disabled" : ""}
+      >
+        ${raidClosed ? "공대 마감" : partyClosed ? "파티 마감" : (partyName === 'party1' ? '1파티 신청' : '2파티 신청')}
+      </button>
+    </div>
+  `;
+}
 
     function renderManageList(title, members, raidId, partyName) {
       if (!members.length || !isAdmin) return "";
