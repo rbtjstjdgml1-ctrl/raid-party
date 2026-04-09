@@ -1142,11 +1142,11 @@ function updateCreatorRoleSelect() {
   }
 }
 
-function updatePartyRoleSelect(raidId, partyName) {
-  const jobEl = document.getElementById(`job-${raidId}-${partyName}`);
-  const roleEl = document.getElementById(`role-${raidId}-${partyName}`);
-  const wrapEl = document.getElementById(`join-wrap-${raidId}-${partyName}`);
-  if (!jobEl || !roleEl || !wrapEl) return;
+function updateAdminRoleSelect(raidId, partyName) {
+  const jobEl = document.getElementById(`admin-job-${raidId}-${partyName}`);
+  const roleEl = document.getElementById(`admin-role-${raidId}-${partyName}`);
+
+  if (!jobEl || !roleEl) return;
 
   const job = jobEl.value;
 
@@ -1157,7 +1157,6 @@ function updatePartyRoleSelect(raidId, partyName) {
       <option value="tank">탱</option>
       <option value="dps">딜</option>
     `;
-    wrapEl.className = "join-ui";
   } else if (job === "호법성") {
     roleEl.style.display = "block";
     roleEl.innerHTML = `
@@ -1165,11 +1164,9 @@ function updatePartyRoleSelect(raidId, partyName) {
       <option value="heal">힐</option>
       <option value="dps">딜</option>
     `;
-    wrapEl.className = "join-ui";
   } else {
     roleEl.style.display = "none";
     roleEl.innerHTML = `<option value="">역할 선택</option>`;
-    wrapEl.className = "join-ui join-no-role";
   }
 }
 
