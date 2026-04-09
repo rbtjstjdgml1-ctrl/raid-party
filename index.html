@@ -885,32 +885,32 @@ function removeUserApplicationsByName(userName) {
 }
 
     function createRaid() {
-      if (!isAdmin || !isApprovedUser()) {
-        alert("관리자만 공대 생성 가능");
-        return;
-      }
+  if (!isAdmin || !isApprovedUser()) {
+    alert("관리자만 공대 생성 가능");
+    return;
+  }
 
-      const raidName = document.getElementById("raidName").value;
-      const raidDate = document.getElementById("raidDate").value;
-      const raidTime = document.getElementById("raidTime").value;
+  const raidName = document.getElementById("raidName").value;
+  const raidDate = document.getElementById("raidDate").value;
+  const raidTime = document.getElementById("raidTime").value;
 
-      if (!raidName || !raidDate || !raidTime) {
-        alert("공대 이름, 날짜, 시간을 선택해줘");
-        return;
-      }
+  if (!raidName || !raidDate || !raidTime) {
+    alert("공대 이름, 날짜, 시간을 선택해줘");
+    return;
+  }
 
-      db.ref("raids").push({
-        name: raidName,
-        date: raidDate,
-        time: raidTime,
-        party1: {},
-        party2: {}
-      }).then(() => {
-        document.getElementById("raidName").value = "";
-        document.getElementById("raidDate").value = "";
-        document.getElementById("raidTime").value = "";
-      });
-    }
+  db.ref("raids").push({
+    name: raidName,
+    date: raidDate,
+    time: raidTime,
+    party1: {},
+    party2: {}
+  }).then(() => {
+    document.getElementById("raidName").value = "";
+    document.getElementById("raidDate").value = "";
+    document.getElementById("raidTime").value = "";
+  });
+}
 
     function deleteRaid(raidId) {
       if (!isAdmin) {
