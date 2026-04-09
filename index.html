@@ -808,10 +808,9 @@ function removeUserApplicationsByName(userName) {
     return;
   }
 
-  const pending = Object.entries(users).filter(([_, u]) => !u.approved && !u.banned);
-  const approved = Object.entries(users).filter(([_, u]) => u.approved && !u.banned);
+  const pending = Object.entries(users).filter(([_, user]) => !user.approved && !user.banned);
+  const approved = Object.entries(users).filter(([_, user]) => user.approved && !user.banned);
 
-  // ✅ 1. grid 생성
   pendingBox.innerHTML = pending.length
     ? `<div class="user-grid" id="pendingGrid"></div>`
     : `<div class="empty-text">대기 없음</div>`;
@@ -820,11 +819,9 @@ function removeUserApplicationsByName(userName) {
     ? `<div class="user-grid" id="approvedGrid"></div>`
     : `<div class="empty-text">승인된 사용자 없음</div>`;
 
-  // ✅ 2. grid 가져오기
   const pendingGrid = document.getElementById("pendingGrid");
   const approvedGrid = document.getElementById("approvedGrid");
 
-  // ✅ 3. 승인 대기
   pending.forEach(([key, user]) => {
     pendingGrid.innerHTML += `
       <div class="user-card">
@@ -839,7 +836,6 @@ function removeUserApplicationsByName(userName) {
     `;
   });
 
-  // ✅ 4. 승인된 사용자
   approved.forEach(([key, user]) => {
     approvedGrid.innerHTML += `
       <div class="user-card">
