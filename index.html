@@ -514,27 +514,21 @@ button.locked {
       <div class="section-title">승인 대기</div>
       <div class="gate-message">입장 승인 대기중입니다.</div>
       <div class="muted">관리자가 승인하면 자동으로 입장 가능해져.</div>
-      <div class="inline-buttons" style="margin-top:12px;">
-        <button class="gray" onclick="changeMyId()">아이디 변경</button>
-      </div>
+     
     </div>
 
     <div class="box" id="bannedBox" style="display:none;">
       <div class="section-title">입장 불가</div>
       <div class="gate-message">현재 아이디는 추방된 상태야.</div>
       <div class="muted">같은 아이디나 다른 아이디로 다시 신청할 수 있어. 다시 승인이 필요해.</div>
-      <div class="inline-buttons" style="margin-top:12px;">
-        <button class="gray" onclick="changeMyId()">다시 신청하기</button>
-      </div>
+    
     </div>
 
     <div id="appWrap" style="display:none;">
       <div class="box">
         <div class="section-title">내 상태</div>
         <div class="current-user" id="currentUserLabel">현재 아이디: -</div>
-        <div class="inline-buttons" style="margin-top:12px;">
-          <button class="gray" onclick="changeMyId()">아이디 변경</button>
-        </div>
+       
       </div>
 
       <div class="box">
@@ -1443,9 +1437,7 @@ function renderManageList(title, members, raidId, partyName) {
                 ${renderManageList("2파티 관리", party2, raidId, "party2")}
 
                 ${isAdmin ? `
-                  <div class="inline-buttons" style="margin-top:10px;">
-                    <button class="danger small" onclick="deleteRaid('${raidId}')">공대 삭제</button>
-                  </div>
+            
                 ` : ""}
               </div>
             ` : ""}
