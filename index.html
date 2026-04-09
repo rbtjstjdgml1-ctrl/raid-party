@@ -1060,35 +1060,37 @@ function removeUserApplicationsByName(userName) {
     roleEl.innerHTML = `<option value="">역할 선택</option>`;
   }
 }
-      const jobEl = document.getElementById(`job-${raidId}-${partyName}`);
-      const roleEl = document.getElementById(`role-${raidId}-${partyName}`);
-      const wrapEl = document.getElementById(`join-wrap-${raidId}-${partyName}`);
-      if (!jobEl || !roleEl || !wrapEl) return;
 
-      const job = jobEl.value;
+function updatePartyRoleSelect(raidId, partyName) {
+  const jobEl = document.getElementById(`job-${raidId}-${partyName}`);
+  const roleEl = document.getElementById(`role-${raidId}-${partyName}`);
+  const wrapEl = document.getElementById(`join-wrap-${raidId}-${partyName}`);
+  if (!jobEl || !roleEl || !wrapEl) return;
 
-      if (job === "검성") {
-        roleEl.style.display = "block";
-        roleEl.innerHTML = `
-          <option value="">역할 선택</option>
-          <option value="tank">탱</option>
-          <option value="dps">딜</option>
-        `;
-        wrapEl.className = "join-ui";
-      } else if (job === "호법성") {
-        roleEl.style.display = "block";
-        roleEl.innerHTML = `
-          <option value="">역할 선택</option>
-          <option value="heal">힐</option>
-          <option value="dps">딜</option>
-        `;
-        wrapEl.className = "join-ui";
-      } else {
-        roleEl.style.display = "none";
-        roleEl.innerHTML = `<option value="">역할 선택</option>`;
-        wrapEl.className = "join-ui join-no-role";
-      }
-    }
+  const job = jobEl.value;
+
+  if (job === "검성") {
+    roleEl.style.display = "block";
+    roleEl.innerHTML = `
+      <option value="">역할 선택</option>
+      <option value="tank">탱</option>
+      <option value="dps">딜</option>
+    `;
+    wrapEl.className = "join-ui";
+  } else if (job === "호법성") {
+    roleEl.style.display = "block";
+    roleEl.innerHTML = `
+      <option value="">역할 선택</option>
+      <option value="heal">힐</option>
+      <option value="dps">딜</option>
+    `;
+    wrapEl.className = "join-ui";
+  } else {
+    roleEl.style.display = "none";
+    roleEl.innerHTML = `<option value="">역할 선택</option>`;
+    wrapEl.className = "join-ui join-no-role";
+  }
+}
 
     function cancelMy(raidId, partyName, key) {
       if (!isApprovedUser()) {
