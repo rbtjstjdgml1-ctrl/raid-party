@@ -933,37 +933,51 @@ function removeUserApplicationsByName(userName) {
     }
 
     function joinFromRaidDetail(raidId, partyName) {
-      const jobEl = document.getElementById(`job-${raidId}-${partyName}`);
-      const roleEl = document.getElementById(`role-${raidId}-${partyName}`);
+  const raid = raids[raidId] || {};
+  const partyMembers = getMembers(raid, partyName);
+  const totalMembers = getTotalRaidCount(raid);
 
-      if (!jobEl) return;
+  if (totalMembers >= 8) {
+    alert("이 공대는 마감이야");
+    return;
+  }
 
-      const job = jobEl.value;
-      if (!job) {
-        alert("직업 선택");
-        return;
-      }
+  if (partyMembers.length >= 4) {
+    alert("이 파티는 마감이야");
+    return;
+  }
 
-      let role = "dps";
+  const jobEl = document.getElementById(`job-${raidId}-${partyName}`);
+  const roleEl = document.getElementById(`role-${raidId}-${partyName}`);
 
-      if (job === "검성") {
-        if (!roleEl.value) {
-          alert("검성 역할 선택");
-          return;
-        }
-        role = roleEl.value;
-      } else if (job === "호법성") {
-        if (!roleEl.value) {
-          alert("호법성 역할 선택");
-          return;
-        }
-        role = roleEl.value;
-      } else {
-        role = resolveRole(job, "");
-      }
+  if (!jobEl) return;
 
-      validateAndJoin(raidId, partyName, job, role);
+  const job = jobEl.value;
+  if (!job) {
+    alert("직업 선택");
+    return;
+  }
+
+  let role = "dps";
+
+  if (job === "검성") {
+    if (!roleEl.value) {
+      alert("검성 역할 선택");
+      return;
     }
+    role = roleEl.value;
+  } else if (job === "호법성") {
+    if (!roleEl.value) {
+      alert("호법성 역할 선택");
+      return;
+    }
+    role = roleEl.value;
+  } else {
+    role = resolveRole(job, "");
+  }
+
+  validateAndJoin(raidId, partyName, job, role);
+}
 
     function updatePartyRoleSelect(raidId, partyName) {
       const jobEl = document.getElementById(`job-${raidId}-${partyName}`);
