@@ -1548,6 +1548,11 @@ function renderRaids() {
         raidDateEl.min = `${yyyy}-${mm}-${dd}`;
       }
 
+  const creatorJobEl = document.getElementById("raidCreatorJob");
+  if (creatorJobEl) {
+    creatorJobEl.addEventListener("change", updateCreatorRoleSelect);
+  }
+  
       db.ref("users").on("value", snapshot => {
         users = snapshot.val() || {};
         updateGateUI();
