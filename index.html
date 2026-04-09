@@ -206,9 +206,10 @@ button.locked {
   width: auto;
 }
 
-.user-grid .user-card {
-  width: 100%;
-  min-width: 0;
+.user-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
 }
 
 .user-card-row {
