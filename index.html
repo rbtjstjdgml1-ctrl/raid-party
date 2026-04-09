@@ -1523,11 +1523,11 @@ function renderManageList(title, members, raidId, partyName) {
                 ${renderManageList("1파티 관리", party1, raidId, "party1")}
                 ${renderManageList("2파티 관리", party2, raidId, "party2")}
 
-                ${isAdmin ? `
-            
-                ` : ""}
-              </div>
-            ` : ""}
+               ${isAdmin ? `
+  <div class="inline-buttons" style="margin-top:10px;">
+    <button class="danger small" onclick="deleteRaid('${raidId}')">공대 삭제</button>
+  </div>
+` : ""}
           </div>
         `;
       });
