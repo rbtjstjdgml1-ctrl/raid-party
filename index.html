@@ -1420,8 +1420,12 @@ function adminAddMember(raidId, partyName) {
   const raidClosed = totalMembers >= 8;
   const partyClosed = partyMembers.length >= 4;
   const locked = raidClosed || partyClosed;
+  const myUser = getMyUserRecord();
+const myJob = myUser?.job || "";
 
-  const jobOptions = JOBS.map(job => `<option value="${job}">${job}</option>`).join("");
+  const jobOptions = JOBS.map(job =>
+  `<option value="${job}" ${myJob === job ? "selected" : ""}>${job}</option>`
+).join("");
 
   return `
     <div class="join-ui join-no-role" id="join-wrap-${raidId}-${partyName}">
