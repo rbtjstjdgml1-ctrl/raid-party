@@ -1548,6 +1548,12 @@ function renderRaids() {
         raidDateEl.value = `${yyyy}-${mm}-${dd}`;
         raidDateEl.min = `${yyyy}-${mm}-${dd}`;
       }
+      
+document.addEventListener("change", function (e) {
+  if (e.target.id && e.target.id.startsWith("job-")) {
+    updatePartyRoleSelect(e.target.dataset.raidId, e.target.dataset.partyName);
+  }
+});
 
   const creatorJobEl = document.getElementById("raidCreatorJob");
 if (creatorJobEl) {
