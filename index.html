@@ -1034,8 +1034,10 @@ function createRaid() {
     }
 
     function getTotalRaidCount(raid) {
-      return getMembers(raid, "party1").length + getMembers(raid, "party2").length;
-    }
+  const p1 = getMembers(raid, "party1").filter(m => m.filled).length;
+  const p2 = getMembers(raid, "party2").filter(m => m.filled).length;
+  return p1 + p2;
+}
 
     function getJobIcon(job) {
       if (job === "수호") return "🛡️";
@@ -1441,15 +1443,11 @@ function adminAddMember(raidId, partyName) {
   }).join("");
 }
 
-      return `
-        ${chip(tank, "🛡️ -")}
-        ${chip(heal, "💚 -")}
-        ${chip(dps[0], "⚔️ -")}
-        ${chip(dps[1], "🏹 -")}
-      `;
-    }
+      
 
     function renderJoinUI(raidId, partyName) {
+  return "";
+}
   const raid = raids[raidId] || {};
   const partyMembers = getMembers(raid, partyName);
   const totalMembers = getTotalRaidCount(raid);
