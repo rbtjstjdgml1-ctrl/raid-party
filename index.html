@@ -538,27 +538,71 @@ button.locked {
 
       <input type="date" id="raidDate" />
 
-      <select id="raidTime">
-        <option value="">시간 선택</option>
-        <option value="저녁 9시">저녁 9시</option>
-        <option value="저녁 10시">저녁 10시</option>
-      </select>
+    <select id="raidTime">
+  <option value="">시간 선택</option>
+  <option value="저녁 9시">저녁 9시</option>
+  <option value="저녁 10시">저녁 10시</option>
+</select>
 
-      <select id="raidCreatorJob">
-        <option value="">내 직업 선택</option>
-        <option value="수호">수호</option>
-        <option value="치유성">치유성</option>
-        <option value="궁성">궁성</option>
-        <option value="살성">살성</option>
-        <option value="검성">검성</option>
-        <option value="마도성">마도성</option>
-        <option value="정령성">정령성</option>
-        <option value="호법성">호법성</option>
-      </select>
+<div class="detail-block" style="grid-column:1 / -1;">
+  <div class="detail-title"><span>1파티 역할 구성</span></div>
+  <div class="row two">
+    <select id="p1slot1">
+      <option value="">1칸 역할</option>
+      <option value="tank">탱</option>
+      <option value="heal">힐</option>
+      <option value="dps">딜</option>
+    </select>
+    <select id="p1slot2">
+      <option value="">2칸 역할</option>
+      <option value="tank">탱</option>
+      <option value="heal">힐</option>
+      <option value="dps">딜</option>
+    </select>
+    <select id="p1slot3">
+      <option value="">3칸 역할</option>
+      <option value="tank">탱</option>
+      <option value="heal">힐</option>
+      <option value="dps">딜</option>
+    </select>
+    <select id="p1slot4">
+      <option value="">4칸 역할</option>
+      <option value="tank">탱</option>
+      <option value="heal">힐</option>
+      <option value="dps">딜</option>
+    </select>
+  </div>
+</div>
 
-      <select id="raidCreatorRole" style="display:none;">
-        <option value="">내 역할 선택</option>
-      </select>
+<div class="detail-block" style="grid-column:1 / -1;">
+  <div class="detail-title"><span>2파티 역할 구성</span></div>
+  <div class="row two">
+    <select id="p2slot1">
+      <option value="">1칸 역할</option>
+      <option value="tank">탱</option>
+      <option value="heal">힐</option>
+      <option value="dps">딜</option>
+    </select>
+    <select id="p2slot2">
+      <option value="">2칸 역할</option>
+      <option value="tank">탱</option>
+      <option value="heal">힐</option>
+      <option value="dps">딜</option>
+    </select>
+    <select id="p2slot3">
+      <option value="">3칸 역할</option>
+      <option value="tank">탱</option>
+      <option value="heal">힐</option>
+      <option value="dps">딜</option>
+    </select>
+    <select id="p2slot4">
+      <option value="">4칸 역할</option>
+      <option value="tank">탱</option>
+      <option value="heal">힐</option>
+      <option value="dps">딜</option>
+    </select>
+  </div>
+</div>
     </div>
     <button onclick="createRaid()">공대 생성</button>
   </div>
