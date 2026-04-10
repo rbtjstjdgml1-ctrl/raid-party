@@ -954,76 +954,67 @@ function removeUserApplicationsByName(userName) {
   });
 }
 
-    function createRaid() {
+function createRaid() {
   if (!isApprovedUser()) {
     alert("승인된 사용자만 공대 생성 가능");
-    return;
-  }
-
-  const myUser = getMyUserRecord();
-  if (!myUser) {
-    alert("사용자 정보 없음");
     return;
   }
 
   const raidName = document.getElementById("raidName").value;
   const raidDate = document.getElementById("raidDate").value;
   const raidTime = document.getElementById("raidTime").value;
-  const creatorJob = document.getElementById("raidCreatorJob").value;
-  const creatorRoleEl = document.getElementById("raidCreatorRole");
+
+  const p1slot1 = document.getElementById("p1slot1").value;
+  const p1slot2 = document.getElementById("p1slot2").value;
+  const p1slot3 = document.getElementById("p1slot3").value;
+  const p1slot4 = document.getElementById("p1slot4").value;
+
+  const p2slot1 = document.getElementById("p2slot1").value;
+  const p2slot2 = document.getElementById("p2slot2").value;
+  const p2slot3 = document.getElementById("p2slot3").value;
+  const p2slot4 = document.getElementById("p2slot4").value;
 
   if (!raidName || !raidDate || !raidTime) {
     alert("공대 이름, 날짜, 시간을 선택해줘");
     return;
   }
 
-  if (!creatorJob) {
-    alert("내 직업 선택");
+  if (!p1slot1 || !p1slot2 || !p1slot3 || !p1slot4 ||
+      !p2slot1 || !p2slot2 || !p2slot3 || !p2slot4) {
+    alert("8칸 역할을 모두 선택해줘");
     return;
   }
 
-  let creatorRole = "dps";
-
-  if (creatorJob === "수호") {
-    creatorRole = "tank";
-  } else if (creatorJob === "치유성") {
-    creatorRole = "heal";
-  } else if (creatorJob === "검성") {
-    if (!creatorRoleEl.value) {
-      alert("검성 역할 선택");
-      return;
-    }
-    creatorRole = creatorRoleEl.value;
-  } else if (creatorJob === "호법성") {
-    if (!creatorRoleEl.value) {
-      alert("호법성 역할 선택");
-      return;
-    }
-    creatorRole = creatorRoleEl.value;
-  }
-
-  const newRaidRef = db.ref("raids").push();
-
-  newRaidRef.set({
+  db.ref("raids").push({
     name: raidName,
     date: raidDate,
     time: raidTime,
-    party1: {},
-    party2: {}
-  }).then(() => {
-    return newRaidRef.child("party1").push({
-      name: myUser.name,
-      job: creatorJob,
-      role: creatorRole,
-      leader: true
-    });
+    party1: {
+      slot1: { wantedRole: p1slot1, name: "", job: "", filled: false, leader: false },
+      slot2: { wantedRole: p1slot2, name: "", job: "", filled: false, leader: false },
+      slot3: { wantedRole: p1slot3, name: "", job: "", filled: false, leader: false },
+      slot4: { wantedRole: p1slot4, name: "", job: "", filled: false, leader: false }
+    },
+    party2: {
+      slot1: { wantedRole: p2slot1, name: "", job: "", filled: false, leader: false },
+      slot2: { wantedRole: p2slot2, name: "", job: "", filled: false, leader: false },
+      slot3: { wantedRole: p2slot3, name: "", job: "", filled: false, leader: false },
+      slot4: { wantedRole: p2slot4, name: "", job: "", filled: false, leader: false }
+    }
   }).then(() => {
     document.getElementById("raidName").value = "";
     document.getElementById("raidDate").value = "";
     document.getElementById("raidTime").value = "";
-    document.getElementById("raidCreatorJob").value = "";
-    creatorRoleEl.value = "";
-    creatorRoleEl.style.display = "none";
+
+    document.getElementById("p1slot1").value = "";
+    document.getElementById("p1slot2").value = "";
+    document.getElementById("p1slot3").value = "";
+    document.getElementById("p1slot4").value = "";
+
+    document.getElementById("p2slot1").value = "";
+    document.getElementById("p2slot2").value = "";
+    document.getElementById("p2slot3").value = "";
+    document.getElementById("p2slot4").value = "";
   });
 }
 
@@ -1426,27 +1417,29 @@ function adminAddMember(raidId, partyName) {
     }
 
     function renderSimpleParty(members, raidId, partyName) {
-      const myUser = getMyUserRecord();
+  const slots = Array.isArray(members) ? members : Object.values(members || {});
 
-      const tank = members.find(m => m.role === "tank");
-      const heal = members.find(m => m.role === "heal");
-      const dps = members.filter(m => m.role === "dps");
+  function roleLabel(role) {
+    if (role === "tank") return "탱";
+    if (role === "heal") return "힐";
+    return "딜";
+  }
 
-      function chip(member, fallback) {
-        if (!member) {
-          return `<span class="member-chip empty">${fallback}</span>`;
-        }
+  function roleIcon(role) {
+    if (role === "tank") return "🛡️";
+    if (role === "heal") return "💚";
+    return "⚔️";
+  }
 
-        const isMine = myUser && normalizeName(member.name) === normalizeName(myUser.name);
-
-        return `
-          <span class="member-chip ${getRoleClass(member.role)}">
-            ${getJobIcon(member.job)} ${member.name}
-            ${member.leader ? '<span class="tag leader">👑</span>' : ''}
-            ${isMine ? `<button class="danger small" onclick="event.stopPropagation(); cancelMy('${raidId}','${partyName}','${member.key}')">취소</button>` : ""}
-          </span>
-        `;
-      }
+  return slots.map(slot => {
+    const nameText = slot && slot.filled && slot.name ? slot.name : "비어있음";
+    return `
+      <span class="member-chip ${getRoleClass(slot?.wantedRole || slot?.role)}">
+        ${roleIcon(slot?.wantedRole || slot?.role)} [${roleLabel(slot?.wantedRole || slot?.role)}] ${nameText}
+      </span>
+    `;
+  }).join("");
+}
 
       return `
         ${chip(tank, "🛡️ -")}
