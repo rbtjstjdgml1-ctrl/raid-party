@@ -1448,44 +1448,7 @@ function adminAddMember(raidId, partyName) {
     function renderJoinUI(raidId, partyName) {
   return "";
 }
-  const raid = raids[raidId] || {};
-  const partyMembers = getMembers(raid, partyName);
-  const totalMembers = getTotalRaidCount(raid);
-
-  const raidClosed = totalMembers >= 8;
-  const partyClosed = partyMembers.length >= 4;
-  const locked = raidClosed || partyClosed;
-  const myUser = getMyUserRecord();
-const myJob = myUser?.job || "";
-
-  const jobOptions = JOBS.map(job =>
-  `<option value="${job}" ${myJob === job ? "selected" : ""}>${job}</option>`
-).join("");
-
-  return `
-    <div class="join-ui join-no-role" id="join-wrap-${raidId}-${partyName}">
-
-     <select id="job-${raidId}-${partyName}" ${locked ? "disabled" : ""}>
-  <option value="">직업 선택</option>
-  ${jobOptions}
-</select>
-
-<select id="role-${raidId}-${partyName}" ${locked ? "disabled" : ""}>
-  <option value="">역할 선택(검성/호법성만)</option>
-  <option value="tank">탱</option>
-  <option value="heal">힐</option>
-  <option value="dps">딜</option>
-</select>
-      <button
-        class="gray ${locked ? "locked" : ""}"
-        onclick="${locked ? "" : `joinFromRaidDetail('${raidId}','${partyName}')`}"
-        ${locked ? "disabled" : ""}
-      >
-        ${raidClosed ? "공대 마감" : partyClosed ? "파티 마감" : (partyName === 'party1' ? '1파티 신청' : '2파티 신청')}
-      </button>
-    </div>
-  `;
-}
+ 
 
 function renderManageList(title, members, raidId, partyName) {
   if (!isAdmin) return "";
@@ -1562,7 +1525,7 @@ function renderRaids() {
     .forEach(([raidId, raid]) => {
       const party1 = getMembers(raid, "party1");
       const party2 = getMembers(raid, "party2");
-      const total = party1.length + party2.length;
+      const total = getTotalRaidCount(raid);
       const closed = total >= 8;
       const opened = openedRaid === raidId;
 
