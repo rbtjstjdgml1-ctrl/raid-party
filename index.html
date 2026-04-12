@@ -429,6 +429,44 @@ button.locked {
         grid-template-columns: 1fr auto;
       }
     }
+    .create-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+}
+
+.create-row select,
+.create-row input {
+  height: 52px;
+}
+
+.role-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.role-row select {
+  width: 100%;
+  text-align: center;
+}
+
+@media (max-width: 600px) {
+  .create-row {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .create-row select,
+  .create-row input,
+  .role-row select {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .role-row {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
   </style>
 </head>
 <body>
