@@ -1130,7 +1130,14 @@ newRaidRef.set({
       if (job === "호법성") return roleInput;
       return "dps";
     }
-
+function canJobTakeRole(job, role) {
+  if (job === "수호") return role === "tank";
+  if (job === "치유성") return role === "heal";
+  if (["궁성", "살성", "마도성", "정령성"].includes(job)) return role === "dps";
+  if (job === "검성") return ["tank", "dps"].includes(role);
+  if (job === "호법성") return ["heal", "dps"].includes(role);
+  return false;
+}
     function isAlreadyInRaid(raid, userName) {
       const allMembers = [...getMembers(raid, "party1"), ...getMembers(raid, "party2")];
       return allMembers.some(m => normalizeName(m.name) === normalizeName(userName));
