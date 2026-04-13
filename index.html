@@ -1191,7 +1191,7 @@ newRaidRef.set({
     return;
   }
 
-  if (partyMembers.length >= 4) {
+  const partyMembers = getMembers(raid, partyName).filter(m => m.filled);
     alert("이 파티는 마감이야");
     return;
   }
@@ -1373,12 +1373,12 @@ function adminAddMember(raidId, partyName) {
   }
 
   const raid = raids[raidId] || {};
-  const partyMembers = getMembers(raid, partyName);
+  const partyMembers = getMembers(raid, partyName).filter(m => m.filled);
 
-  if (partyMembers.length >= 4) {
-    alert("이 파티는 이미 4명이야");
-    return;
-  }
+const partyMembers = getMembers(raid, partyName).filter(m => m.filled);
+  alert("이 파티는 이미 4명이야");
+  return;
+}
 
   let role = "dps";
 
