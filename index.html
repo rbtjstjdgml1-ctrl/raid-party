@@ -1279,16 +1279,28 @@ const party1Data = {
   slot4: { wantedRole: p1slot4, name: "", job: "", role: "", filled: false, leader: false }
 };
 
-const creatorSlotKey = Object.keys(party1Data).find(key =>
-  canJobTakeRole(myUser.job, party1Data[key].wantedRole)
-);
+const mySlot = document.getElementById("mySlot").value;
 
-if (!creatorSlotKey) {
-  alert("생성자 직업과 맞는 자리가 1파티에 없어");
+if (!mySlot) {
+  alert("내 자리 선택해줘");
   return;
 }
 
-party1Data[creatorSlotKey] = {
+const wantedRole = party1Data[mySlot].wantedRole;
+
+if (!canJobTakeRole(myUser.job, wantedRole)) {
+  alert("이 자리는 네 직업으로 들어갈 수 없어");
+  return;
+}
+
+party1Data[mySlot] = {
+  wantedRole: wantedRole,
+  name: myUser.name,
+  job: myUser.job,
+  role: wantedRole,
+  filled: true,
+  leader: true
+};
   wantedRole: party1Data[creatorSlotKey].wantedRole,
   name: myUser.name,
   job: myUser.job,
@@ -1322,6 +1334,7 @@ newRaidRef.set({
     document.getElementById("p2slot2").value = "";
     document.getElementById("p2slot3").value = "";
     document.getElementById("p2slot4").value = "";
+    document.getElementById("mySlot").value = "";
 
     setDefaultRoles();
   });
