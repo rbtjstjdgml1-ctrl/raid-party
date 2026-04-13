@@ -1037,23 +1037,33 @@ function createRaid() {
     return;
   }
 
-  db.ref("raids").push({
-    name: raidName,
-    date: raidDate,
-    time: raidTime,
-    party1: {
-      slot1: { wantedRole: p1slot1, name: "", job: "", filled: false, leader: false },
-      slot2: { wantedRole: p1slot2, name: "", job: "", filled: false, leader: false },
-      slot3: { wantedRole: p1slot3, name: "", job: "", filled: false, leader: false },
-      slot4: { wantedRole: p1slot4, name: "", job: "", filled: false, leader: false }
+const newRaidRef = db.ref("raids").push();
+const myUser = getMyUserRecord();
+
+newRaidRef.set({
+  name: raidName,
+  date: raidDate,
+  time: raidTime,
+  party1: {
+    slot1: {
+      wantedRole: p1slot1,
+      name: myUser.name,
+      job: myUser.job,
+      role: p1slot1,
+      filled: true,
+      leader: true
     },
-    party2: {
-      slot1: { wantedRole: p2slot1, name: "", job: "", filled: false, leader: false },
-      slot2: { wantedRole: p2slot2, name: "", job: "", filled: false, leader: false },
-      slot3: { wantedRole: p2slot3, name: "", job: "", filled: false, leader: false },
-      slot4: { wantedRole: p2slot4, name: "", job: "", filled: false, leader: false }
-    }
-  }).then(() => {
+    slot2: { wantedRole: p1slot2, name: "", job: "", filled: false, leader: false },
+    slot3: { wantedRole: p1slot3, name: "", job: "", filled: false, leader: false },
+    slot4: { wantedRole: p1slot4, name: "", job: "", filled: false, leader: false }
+  },
+  party2: {
+    slot1: { wantedRole: p2slot1, name: "", job: "", filled: false, leader: false },
+    slot2: { wantedRole: p2slot2, name: "", job: "", filled: false, leader: false },
+    slot3: { wantedRole: p2slot3, name: "", job: "", filled: false, leader: false },
+    slot4: { wantedRole: p2slot4, name: "", job: "", filled: false, leader: false }
+  }
+}).then(() => {
     document.getElementById("raidName").value = "";
     document.getElementById("raidDate").value = "";
     document.getElementById("raidTime").value = "";
