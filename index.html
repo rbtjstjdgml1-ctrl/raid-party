@@ -580,11 +580,11 @@ button.locked {
     font-size: 13px;
   }
 
-.party-line {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
+  .party-line {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
 
   .member-chip {
     width: 100%;
@@ -593,19 +593,34 @@ button.locked {
     margin-bottom: 0;
     padding: 10px 12px;
   }
-  
+
+  .manage-item {
+    padding: 10px;
+  }
+
   .manage-item-row {
     flex-direction: column;
     align-items: stretch;
-    gap: 8px;
+    gap: 10px;
+  }
+
+  .manage-left {
+    justify-content: flex-start;
+    font-size: 14px;
   }
 
   .manage-buttons {
+    grid-template-columns: repeat(2, 1fr);
     width: 100%;
   }
 
   .manage-buttons button {
-    flex: 1;
+    min-height: 40px;
+    font-size: 13px;
+    padding: 9px 6px;
+    white-space: normal;
+    line-height: 1.2;
+  }
 
   .party-line button.small {
     width: 100%;
@@ -618,6 +633,21 @@ button.locked {
 
   .inline-buttons button {
     flex: 1;
+  }
+
+  .create-row {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .create-row select,
+  .create-row input,
+  .role-row select {
+    font-size: 14px;
+    padding: 10px;
+  }
+
+  .role-row {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
   .create-row {
@@ -1466,25 +1496,7 @@ function updateAdminRoleSelect(raidId, partyName) {
   });
 }
 
-  if (!confirm("이 멤버를 삭제할까?")) return;
 
-  db.ref("raids/" + raidId + "/" + partyName + "/" + key).once("value").then(snapshot => {
-    const slot = snapshot.val();
-
-    if (!slot) {
-      alert("삭제할 멤버 정보가 없어");
-      return;
-    }
-
-    db.ref("raids/" + raidId + "/" + partyName + "/" + key).update({
-      name: "",
-      job: "",
-      role: "",
-      filled: false,
-      leader: false
-    });
-  });
-}
 function adminAddMember(raidId, partyName) {
   if (!canManageParty(raidId, partyName)) {
     alert("이 파티를 관리할 권한이 없어");
