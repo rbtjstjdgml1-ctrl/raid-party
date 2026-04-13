@@ -1497,14 +1497,21 @@ function adminAddMember(raidId, partyName) {
     return "⚔️";
   }
 
-  return slots.map(slot => {
-    const nameText = slot && slot.filled && slot.name ? slot.name : "비어있음";
-    return `
-      <span class="member-chip ${getRoleClass(slot?.wantedRole || slot?.role)}">
-        ${roleIcon(slot?.wantedRole || slot?.role)} [${roleLabel(slot?.wantedRole || slot?.role)}] ${nameText}
-      </span>
-    `;
-  }).join("");
+  return slots.map((slot, index) => {
+  const isFilled = slot && slot.filled && slot.name;
+  const nameText = isFilled ? slot.name : "비어있음";
+
+  const clickAction = !isFilled
+    ? `onclick="joinSlot('${raidId}', '${partyName}', 'slot${index + 1}')"`
+    : "";
+
+  return `
+    <span class="member-chip ${getRoleClass(slot?.wantedRole || slot?.role)}" ${clickAction}>
+      ${roleIcon(slot?.wantedRole || slot?.role)} 
+      [${roleLabel(slot?.wantedRole || slot?.role)}] ${nameText}
+    </span>
+  `;
+}).join("");
 }
 
       
