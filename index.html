@@ -1709,7 +1709,7 @@ function adminAddMember(raidId, partyName) {
 }
 
 function renderManageList(title, members, raidId, partyName) {
-  if (!canManageParty(raidId, partyName)) return "";
+  if (!canManageParty(raidId)) return "";
 
   let html = `
     <div class="detail-block">
@@ -1722,20 +1722,19 @@ function renderManageList(title, members, raidId, partyName) {
     const moveLabel = partyName === "party1" ? "2파티 이동" : "1파티 이동";
 
     html += `
-  <div class="manage-item">
-    <div class="manage-item-row">
-      <div class="manage-left">
-        <span class="manage-name">${getJobIcon(member.job)} ${member.name}</span>
-        ${member.leader ? '<span class="tag leader">👑 파티장</span>' : ''}
-      </div>
+      <div class="manage-item">
+        <div class="manage-item-row">
+          <div class="manage-left">
+            <span class="manage-name">${getJobIcon(member.job)} ${member.name}</span>
+          </div>
 
-      <div class="manage-buttons">
-        <button class="gray small" onclick="moveMember('${raidId}', '${partyName}', '${moveTo}', '${member.key}')">${moveLabel}</button>
-<button class="danger small" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>
+          <div class="manage-buttons">
+            <button class="gray small" onclick="moveMember('${raidId}', '${partyName}', '${moveTo}', '${member.key}')">${moveLabel}</button>
+            <button class="danger small" onclick="deleteMember('${raidId}', '${partyName}', '${member.key}')">삭제</button>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-`;
+    `;
   });
 
   html += `
