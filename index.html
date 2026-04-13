@@ -1399,8 +1399,8 @@ function updateAdminRoleSelect(raidId, partyName) {
 }
 
     function deleteMember(raidId, partyName, key) {
-  if (!canManageParty(raidId, partyName)) {
-    alert("이 파티를 관리할 권한이 없어");
+  if (!canManageParty(raidId)) {
+    alert("이 공대를 관리할 권한이 없어");
     return;
   }
 
@@ -1414,17 +1414,11 @@ function updateAdminRoleSelect(raidId, partyName) {
       return;
     }
 
-    if (slot.leader) {
-      alert("파티장은 삭제할 수 없어");
-      return;
-    }
-
     db.ref("raids/" + raidId + "/" + partyName + "/" + key).update({
       name: "",
       job: "",
       role: "",
-      filled: false,
-      leader: false
+      filled: false
     });
   });
 }
