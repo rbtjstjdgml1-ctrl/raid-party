@@ -1231,39 +1231,27 @@ function createRaid() {
 
   const newRaidRef = db.ref("raids").push();
 
-const party1Data = {
-  slot1: { wantedRole: p1slot1, name: "", job: "", role: "", filled: false, leader: false },
-  slot2: { wantedRole: p1slot2, name: "", job: "", role: "", filled: false, leader: false },
-  slot3: { wantedRole: p1slot3, name: "", job: "", role: "", filled: false, leader: false },
-  slot4: { wantedRole: p1slot4, name: "", job: "", role: "", filled: false, leader: false }
-};
+  const party1Data = {
+    slot1: { wantedRole: p1slot1, name: "", job: "", role: "", filled: false },
+    slot2: { wantedRole: p1slot2, name: "", job: "", role: "", filled: false },
+    slot3: { wantedRole: p1slot3, name: "", job: "", role: "", filled: false },
+    slot4: { wantedRole: p1slot4, name: "", job: "", role: "", filled: false }
+  };
 
-// 공대 생성자 이름 저장 (파티장은 아직 없음)
-newRaidRef.set({
-  name: raidName,
-  date: raidDate,
-  time: raidTime,
-  owner: myUser.name, // ⭐ 공대장 저장
-  party1: party1Data,
-  party2: {
-    slot1: { wantedRole: p2slot1, name: "", job: "", role: "", filled: false, leader: false },
-    slot2: { wantedRole: p2slot2, name: "", job: "", role: "", filled: false, leader: false },
-    slot3: { wantedRole: p2slot3, name: "", job: "", role: "", filled: false, leader: false },
-    slot4: { wantedRole: p2slot4, name: "", job: "", role: "", filled: false, leader: false }
-  }
-});
+  const party2Data = {
+    slot1: { wantedRole: p2slot1, name: "", job: "", role: "", filled: false },
+    slot2: { wantedRole: p2slot2, name: "", job: "", role: "", filled: false },
+    slot3: { wantedRole: p2slot3, name: "", job: "", role: "", filled: false },
+    slot4: { wantedRole: p2slot4, name: "", job: "", role: "", filled: false }
+  };
 
-newRaidRef.set({
-  name: raidName,
-  date: raidDate,
-  time: raidTime,
-  party1: party1Data,
-  party2: {
-    slot1: { wantedRole: p2slot1, name: "", job: "", role: "", filled: false, leader: false },
-    slot2: { wantedRole: p2slot2, name: "", job: "", role: "", filled: false, leader: false },
-    slot3: { wantedRole: p2slot3, name: "", job: "", role: "", filled: false, leader: false },
-    slot4: { wantedRole: p2slot4, name: "", job: "", role: "", filled: false, leader: false }
-  }
+  newRaidRef.set({
+    name: raidName,
+    date: raidDate,
+    time: raidTime,
+    owner: myUser.name,
+    party1: party1Data,
+    party2: party2Data
   }).then(() => {
     document.getElementById("raidName").value = "";
     document.getElementById("raidDate").value = "";
@@ -1278,8 +1266,6 @@ newRaidRef.set({
     document.getElementById("p2slot2").value = "";
     document.getElementById("p2slot3").value = "";
     document.getElementById("p2slot4").value = "";
-    document.getElementById("mySlot").value = "";
-    
 
     setDefaultRoles();
   });
