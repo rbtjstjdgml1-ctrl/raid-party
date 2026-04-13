@@ -1148,25 +1148,11 @@ function canJobTakeRole(job, role) {
   if (job === "호법성") return ["heal", "dps"].includes(role);
   return false;
 }
+
     function isAlreadyInRaid(raid, userName) {
       const allMembers = [...getMembers(raid, "party1"), ...getMembers(raid, "party2")];
       return allMembers.some(m => normalizeName(m.name) === normalizeName(userName));
     }
-
-    if (!emptySlotKey) {
-      alert("해당 역할 자리가 없어");
-      return;
-    }
-
-    db.ref("raids/" + raidId + "/" + partyName + "/" + emptySlotKey).update({
-      name: myUser.name,
-      job: job,
-      role: role,
-      filled: true,
-      leader: false
-    });
-  });
-}
 
 function updateAdminRoleSelect(raidId, partyName) {
   const jobEl = document.getElementById(`admin-job-${raidId}-${partyName}`);
