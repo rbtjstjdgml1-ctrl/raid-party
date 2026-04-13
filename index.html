@@ -1420,6 +1420,7 @@ if (!emptySlotKey) {
 
     function renderSimpleParty(members, raidId, partyName) {
   const slots = Array.isArray(members) ? members : Object.values(members || {});
+  const myUser = getMyUserRecord();
 
   function roleLabel(role) {
     if (role === "tank") return "탱";
@@ -1434,20 +1435,35 @@ if (!emptySlotKey) {
   }
 
   return slots.map((slot, index) => {
-  const isFilled = slot && slot.filled && slot.name;
-  const nameText = isFilled ? slot.name : "비어있음";
+    const slotKey = `slot${index + 1}`;
+    const isFilled = slot && slot.filled && slot.name;
+    const nameText = isFilled ? slot.name : "비어있음";
+    const role = slot?.wantedRole || slot?.role || "dps";
 
-  const clickAction = !isFilled
-    ? `onclick="joinSlot('${raidId}', '${partyName}', 'slot${index + 1}')"`
-    : "";
+    let extraButton = "";
+    if (
+      isFilled &&
+      myUser &&
+      normalizeName(slot.name) === normalizeName(myUser.name)
+    ) {
+      extraButton = `
+        <button class="danger small" style="margin-left:6px;" onclick="cancelMy('${raidId}','${partyName}','${slotKey}')">
+          신청취소
+        </button>
+      `;
+    }
 
-  return `
-    <span class="member-chip ${getRoleClass(slot?.wantedRole || slot?.role)}" ${clickAction}>
-      ${roleIcon(slot?.wantedRole || slot?.role)} 
-      [${roleLabel(slot?.wantedRole || slot?.role)}] ${nameText}
-    </span>
-  `;
-}).join("");
+    const clickAction = !isFilled
+      ? `onclick="joinSlot('${raidId}', '${partyName}', '${slotKey}')"`
+      : "";
+
+    return `
+      <span class="member-chip ${getRoleClass(role)}" ${clickAction}>
+        ${roleIcon(role)} [${roleLabel(role)}] ${nameText}
+      </span>
+      ${extraButton}
+    `;
+  }).join("");
 }
 
  function joinSlot(raidId, partyName, slotKey) {
