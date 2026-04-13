@@ -1329,21 +1329,16 @@ function canJobTakeRole(job, role) {
       return allMembers.some(m => normalizeName(m.name) === normalizeName(userName));
     }
 
-function canManageParty(raidId, partyName) {
+function canManageParty(raidId) {
   if (isAdmin) return true;
 
   const myUser = getMyUserRecord();
   if (!myUser) return false;
 
   const raid = raids[raidId];
-  if (!raid || !raid[partyName]) return false;
+  if (!raid) return false;
 
-  return Object.values(raid[partyName]).some(member =>
-    member &&
-    member.filled &&
-    member.leader &&
-    normalizeName(member.name) === normalizeName(myUser.name)
-  );
+  return raid.owner && normalizeName(raid.owner) === normalizeName(myUser.name);
 }
 
 function updateAdminRoleSelect(raidId, partyName) {
