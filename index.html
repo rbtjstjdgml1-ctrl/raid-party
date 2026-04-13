@@ -1138,64 +1138,48 @@ newRaidRef.set({
     }
 
     function validateAndJoin(raidId, partyName, job, role) {
-      if (!isApprovedUser()) {
-        alert("관리자 승인 후 이용 가능");
-        return;
-      }
+  if (!isApprovedUser()) {
+    alert("관리자 승인 후 이용 가능");
+    return;
+  }
 
-      const myUser = getMyUserRecord();
-      if (!myUser) {
-        alert("사용자 정보 없음");
-        return;
-      }
+  const myUser = getMyUserRecord();
+  if (!myUser) {
+    alert("사용자 정보 없음");
+    return;
+  }
 
-      db.ref("raids/" + raidId).once("value").then(snapshot => {
-        const raid = snapshot.val() || {};
-        const partyMembers = getMembers(raid, partyName);
-        const totalMembers = getTotalRaidCount(raid);
+  db.ref("raids/" + raidId).once("value").then(snapshot => {
+    const raid = snapshot.val() || {};
+    const party = raid[partyName] || {};
 
-        if (totalMembers >= 8) {
-          alert("이 공대는 마감이야");
-          return;
-        }
-
-        if (partyMembers.length >= 4) {
-          alert("이 파티는 4명이 가득 찼어");
-          return;
-        }
-
-        if (isAlreadyInRaid(raid, myUser.name)) {
-          alert("같은 공대에는 한 번만 신청할 수 있어");
-          return;
-        }
-
-        const tanks = partyMembers.filter(m => m.role === "tank").length;
-        const heals = partyMembers.filter(m => m.role === "heal").length;
-        const dps = partyMembers.filter(m => m.role === "dps").length;
-
-        if (role === "tank" && tanks >= 1) {
-          alert("탱 자리는 이미 있어");
-          return;
-        }
-
-        if (role === "heal" && heals >= 1) {
-          alert("힐 자리는 이미 있어");
-          return;
-        }
-
-        if (role === "dps" && dps >= 2) {
-          alert("딜 자리는 이미 꽉 찼어");
-          return;
-        }
-
-        db.ref("raids/" + raidId + "/" + partyName).push({
-          name: myUser.name,
-          job,
-          role,
-          leader: false
-        });
-      });
+    if (isAlreadyInRaid(raid, myUser.name)) {
+      alert("같은 공대에는 한 번만 신청할 수 있어");
+      return;
     }
+
+    let emptySlotKey = null;
+
+    Object.entries(party).forEach(([key, slot]) => {
+      if (!slot.filled && slot.wantedRole === role && !emptySlotKey) {
+        emptySlotKey = key;
+      }
+    });
+
+    if (!emptySlotKey) {
+      alert("해당 역할 자리가 없어");
+      return;
+    }
+
+    db.ref("raids/" + raidId + "/" + partyName + "/" + emptySlotKey).update({
+      name: myUser.name,
+      job: job,
+      role: role,
+      filled: true,
+      leader: false
+    });
+  });
+}
 
     function joinFromRaidDetail(raidId, partyName) {
   const raid = raids[raidId] || {};
