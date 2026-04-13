@@ -1181,20 +1181,60 @@ newRaidRef.set({
   });
 }
 
-    function joinFromRaidDetail(raidId, partyName) {
+  function joinFromRaidDetail(raidId, partyName) {
   const raid = raids[raidId] || {};
-  const partyMembers = getMembers(raid, partyName);
   const totalMembers = getTotalRaidCount(raid);
+  const partyMembers = getMembers(raid, partyName).filter(m => m.filled);
 
   if (totalMembers >= 8) {
     alert("이 공대는 마감이야");
     return;
   }
 
-  const partyMembers = getMembers(raid, partyName).filter(m => m.filled);
+  if (partyMembers.length >= 4) {
     alert("이 파티는 마감이야");
     return;
   }
+
+  const jobEl = document.getElementById(`job-${raidId}-${partyName}`);
+  const roleEl = document.getElementById(`role-${raidId}-${partyName}`);
+
+  if (!jobEl) return;
+
+  const job = jobEl.value;
+  if (!job) {
+    alert("직업 선택");
+    return;
+  }
+
+  let role = "dps";
+
+  if (job === "검성") {
+    if (!roleEl.value) {
+      alert("검성 역할 선택");
+      return;
+    }
+    if (roleEl.value !== "tank" && roleEl.value !== "dps") {
+      alert("검성은 탱 또는 딜만 가능");
+      return;
+    }
+    role = roleEl.value;
+  } else if (job === "호법성") {
+    if (!roleEl.value) {
+      alert("호법성 역할 선택");
+      return;
+    }
+    if (roleEl.value !== "heal" && roleEl.value !== "dps") {
+      alert("호법성은 힐 또는 딜만 가능");
+      return;
+    }
+    role = roleEl.value;
+  } else {
+    role = resolveRole(job, "");
+  }
+
+  validateAndJoin(raidId, partyName, job, role);
+}
 
   const jobEl = document.getElementById(`job-${raidId}-${partyName}`);
   const roleEl = document.getElementById(`role-${raidId}-${partyName}`);
@@ -1373,9 +1413,9 @@ function adminAddMember(raidId, partyName) {
   }
 
   const raid = raids[raidId] || {};
-  const partyMembers = getMembers(raid, partyName).filter(m => m.filled);
-
 const partyMembers = getMembers(raid, partyName).filter(m => m.filled);
+
+if (partyMembers.length >= 4) {
   alert("이 파티는 이미 4명이야");
   return;
 }
@@ -1732,10 +1772,6 @@ function renderRaids() {
         raidDateEl.value = `${yyyy}-${mm}-${dd}`;
         raidDateEl.min = `${yyyy}-${mm}-${dd}`;
       }
-
-if (creatorJobEl) {
-  creatorJobEl.onchange = updateCreatorRoleSelect;
-}
   
       db.ref("users").on("value", snapshot => {
         users = snapshot.val() || {};
