@@ -915,9 +915,14 @@ function removeUserApplicationsByName(userName) {
   Object.entries(raids).forEach(([raidId, raid]) => {
     ["party1", "party2"].forEach(partyName => {
       const members = raid[partyName] || {};
+
       Object.entries(members).forEach(([memberKey, member]) => {
         if (normalizeName(member.name) === normalizeName(userName)) {
-          updates[`raids/${raidId}/${partyName}/${memberKey}`] = null;
+          updates[`raids/${raidId}/${partyName}/${memberKey}/name`] = "";
+          updates[`raids/${raidId}/${partyName}/${memberKey}/job`] = "";
+          updates[`raids/${raidId}/${partyName}/${memberKey}/role`] = "";
+          updates[`raids/${raidId}/${partyName}/${memberKey}/filled`] = false;
+          updates[`raids/${raidId}/${partyName}/${memberKey}/leader`] = false;
         }
       });
     });
