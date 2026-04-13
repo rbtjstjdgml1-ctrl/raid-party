@@ -1405,12 +1405,29 @@ function adminAddMember(raidId, partyName) {
     return;
   }
 
-  db.ref("raids/" + raidId + "/" + partyName).push({
-    name: name,
-    job: job,
-    role: role,
-    leader: false
-  });
+  const raid = raids[raidId] || {};
+const party = raid[partyName] || {};
+
+let emptySlotKey = null;
+
+Object.entries(party).forEach(([key, slot]) => {
+  if (!slot.filled && !emptySlotKey) {
+    emptySlotKey = key;
+  }
+});
+
+if (!emptySlotKey) {
+  alert("빈 자리가 없어");
+  return;
+}
+
+db.ref("raids/" + raidId + "/" + partyName + "/" + emptySlotKey).update({
+  name: name,
+  job: job,
+  role: party[emptySlotKey].wantedRole,
+  filled: true,
+  leader: false
+});
 
   nameEl.value = "";
   jobEl.value = "";
