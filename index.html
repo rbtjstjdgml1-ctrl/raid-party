@@ -634,6 +634,37 @@ button.locked {
   .role-row {
     grid-template-columns: repeat(4, 1fr);
   }
+    .manage-item {
+    padding: 10px;
+  }
+
+  .manage-item-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .manage-left {
+    justify-content: flex-start;
+    font-size: 14px;
+  }
+
+  .manage-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    width: 100%;
+  }
+
+  .manage-buttons button {
+    min-height: 40px;
+    font-size: 13px;
+    padding: 9px 6px;
+    white-space: normal;
+    line-height: 1.2;
+  }
+
+  .manage-buttons button:last-child {
+    grid-column: 1 / -1;
+  }
 }
   </style>
 </head>
