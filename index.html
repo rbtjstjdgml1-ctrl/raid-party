@@ -994,6 +994,22 @@ function removeUserApplicationsByName(userName) {
   });
 }
 
+function renderApprovalLists() {
+  ...
+}
+
+function setDefaultRoles() {
+  const defaultRoles = ["tank", "heal", "dps", "dps"];
+
+  defaultRoles.forEach((role, i) => {
+    const p1 = document.getElementById(`p1slot${i + 1}`);
+    const p2 = document.getElementById(`p2slot${i + 1}`);
+
+    if (p1 && !p1.value) p1.value = role;
+    if (p2 && !p2.value) p2.value = role;
+  });
+}
+
 function createRaid() {
   if (!isApprovedUser()) {
     alert("승인된 사용자만 공대 생성 가능");
