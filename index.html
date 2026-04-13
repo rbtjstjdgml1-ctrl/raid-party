@@ -1387,22 +1387,14 @@ function updateAdminRoleSelect(raidId, partyName) {
       return;
     }
 
-    if (member.leader) {
-      alert("파티장은 신청취소할 수 없어");
-      return;
-    }
-
     if (!confirm("신청 취소할까?")) return;
 
-    const isOwner = raid.owner && normalizeName(raid.owner) === normalizeName(myUser.name);
-
-db.ref("raids/" + raidId + "/" + partyName + "/" + slotKey).update({
-  name: myUser.name,
-  job: myUser.job,
-  role: slot.wantedRole,
-  filled: true,
-  leader: isOwner // ⭐ 공대장이 처음 들어가면 파티장됨
-});
+    db.ref("raids/" + raidId + "/" + partyName + "/" + key).update({
+      name: "",
+      job: "",
+      role: "",
+      filled: false
+    });
   });
 }
 
