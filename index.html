@@ -650,48 +650,7 @@ button.locked {
     grid-template-columns: repeat(4, 1fr);
   }
 }
-  .create-row {
-    grid-template-columns: 1fr 1fr 1fr;
-  }
 
-  .create-row select,
-  .create-row input,
-  .role-row select {
-    font-size: 14px;
-    padding: 10px;
-  }
-
-  .role-row {
-    grid-template-columns: repeat(4, 1fr);
-  }
-    .manage-item {
-    padding: 10px;
-  }
-
-  .manage-item-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
-
-  .manage-left {
-    justify-content: flex-start;
-    font-size: 14px;
-  }
-
-  .manage-buttons {
-    grid-template-columns: repeat(2, 1fr);
-    width: 100%;
-  }
-
-  .manage-buttons button {
-    min-height: 40px;
-    font-size: 13px;
-    padding: 9px 6px;
-    white-space: normal;
-    line-height: 1.2;
-  }
-}
   </style>
 </head>
 <body>
@@ -1306,13 +1265,6 @@ party1Data[mySlot] = {
   name: myUser.name,
   job: myUser.job,
   role: wantedRole,
-  filled: true,
-  leader: true
-};
-  wantedRole: party1Data[creatorSlotKey].wantedRole,
-  name: myUser.name,
-  job: myUser.job,
-  role: party1Data[creatorSlotKey].wantedRole,
   filled: true,
   leader: true
 };
