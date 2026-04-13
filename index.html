@@ -1206,7 +1206,7 @@ function updateAdminRoleSelect(raidId, partyName) {
   }
 }
 
-    function cancelMy(raidId, partyName, key) {
+  function cancelMy(raidId, partyName, key) {
   if (!isApprovedUser()) {
     alert("승인된 사용자만 가능");
     return;
@@ -1221,6 +1221,11 @@ function updateAdminRoleSelect(raidId, partyName) {
 
     if (normalizeName(member.name) !== normalizeName(myUser.name)) {
       alert("본인 신청만 취소 가능");
+      return;
+    }
+
+    if (member.leader) {
+      alert("파티장은 신청취소할 수 없어");
       return;
     }
 
@@ -1428,7 +1433,7 @@ if (!emptySlotKey) {
   });
 }
 
-    function renderSimpleParty(members, raidId, partyName) {
+  function renderSimpleParty(members, raidId, partyName) {
   const slots = Array.isArray(members) ? members : Object.values(members || {});
   const myUser = getMyUserRecord();
   const raid = raids[raidId] || {};
