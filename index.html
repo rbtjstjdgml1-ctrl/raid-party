@@ -1595,10 +1595,10 @@ function adminAddMember(raidId, partyName) {
 
     let extraButton = "";
     if (
-      isFilled &&
-      myUser &&
-      normalizeName(slot.name) === normalizeName(myUser.name) &&
-    )
+  isFilled &&
+  myUser &&
+  normalizeName(slot.name) === normalizeName(myUser.name)
+)
       extraButton = `
         <button class="danger small" style="margin-left:6px;" onclick="cancelMy('${raidId}','${partyName}','${slotKey}')">
           신청취소
