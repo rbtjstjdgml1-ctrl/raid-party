@@ -1463,7 +1463,6 @@ if (!emptySlotKey) {
 }
 
  function joinSlot(raidId, partyName, slotKey) {
-  function validateAndJoin(raidId, partyName, job, role) {
   if (!isApprovedUser()) {
     alert("승인된 사용자만 가능");
     return;
@@ -1492,38 +1491,35 @@ if (!emptySlotKey) {
     if (isAlreadyInRaid(raid, myUser.name)) {
       alert("같은 공대에는 한 번만 신청 가능");
       return;
-      }
-      const wantedRole = slot.wantedRole;
-const myJob = myUser.job;
+    }
 
-// 직업별 역할 제한
-if (myJob === "수호" && wantedRole !== "tank") {
-  alert("수호는 탱 자리만 신청 가능");
-  return;
-}
+    const wantedRole = slot.wantedRole;
+    const myJob = myUser.job;
 
-if (myJob === "치유성" && wantedRole !== "heal") {
-  alert("치유성은 힐 자리만 신청 가능");
-  return;
-}
+    if (myJob === "수호" && wantedRole !== "tank") {
+      alert("수호는 탱 자리만 신청 가능");
+      return;
+    }
 
-if (
-  ["궁성", "살성", "마도성", "정령성"].includes(myJob) &&
-  wantedRole !== "dps"
-) {
-  alert(myJob + "은 딜 자리만 신청 가능");
-  return;
-}
+    if (myJob === "치유성" && wantedRole !== "heal") {
+      alert("치유성은 힐 자리만 신청 가능");
+      return;
+    }
 
-if (myJob === "검성" && !["tank", "dps"].includes(wantedRole)) {
-  alert("검성은 탱 또는 딜 자리만 신청 가능");
-  return;
-}
+    if (["궁성", "살성", "마도성", "정령성"].includes(myJob) && wantedRole !== "dps") {
+      alert(myJob + "은 딜 자리만 신청 가능");
+      return;
+    }
 
-if (myJob === "호법성" && !["heal", "dps"].includes(wantedRole)) {
-  alert("호법성은 힐 또는 딜 자리만 신청 가능");
-  return;
-}
+    if (myJob === "검성" && !["tank", "dps"].includes(wantedRole)) {
+      alert("검성은 탱 또는 딜 자리만 신청 가능");
+      return;
+    }
+
+    if (myJob === "호법성" && !["heal", "dps"].includes(wantedRole)) {
+      alert("호법성은 힐 또는 딜 자리만 신청 가능");
+      return;
+    }
 
     db.ref("raids/" + raidId + "/" + partyName + "/" + slotKey).update({
       name: myUser.name,
