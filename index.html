@@ -436,17 +436,55 @@ button.locked {
   width: 100%;
   margin-bottom: 0;
 }
-    .manage-item {
-      background: rgba(255,255,255,0.04);
-      border-radius: 12px;
-      padding: 10px;
-    }
+   .manage-item {
+  background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+  border-radius: 14px;
+  padding: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
 
-    .manage-top {
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 8px;
-    }
+.manage-item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.manage-left {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 15px;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.manage-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  word-break: break-word;
+}
+
+.manage-buttons {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(72px, 1fr));
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.manage-buttons button {
+  margin: 0;
+  width: 100%;
+  min-height: 42px;
+  padding: 10px 8px;
+  font-size: 13px;
+  border-radius: 12px;
+  white-space: nowrap;
+}
 
     .tag {
       display: inline-block;
