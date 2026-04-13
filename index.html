@@ -264,11 +264,12 @@ button.locked {
     }
 
     .raid-summary-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  min-width: 0;
+}
 
     .raid-meta {
       color: var(--muted);
@@ -486,7 +487,7 @@ button.locked {
   white-space: nowrap;
 }
 
-    .tag {
+.tag {
   display: inline-block;
   padding: 4px 10px;
   border-radius: 999px;
@@ -496,6 +497,7 @@ button.locked {
   color: #f4d27a;
   border: 1px solid rgba(244, 210, 122, 0.35);
   margin-left: 6px;
+  white-space: nowrap;
 }
 
     .notice-box {
