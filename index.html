@@ -1771,6 +1771,8 @@ function renderRaids() {
       return getRaidSortValue(raidA).localeCompare(getRaidSortValue(raidB));
     })
     .forEach(([raidId, raid]) => {
+  const myUser = getMyUserRecord();
+  const isMine = myUser && normalizeName(myUser.name) === normalizeName(raid.owner);
       const party1 = getMembers(raid, "party1");
       const party2 = getMembers(raid, "party2");
       const total = getTotalRaidCount(raid);
