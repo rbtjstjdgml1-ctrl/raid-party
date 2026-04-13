@@ -1494,6 +1494,11 @@ if (!emptySlotKey) {
     const wantedRole = slot.wantedRole;
     const myJob = myUser.job;
 
+    if (!myJob) {
+  alert("직업 정보가 없어. 다시 입장 신청해줘");
+  return;
+}
+
     if (myJob === "수호" && wantedRole !== "tank") {
       alert("수호는 탱 자리만 신청 가능");
       return;
