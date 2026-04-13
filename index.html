@@ -1519,7 +1519,46 @@ function adminAddMember(raidId, partyName) {
     function renderJoinUI(raidId, partyName) {
   return "";
 }
- 
+ function joinSlot(raidId, partyName, slotKey) {
+  if (!isApprovedUser()) {
+    alert("승인된 사용자만 가능");
+    return;
+  }
+
+  const myUser = getMyUserRecord();
+  if (!myUser) {
+    alert("사용자 정보 없음");
+    return;
+  }
+
+  db.ref("raids/" + raidId).once("value").then(snapshot => {
+    const raid = snapshot.val() || {};
+    const slot = raid?.[partyName]?.[slotKey];
+
+    if (!slot) {
+      alert("자리 정보 없음");
+      return;
+    }
+
+    if (slot.filled) {
+      alert("이미 찬 자리야");
+      return;
+    }
+
+    if (isAlreadyInRaid(raid, myUser.name)) {
+      alert("같은 공대에는 한 번만 신청 가능");
+      return;
+    }
+
+    db.ref("raids/" + raidId + "/" + partyName + "/" + slotKey).update({
+      name: myUser.name,
+      job: myUser.job,
+      role: slot.wantedRole,
+      filled: true,
+      leader: false
+    });
+  });
+}
 
 function renderManageList(title, members, raidId, partyName) {
   if (!isAdmin) return "";
