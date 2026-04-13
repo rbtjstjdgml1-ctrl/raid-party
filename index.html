@@ -1569,7 +1569,7 @@ function renderManageList(title, members, raidId, partyName) {
       <div class="manage-list">
   `;
 
-  members.forEach(member => {
+  members.filter(member => member.filled).forEach(member => {
     const moveTo = partyName === "party1" ? "party2" : "party1";
     const moveLabel = partyName === "party1" ? "2파티로 이동" : "1파티로 이동";
 
