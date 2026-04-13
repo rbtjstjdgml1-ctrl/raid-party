@@ -1136,6 +1136,12 @@ newRaidRef.set({
       return allMembers.some(m => normalizeName(m.name) === normalizeName(userName));
     }
 
+function validateAndJoin(raidId, partyName, job, role) {
+  if (!isApprovedUser()) {
+    alert("승인된 사용자만 가능");
+    return;
+  }
+
   const myUser = getMyUserRecord();
   if (!myUser) {
     alert("사용자 정보 없음");
