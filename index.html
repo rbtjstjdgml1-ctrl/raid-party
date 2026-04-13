@@ -1405,7 +1405,6 @@ function adminAddMember(raidId, partyName) {
     return;
   }
 
-  const raid = raids[raidId] || {};
 const party = raid[partyName] || {};
 
 let emptySlotKey = null;
@@ -1454,50 +1453,59 @@ db.ref("raids/" + raidId + "/" + partyName + "/" + emptySlotKey).update({
     }
 
     function moveMember(raidId, fromParty, toParty, key) {
-      if (!isAdmin) {
-        alert("관리자만 이동 가능");
-        return;
-      }
+  if (!isAdmin) {
+    alert("관리자만 이동 가능");
+    return;
+  }
 
-      db.ref("raids/" + raidId).once("value").then(snapshot => {
-        const raid = snapshot.val() || {};
-        const fromMembers = getMembers(raid, fromParty);
-        const toMembers = getMembers(raid, toParty);
-        const member = fromMembers.find(m => m.key === key);
+  db.ref("raids/" + raidId).once("value").then(snapshot => {
+    const raid = snapshot.val() || {};
+    const fromPartyData = raid[fromParty] || {};
+    const toPartyData = raid[toParty] || {};
+    const member = fromPartyData[key];
 
-        if (!member) return;
-
-        if (toMembers.length >= 4) {
-          alert("옮길 파티가 이미 4명이야");
-          return;
-        }
-
-        const roleCount = toMembers.filter(m => m.role === member.role).length;
-        if (member.role === "tank" && roleCount >= 1) {
-          alert("옮길 파티의 탱 자리가 이미 있어");
-          return;
-        }
-        if (member.role === "heal" && roleCount >= 1) {
-          alert("옮길 파티의 힐 자리가 이미 있어");
-          return;
-        }
-        if (member.role === "dps" && roleCount >= 2) {
-          alert("옮길 파티의 딜 자리가 이미 꽉 찼어");
-          return;
-        }
-
-        const data = {
-          name: member.name,
-          job: member.job,
-          role: member.role,
-          leader: member.leader || false
-        };
-
-        db.ref("raids/" + raidId + "/" + fromParty + "/" + key).remove().then(() => {
-          db.ref("raids/" + raidId + "/" + toParty).push(data);
-        });
-      });
+    if (!member || !member.filled) {
+      alert("이동할 멤버가 없어");
+      return;
     }
+
+    let emptySlotKey = null;
+
+    Object.entries(toPartyData).forEach(([slotKey, slot]) => {
+      if (!slot.filled && !emptySlotKey) {
+        emptySlotKey = slotKey;
+      }
+    });
+
+    if (!emptySlotKey) {
+      alert("옮길 파티에 빈 자리가 없어");
+      return;
+    }
+
+    const targetSlot = toPartyData[emptySlotKey];
+
+    if (!targetSlot || targetSlot.wantedRole !== member.role) {
+      alert("옮길 파티에 같은 역할 빈칸이 없어");
+      return;
+    }
+
+    const updates = {};
+
+    updates[`raids/${raidId}/${toParty}/${emptySlotKey}/name`] = member.name;
+    updates[`raids/${raidId}/${toParty}/${emptySlotKey}/job`] = member.job;
+    updates[`raids/${raidId}/${toParty}/${emptySlotKey}/role`] = member.role;
+    updates[`raids/${raidId}/${toParty}/${emptySlotKey}/filled`] = true;
+    updates[`raids/${raidId}/${toParty}/${emptySlotKey}/leader`] = member.leader || false;
+
+    updates[`raids/${raidId}/${fromParty}/${key}/name`] = "";
+    updates[`raids/${raidId}/${fromParty}/${key}/job`] = "";
+    updates[`raids/${raidId}/${fromParty}/${key}/role`] = "";
+    updates[`raids/${raidId}/${fromParty}/${key}/filled`] = false;
+    updates[`raids/${raidId}/${fromParty}/${key}/leader`] = false;
+
+    db.ref().update(updates);
+  });
+}
 
     function renderSimpleParty(members, raidId, partyName) {
   const slots = Array.isArray(members) ? members : Object.values(members || {});
