@@ -1592,7 +1592,7 @@ function adminAddMember(raidId, partyName) {
   isFilled &&
   myUser &&
   normalizeName(slot.name) === normalizeName(myUser.name)
-)
+) {
       extraButton = `
         <button class="danger small" style="margin-left:6px;" onclick="cancelMy('${raidId}','${partyName}','${slotKey}')">
           신청취소
