@@ -1425,8 +1425,8 @@ function updateAdminRoleSelect(raidId, partyName) {
 
 
 function adminAddMember(raidId, partyName) {
-  if (!canManageParty(raidId, partyName)) {
-    alert("이 파티를 관리할 권한이 없어");
+  if (!canManageParty(raidId)) {
+    alert("이 공대를 관리할 권한이 없어");
     return;
   }
 
@@ -1450,12 +1450,12 @@ function adminAddMember(raidId, partyName) {
   }
 
   const raid = raids[raidId] || {};
-const partyMembers = getMembers(raid, partyName).filter(m => m.filled);
+  const partyMembers = getMembers(raid, partyName).filter(m => m.filled);
 
-if (partyMembers.length >= 4) {
-  alert("이 파티는 이미 4명이야");
-  return;
-}
+  if (partyMembers.length >= 4) {
+    alert("이 파티는 이미 4명이야");
+    return;
+  }
 
   let role = "dps";
 
@@ -1496,28 +1496,26 @@ if (partyMembers.length >= 4) {
     return;
   }
 
-const party = raid[partyName] || {};
+  const party = raid[partyName] || {};
+  let emptySlotKey = null;
 
-let emptySlotKey = null;
+  Object.entries(party).forEach(([key, slot]) => {
+    if (!slot.filled && slot.wantedRole === role && !emptySlotKey) {
+      emptySlotKey = key;
+    }
+  });
 
-Object.entries(party).forEach(([key, slot]) => {
-  if (!slot.filled && slot.wantedRole === role && !emptySlotKey) {
-    emptySlotKey = key;
+  if (!emptySlotKey) {
+    alert("해당 역할 빈 자리가 없어");
+    return;
   }
-});
 
-if (!emptySlotKey) {
-  alert("해당 역할 빈 자리가 없어");
-  return;
-}
-
-db.ref("raids/" + raidId + "/" + partyName + "/" + emptySlotKey).update({
-  name: name,
-  job: job,
-  role: role,
-  filled: true,
-  leader: false
-});
+  db.ref("raids/" + raidId + "/" + partyName + "/" + emptySlotKey).update({
+    name: name,
+    job: job,
+    role: role,
+    filled: true
+  });
 
   nameEl.value = "";
   jobEl.value = "";
