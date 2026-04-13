@@ -1643,12 +1643,12 @@ function adminAddMember(raidId, partyName) {
 
   db.ref("raids/" + raidId).once("value").then(snapshot => {
     const raid = snapshot.val() || {};
-    
+
     if (getTotalRaidCount(raid) >= 8) {
       alert("이 공대는 마감이야");
       return;
     }
-    
+
     const slot = raid?.[partyName]?.[slotKey];
 
     if (!slot) {
@@ -1670,9 +1670,9 @@ function adminAddMember(raidId, partyName) {
     const myJob = myUser.job;
 
     if (!myJob) {
-  alert("직업 정보가 없어. 다시 입장 신청해줘");
-  return;
-}
+      alert("직업 정보가 없어. 다시 입장 신청해줘");
+      return;
+    }
 
     if (myJob === "수호" && wantedRole !== "tank") {
       alert("수호는 탱 자리만 신청 가능");
@@ -1703,8 +1703,7 @@ function adminAddMember(raidId, partyName) {
       name: myUser.name,
       job: myUser.job,
       role: slot.wantedRole,
-      filled: true,
-      leader: false
+      filled: true
     });
   });
 }
