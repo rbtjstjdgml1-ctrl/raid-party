@@ -746,7 +746,6 @@ function autoDeleteOldRaids() {
   document.getElementById("pendingManageBox").style.display = isAdmin ? "block" : "none";
   document.getElementById("raidCreateBox").style.display = isApprovedUser() ? "block" : "none";
 
-  updateCreatorRoleSelect();
 }
 
     function updateGateUI() {
@@ -1137,12 +1136,6 @@ newRaidRef.set({
       return allMembers.some(m => normalizeName(m.name) === normalizeName(userName));
     }
 
-    function validateAndJoin(raidId, partyName, job, role) {
-  if (!isApprovedUser()) {
-    alert("관리자 승인 후 이용 가능");
-    return;
-  }
-
   const myUser = getMyUserRecord();
   if (!myUser) {
     alert("사용자 정보 없음");
@@ -1179,129 +1172,6 @@ newRaidRef.set({
       leader: false
     });
   });
-}
-
-  function joinFromRaidDetail(raidId, partyName) {
-  const raid = raids[raidId] || {};
-  const totalMembers = getTotalRaidCount(raid);
-  const partyMembers = getMembers(raid, partyName).filter(m => m.filled);
-
-  if (totalMembers >= 8) {
-    alert("이 공대는 마감이야");
-    return;
-  }
-
-  if (partyMembers.length >= 4) {
-    alert("이 파티는 마감이야");
-    return;
-  }
-
-  const jobEl = document.getElementById(`job-${raidId}-${partyName}`);
-  const roleEl = document.getElementById(`role-${raidId}-${partyName}`);
-
-  if (!jobEl) return;
-
-  const job = jobEl.value;
-  if (!job) {
-    alert("직업 선택");
-    return;
-  }
-
-  let role = "dps";
-
-  if (job === "검성") {
-    if (!roleEl.value) {
-      alert("검성 역할 선택");
-      return;
-    }
-    if (roleEl.value !== "tank" && roleEl.value !== "dps") {
-      alert("검성은 탱 또는 딜만 가능");
-      return;
-    }
-    role = roleEl.value;
-  } else if (job === "호법성") {
-    if (!roleEl.value) {
-      alert("호법성 역할 선택");
-      return;
-    }
-    if (roleEl.value !== "heal" && roleEl.value !== "dps") {
-      alert("호법성은 힐 또는 딜만 가능");
-      return;
-    }
-    role = roleEl.value;
-  } else {
-    role = resolveRole(job, "");
-  }
-
-  validateAndJoin(raidId, partyName, job, role);
-}
-
-  const jobEl = document.getElementById(`job-${raidId}-${partyName}`);
-  const roleEl = document.getElementById(`role-${raidId}-${partyName}`);
-
-  if (!jobEl) return;
-
-  const job = jobEl.value;
-  if (!job) {
-    alert("직업 선택");
-    return;
-  }
-
-let role = "dps";
-
-if (job === "검성") {
-  if (!roleEl.value) {
-    alert("검성 역할 선택");
-    return;
-  }
-  if (roleEl.value !== "tank" && roleEl.value !== "dps") {
-    alert("검성은 탱 또는 딜만 가능");
-    return;
-  }
-  role = roleEl.value;
-} else if (job === "호법성") {
-  if (!roleEl.value) {
-    alert("호법성 역할 선택");
-    return;
-  }
-  if (roleEl.value !== "heal" && roleEl.value !== "dps") {
-    alert("호법성은 힐 또는 딜만 가능");
-    return;
-  }
-  role = roleEl.value;
-} else {
-  role = resolveRole(job, "");
-}
-
-  validateAndJoin(raidId, partyName, job, role);
-}
-
-function updateCreatorRoleSelect() {
-  const jobEl = document.getElementById("raidCreatorJob");
-  const roleEl = document.getElementById("raidCreatorRole");
-
-  if (!jobEl || !roleEl) return;
-
-  const job = jobEl.value;
-
-  if (job === "검성") {
-    roleEl.style.display = "block";
-    roleEl.innerHTML = `
-      <option value="">내 역할 선택</option>
-      <option value="tank">탱</option>
-      <option value="dps">딜</option>
-    `;
-  } else if (job === "호법성") {
-    roleEl.style.display = "block";
-    roleEl.innerHTML = `
-      <option value="">내 역할 선택</option>
-      <option value="heal">힐</option>
-      <option value="dps">딜</option>
-    `;
-  } else {
-    roleEl.style.display = "none";
-    roleEl.innerHTML = `<option value="">내 역할 선택</option>`;
-  }
 }
 
 function updateAdminRoleSelect(raidId, partyName) {
@@ -1464,20 +1334,20 @@ const party = raid[partyName] || {};
 let emptySlotKey = null;
 
 Object.entries(party).forEach(([key, slot]) => {
-  if (!slot.filled && !emptySlotKey) {
+  if (!slot.filled && slot.wantedRole === role && !emptySlotKey) {
     emptySlotKey = key;
   }
 });
 
 if (!emptySlotKey) {
-  alert("빈 자리가 없어");
+  alert("해당 역할 빈 자리가 없어");
   return;
 }
 
 db.ref("raids/" + raidId + "/" + partyName + "/" + emptySlotKey).update({
   name: name,
   job: job,
-  role: party[emptySlotKey].wantedRole,
+  role: role,
   filled: true,
   leader: false
 });
@@ -1525,23 +1395,16 @@ db.ref("raids/" + raidId + "/" + partyName + "/" + emptySlotKey).update({
 
     let emptySlotKey = null;
 
-    Object.entries(toPartyData).forEach(([slotKey, slot]) => {
-      if (!slot.filled && !emptySlotKey) {
-        emptySlotKey = slotKey;
-      }
-    });
+Object.entries(toPartyData).forEach(([slotKey, slot]) => {
+  if (!slot.filled && slot.wantedRole === member.role && !emptySlotKey) {
+    emptySlotKey = slotKey;
+  }
+});
 
-    if (!emptySlotKey) {
-      alert("옮길 파티에 빈 자리가 없어");
-      return;
-    }
-
-    const targetSlot = toPartyData[emptySlotKey];
-
-    if (!targetSlot || targetSlot.wantedRole !== member.role) {
-      alert("옮길 파티에 같은 역할 빈칸이 없어");
-      return;
-    }
+if (!emptySlotKey) {
+  alert("옮길 파티에 같은 역할 빈칸이 없어");
+  return;
+}
 
     const updates = {};
 
@@ -1593,11 +1456,6 @@ db.ref("raids/" + raidId + "/" + partyName + "/" + emptySlotKey).update({
 }).join("");
 }
 
-      
-
-    function renderJoinUI(raidId, partyName) {
-  return "";
-}
  function joinSlot(raidId, partyName, slotKey) {
   if (!isApprovedUser()) {
     alert("승인된 사용자만 가능");
@@ -1627,7 +1485,38 @@ db.ref("raids/" + raidId + "/" + partyName + "/" + emptySlotKey).update({
     if (isAlreadyInRaid(raid, myUser.name)) {
       alert("같은 공대에는 한 번만 신청 가능");
       return;
-    }
+      }
+      const wantedRole = slot.wantedRole;
+const myJob = myUser.job;
+
+// 직업별 역할 제한
+if (myJob === "수호" && wantedRole !== "tank") {
+  alert("수호는 탱 자리만 신청 가능");
+  return;
+}
+
+if (myJob === "치유성" && wantedRole !== "heal") {
+  alert("치유성은 힐 자리만 신청 가능");
+  return;
+}
+
+if (
+  ["궁성", "살성", "마도성", "정령성"].includes(myJob) &&
+  wantedRole !== "dps"
+) {
+  alert(myJob + "은 딜 자리만 신청 가능");
+  return;
+}
+
+if (myJob === "검성" && !["tank", "dps"].includes(wantedRole)) {
+  alert("검성은 탱 또는 딜 자리만 신청 가능");
+  return;
+}
+
+if (myJob === "호법성" && !["heal", "dps"].includes(wantedRole)) {
+  alert("호법성은 힐 또는 딜 자리만 신청 가능");
+  return;
+}
 
     db.ref("raids/" + raidId + "/" + partyName + "/" + slotKey).update({
       name: myUser.name,
@@ -1735,13 +1624,11 @@ function renderRaids() {
               <div class="detail-block">
                 <div class="detail-title"><span>1파티</span></div>
                 <div class="party-line">${renderSimpleParty(party1, raidId, "party1")}</div>
-                ${renderJoinUI(raidId, "party1")}
               </div>
 
               <div class="detail-block">
                 <div class="detail-title"><span>2파티</span></div>
-                <div class="party-line">${renderSimpleParty(party2, raidId, "party2")}</div>
-                ${renderJoinUI(raidId, "party2")}
+                <div class="party-line">${renderSimpleParty(party1, raidId, "party1")}</div>
               </div>
 
               ${renderManageList("1파티 관리", party1, raidId, "party1")}
@@ -1800,7 +1687,6 @@ window.requestEntry = requestEntry;
 window.changeMyId = changeMyId;
 window.adminAddMember = adminAddMember;
 window.updateAdminRoleSelect = updateAdminRoleSelect;
-window.updateCreatorRoleSelect = updateCreatorRoleSelect;
 window.loginAdmin = loginAdmin;
 window.logoutAdmin = logoutAdmin;
 window.resetAll = resetAll;
@@ -1809,7 +1695,6 @@ window.rejectUser = rejectUser;
 window.expelUser = expelUser;
 window.createRaid = createRaid;
 window.deleteRaid = deleteRaid;
-window.joinFromRaidDetail = joinFromRaidDetail;
 window.cancelMy = cancelMy;
 window.deleteMember = deleteMember;
 window.toggleLeader = toggleLeader;
