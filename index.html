@@ -324,6 +324,31 @@ button.locked {
   font-size: 14px;
   white-space: nowrap;
 }
+.member-chip.clickable {
+  cursor: pointer;
+  font-weight: 800;
+  border: 1px solid rgba(255,255,255,0.18);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+}
+
+.member-chip.clickable::after {
+  content: " 신청";
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+.member-chip.locked {
+  cursor: not-allowed;
+  opacity: 0.45;
+  filter: grayscale(0.2);
+}
+
+.member-chip.locked::after {
+  content: " 마감";
+  font-size: 12px;
+  opacity: 0.9;
+}
+
     .role-tank {
   background: rgba(59, 130, 246, 0.18) !important;
   border: 1px solid rgba(59, 130, 246, 0.35) !important;
