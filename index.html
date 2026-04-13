@@ -1047,11 +1047,6 @@ function createRaid() {
     return;
   }
 
-  if (!canJobTakeRole(myUser.job, p1slot1)) {
-    alert(`생성자 직업(${myUser.job})은 1파티 1번 역할(${p1slot1})과 맞지 않아`);
-    return;
-  }
-
   const newRaidRef = db.ref("raids").push();
 
 const party1Data = {
@@ -1090,7 +1085,6 @@ newRaidRef.set({
     slot3: { wantedRole: p2slot3, name: "", job: "", role: "", filled: false, leader: false },
     slot4: { wantedRole: p2slot4, name: "", job: "", role: "", filled: false, leader: false }
   }
-})
   }).then(() => {
     document.getElementById("raidName").value = "";
     document.getElementById("raidDate").value = "";
