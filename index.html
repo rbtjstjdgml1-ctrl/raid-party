@@ -1431,6 +1431,9 @@ if (!emptySlotKey) {
     function renderSimpleParty(members, raidId, partyName) {
   const slots = Array.isArray(members) ? members : Object.values(members || {});
   const myUser = getMyUserRecord();
+  const raid = raids[raidId] || {};
+  const totalCount = getTotalRaidCount(raid);
+  const raidLocked = totalCount >= 8;
 
   function roleLabel(role) {
     if (role === "tank") return "탱";
@@ -1454,7 +1457,8 @@ if (!emptySlotKey) {
     if (
       isFilled &&
       myUser &&
-      normalizeName(slot.name) === normalizeName(myUser.name)
+      normalizeName(slot.name) === normalizeName(myUser.name) &&
+      !slot.leader
     ) {
       extraButton = `
         <button class="danger small" style="margin-left:6px;" onclick="cancelMy('${raidId}','${partyName}','${slotKey}')">
@@ -1463,12 +1467,20 @@ if (!emptySlotKey) {
       `;
     }
 
-    const clickAction = !isFilled
-      ? `onclick="joinSlot('${raidId}', '${partyName}', '${slotKey}')"`
-      : "";
+    let clickAction = "";
+    let extraClass = "";
+
+    if (!isFilled) {
+      if (raidLocked) {
+        extraClass = "locked";
+      } else {
+        clickAction = `onclick="joinSlot('${raidId}', '${partyName}', '${slotKey}')"`
+        extraClass = "clickable";
+      }
+    }
 
     return `
-      <span class="member-chip ${getRoleClass(role)}" ${clickAction}>
+      <span class="member-chip ${getRoleClass(role)} ${extraClass}" ${clickAction}>
         ${roleIcon(role)} [${roleLabel(role)}] ${nameText}
       </span>
       ${extraButton}
