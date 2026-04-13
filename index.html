@@ -1304,27 +1304,34 @@ function updateAdminRoleSelect(raidId, partyName) {
 }
 
     function cancelMy(raidId, partyName, key) {
-      if (!isApprovedUser()) {
-        alert("승인된 사용자만 가능");
-        return;
-      }
+  if (!isApprovedUser()) {
+    alert("승인된 사용자만 가능");
+    return;
+  }
 
-      const myUser = getMyUserRecord();
-      if (!myUser) return;
+  const myUser = getMyUserRecord();
+  if (!myUser) return;
 
-      db.ref("raids/" + raidId + "/" + partyName + "/" + key).once("value").then(snapshot => {
-        const member = snapshot.val();
-        if (!member) return;
+  db.ref("raids/" + raidId + "/" + partyName + "/" + key).once("value").then(snapshot => {
+    const member = snapshot.val();
+    if (!member) return;
 
-        if (normalizeName(member.name) !== normalizeName(myUser.name)) {
-          alert("본인 신청만 취소 가능");
-          return;
-        }
-
-        if (!confirm("신청 취소할까?")) return;
-        db.ref("raids/" + raidId + "/" + partyName + "/" + key).remove();
-      });
+    if (normalizeName(member.name) !== normalizeName(myUser.name)) {
+      alert("본인 신청만 취소 가능");
+      return;
     }
+
+    if (!confirm("신청 취소할까?")) return;
+
+    db.ref("raids/" + raidId + "/" + partyName + "/" + key).update({
+      name: "",
+      job: "",
+      role: "",
+      filled: false,
+      leader: false
+    });
+  });
+}
 
     function deleteMember(raidId, partyName, key) {
   if (!isAdmin) {
