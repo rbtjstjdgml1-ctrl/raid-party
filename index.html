@@ -1502,6 +1502,12 @@ if (!emptySlotKey) {
 
   db.ref("raids/" + raidId).once("value").then(snapshot => {
     const raid = snapshot.val() || {};
+    
+    if (getTotalRaidCount(raid) >= 8) {
+      alert("이 공대는 마감이야");
+      return;
+    }
+    
     const slot = raid?.[partyName]?.[slotKey];
 
     if (!slot) {
