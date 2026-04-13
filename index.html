@@ -1327,12 +1327,30 @@ function updateAdminRoleSelect(raidId, partyName) {
     }
 
     function deleteMember(raidId, partyName, key) {
-      if (!isAdmin) {
-        alert("관리자만 삭제 가능");
-        return;
-      }
-      db.ref("raids/" + raidId + "/" + partyName + "/" + key).remove();
-      }
+  if (!isAdmin) {
+    alert("관리자만 삭제 가능");
+    return;
+  }
+
+  if (!confirm("이 멤버를 삭제할까?")) return;
+
+  db.ref("raids/" + raidId + "/" + partyName + "/" + key).once("value").then(snapshot => {
+    const slot = snapshot.val();
+
+    if (!slot) {
+      alert("삭제할 멤버 정보가 없어");
+      return;
+    }
+
+    db.ref("raids/" + raidId + "/" + partyName + "/" + key).update({
+      name: "",
+      job: "",
+      role: "",
+      filled: false,
+      leader: false
+    });
+  });
+}
 function adminAddMember(raidId, partyName) {
   if (!isAdmin) {
     alert("관리자만 가능");
