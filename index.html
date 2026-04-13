@@ -1136,35 +1136,6 @@ newRaidRef.set({
       return allMembers.some(m => normalizeName(m.name) === normalizeName(userName));
     }
 
-function validateAndJoin(raidId, partyName, job, role) {
-  if (!isApprovedUser()) {
-    alert("승인된 사용자만 가능");
-    return;
-  }
-
-  const myUser = getMyUserRecord();
-  if (!myUser) {
-    alert("사용자 정보 없음");
-    return;
-  }
-
-  db.ref("raids/" + raidId).once("value").then(snapshot => {
-    const raid = snapshot.val() || {};
-    const party = raid[partyName] || {};
-
-    if (isAlreadyInRaid(raid, myUser.name)) {
-      alert("같은 공대에는 한 번만 신청할 수 있어");
-      return;
-    }
-
-    let emptySlotKey = null;
-
-    Object.entries(party).forEach(([key, slot]) => {
-      if (!slot.filled && slot.wantedRole === role && !emptySlotKey) {
-        emptySlotKey = key;
-      }
-    });
-
     if (!emptySlotKey) {
       alert("해당 역할 자리가 없어");
       return;
