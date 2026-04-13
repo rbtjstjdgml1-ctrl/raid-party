@@ -1785,7 +1785,10 @@ function renderRaids() {
           <div class="raid-summary" onclick="toggleRaid('${raidId}')">
             <div class="raid-summary-left">
               <span>${opened ? "▼" : "▶"}</span>
-              <span>${raid.name} (${total}/8)</span>
+              <span>
+  ${raid.name} (${total}/8)
+  ${raid.owner ? `<span class="tag leader">공대장 ${raid.owner}</span>` : ""}
+</span>
               <span class="raid-state">${closed ? "🔴" : "🟢"}</span>
             </div>
             <div class="raid-meta">${raid.date ? formatDate(raid.date) + " / " : ""}${raid.time}</div>
