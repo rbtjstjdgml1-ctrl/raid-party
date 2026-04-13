@@ -1524,8 +1524,8 @@ function adminAddMember(raidId, partyName) {
 }
 
     function moveMember(raidId, fromParty, toParty, key) {
-  if (!canManageParty(raidId, fromParty)) {
-    alert("이 파티를 관리할 권한이 없어");
+  if (!canManageParty(raidId)) {
+    alert("이 공대를 관리할 권한이 없어");
     return;
   }
 
@@ -1542,16 +1542,16 @@ function adminAddMember(raidId, partyName) {
 
     let emptySlotKey = null;
 
-Object.entries(toPartyData).forEach(([slotKey, slot]) => {
-  if (!slot.filled && slot.wantedRole === member.role && !emptySlotKey) {
-    emptySlotKey = slotKey;
-  }
-});
+    Object.entries(toPartyData).forEach(([slotKey, slot]) => {
+      if (!slot.filled && slot.wantedRole === member.role && !emptySlotKey) {
+        emptySlotKey = slotKey;
+      }
+    });
 
-if (!emptySlotKey) {
-  alert("옮길 파티에 같은 역할 빈칸이 없어");
-  return;
-}
+    if (!emptySlotKey) {
+      alert("옮길 파티에 같은 역할 빈칸이 없어");
+      return;
+    }
 
     const updates = {};
 
@@ -1559,13 +1559,11 @@ if (!emptySlotKey) {
     updates[`raids/${raidId}/${toParty}/${emptySlotKey}/job`] = member.job;
     updates[`raids/${raidId}/${toParty}/${emptySlotKey}/role`] = member.role;
     updates[`raids/${raidId}/${toParty}/${emptySlotKey}/filled`] = true;
-    updates[`raids/${raidId}/${toParty}/${emptySlotKey}/leader`] = member.leader || false;
 
     updates[`raids/${raidId}/${fromParty}/${key}/name`] = "";
     updates[`raids/${raidId}/${fromParty}/${key}/job`] = "";
     updates[`raids/${raidId}/${fromParty}/${key}/role`] = "";
     updates[`raids/${raidId}/${fromParty}/${key}/filled`] = false;
-    updates[`raids/${raidId}/${fromParty}/${key}/leader`] = false;
 
     db.ref().update(updates);
   });
