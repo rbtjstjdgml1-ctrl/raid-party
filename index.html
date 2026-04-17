@@ -1629,32 +1629,35 @@ function renderSimpleParty(members, raidId, partyName) {
 
     let clickAction = "";
     let extraClass = "";
+    let mineClass = "";
 
     if (!isFilled) {
       if (raidLocked) {
         extraClass = "locked";
       } else {
-        clickAction = `onclick="joinSlot('${raidId}', '${partyName}', '${slotKey}')"`
+        clickAction = `onclick="joinSlot('${raidId}', '${partyName}', '${slotKey}')"`; 
         extraClass = "clickable";
       }
     } else if (isMine) {
-      clickAction = `onclick="cancelMy('${raidId}', '${partyName}', '${slotKey}')"`
+      clickAction = `onclick="cancelMy('${raidId}', '${partyName}', '${slotKey}')"`; 
       extraClass = "clickable";
+      mineClass = "mine cancel";
     }
 
     let actionText = "";
+    if (!isFilled) {
+      actionText = " 신청";
+    } else if (isMine) {
+      actionText = " 취소";
+    }
 
-if (!isFilled) {
-  actionText = " 신청";
-} else if (isMine) {
-  actionText = " 취소";
+    return `
+      <span class="member-chip ${getRoleClass(role)} ${extraClass} ${mineClass}" ${clickAction}>
+        ${roleIcon(role)} [${roleLabel(role)}] ${nameText}${actionText}
+      </span>
+    `;
+  }).join("");
 }
-
-return `
-  <span class="member-chip ${getRoleClass(role)} ${extraClass} ${isMine ? 'mine cancel' : ''}" ${clickAction}>
-    ${roleIcon(role)} [${roleLabel(role)}] ${nameText}${actionText}
-  </span>
-`;
 
  function joinSlot(raidId, partyName, slotKey) {
   if (!isApprovedUser()) {
