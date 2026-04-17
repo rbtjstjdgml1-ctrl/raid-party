@@ -355,6 +355,12 @@ button.locked {
   filter: grayscale(0.2);
 }
 
+.member-chip.mine {
+  border: 1px solid rgba(244, 210, 122, 0.6);
+  background: rgba(244, 210, 122, 0.06);
+  box-shadow: 0 0 6px rgba(244, 210, 122, 0.18);
+}
+
 .member-chip.locked::after {
   content: " 마감";
   font-size: 12px;
@@ -1609,7 +1615,16 @@ function adminAddMember(raidId, partyName) {
   return slots.map((slot, index) => {
     const slotKey = `slot${index + 1}`;
     const isFilled = slot && slot.filled && slot.name;
-    const nameText = isFilled ? slot.name : "비어있음";
+  let nameText = isFilled ? slot.name : "비어있음";
+
+const isMine =
+  isFilled &&
+  myUser &&
+  normalizeName(slot.name) === normalizeName(myUser.name);
+
+if (isMine) {
+  nameText += " (나)";
+}
     const role = slot?.wantedRole || slot?.role || "dps";
 
     const isMine =
@@ -1633,7 +1648,7 @@ function adminAddMember(raidId, partyName) {
     }
 
     return `
-      <span class="member-chip ${getRoleClass(role)} ${extraClass}" ${clickAction}>
+      <span class="member-chip ${getRoleClass(role)} ${extraClass} ${isMine ? 'mine' : ''}" ${clickAction}>
         ${roleIcon(role)} [${roleLabel(role)}] ${nameText}
       </span>
     `;
