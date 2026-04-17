@@ -343,12 +343,6 @@ button.locked {
   box-shadow: 0 6px 14px rgba(0,0,0,0.18);
 }
 
-.member-chip.clickable::after {
-  content: " 신청";
-  font-size: 12px;
-  opacity: 0.9;
-}
-
 .member-chip.locked {
   cursor: not-allowed;
   opacity: 0.45;
@@ -1642,13 +1636,19 @@ function renderSimpleParty(members, raidId, partyName) {
       extraClass = "clickable";
     }
 
-    return `
-      <span class="member-chip ${getRoleClass(role)} ${extraClass} ${isMine ? 'mine' : ''}" ${clickAction}>
-        ${roleIcon(role)} [${roleLabel(role)}] ${nameText}
-      </span>
-    `;
-  }).join("");
+    let actionText = "";
+
+if (!isFilled) {
+  actionText = " 신청";
+} else if (isMine) {
+  actionText = " 취소";
 }
+
+return `
+  <span class="member-chip ${getRoleClass(role)} ${extraClass} ${isMine ? 'mine' : ''}" ${clickAction}>
+    ${roleIcon(role)} [${roleLabel(role)}] ${nameText}${actionText}
+  </span>
+`;
 
  function joinSlot(raidId, partyName, slotKey) {
   if (!isApprovedUser()) {
