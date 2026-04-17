@@ -1612,18 +1612,10 @@ function adminAddMember(raidId, partyName) {
     const nameText = isFilled ? slot.name : "비어있음";
     const role = slot?.wantedRole || slot?.role || "dps";
 
-    let extraButton = "";
-    if (
-  isFilled &&
-  myUser &&
-  normalizeName(slot.name) === normalizeName(myUser.name)
-) {
-      extraButton = `
-        <button class="danger small" style="margin-left:6px;" onclick="cancelMy('${raidId}','${partyName}','${slotKey}')">
-          신청취소
-        </button>
-      `;
-    }
+    const isMine =
+      isFilled &&
+      myUser &&
+      normalizeName(slot.name) === normalizeName(myUser.name);
 
     let clickAction = "";
     let extraClass = "";
@@ -1635,13 +1627,15 @@ function adminAddMember(raidId, partyName) {
         clickAction = `onclick="joinSlot('${raidId}', '${partyName}', '${slotKey}')"`
         extraClass = "clickable";
       }
+    } else if (isMine) {
+      clickAction = `onclick="cancelMy('${raidId}', '${partyName}', '${slotKey}')"`
+      extraClass = "clickable";
     }
 
     return `
       <span class="member-chip ${getRoleClass(role)} ${extraClass}" ${clickAction}>
         ${roleIcon(role)} [${roleLabel(role)}] ${nameText}
       </span>
-      ${extraButton}
     `;
   }).join("");
 }
