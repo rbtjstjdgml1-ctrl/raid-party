@@ -1649,7 +1649,7 @@ function renderSimpleParty(members, raidId, partyName) {
     return `
       <span class="member-chip ${getRoleClass(role)} ${extraClass} ${mineClass} ${cancelClass}" ${clickAction}>
         <span style="display:block; font-weight:800;">
-          ${roleIcon(role)} [${roleLabel(role)}] ${isFilled ? slot.name : "비어있음"}
+         ${roleIcon(role)} [${roleLabel(role)}] ${isFilled ? `${getJobIcon(slot.job)} ${slot.name} (${slot.job})` : "비어있음"}
         </span>
         <span style="display:block; margin-top:4px; font-size:12px; opacity:0.9;">
           ${isMine ? "(나) · 취소" : !isFilled ? "신청" : ""}
