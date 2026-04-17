@@ -1617,19 +1617,14 @@ function renderSimpleParty(members, raidId, partyName) {
     const role = slot?.wantedRole || slot?.role || "dps";
 
     const isMine =
-  isFilled &&
-  myUser &&
-  normalizeName(slot.name) === normalizeName(myUser.name);
+      isFilled &&
+      myUser &&
+      normalizeName(slot.name) === normalizeName(myUser.name);
 
-let nameText = isFilled ? slot.name : "비어있음";
-if (isMine) {
-  nameText += " (나)";
-}
-
-let clickAction = "";
-let extraClass = "";
-let mineClass = isMine ? "mine" : "";
-let cancelClass = isMine ? "cancel" : "";
+    let clickAction = "";
+    let extraClass = "";
+    let mineClass = "";
+    let cancelClass = "";
 
     if (!isFilled) {
       if (raidLocked) {
@@ -1641,26 +1636,20 @@ let cancelClass = isMine ? "cancel" : "";
     } else if (isMine) {
       clickAction = `onclick="cancelMy('${raidId}', '${partyName}', '${slotKey}')"`; 
       extraClass = "clickable";
-      mineClass = "mine cancel";
-    }
-
-    let actionText = "";
-    if (!isFilled) {
-      actionText = " 신청";
-    } else if (isMine) {
-      actionText = " 취소";
+      mineClass = "mine";
+      cancelClass = "cancel";
     }
 
     return `
-  <span class="member-chip ${getRoleClass(role)} ${extraClass} ${mineClass} ${cancelClass}" ${clickAction}>
-    <span style="display:block; font-weight:800;">
-      ${roleIcon(role)} [${roleLabel(role)}] ${isFilled ? slot.name : "비어있음"}
-    </span>
-    <span style="display:block; margin-top:4px; font-size:12px; opacity:0.9;">
-      ${isMine ? "(나) · 취소" : !isFilled ? "신청" : ""}
-    </span>
-  </span>
-`;
+      <span class="member-chip ${getRoleClass(role)} ${extraClass} ${mineClass} ${cancelClass}" ${clickAction}>
+        <span style="display:block; font-weight:800;">
+          ${roleIcon(role)} [${roleLabel(role)}] ${isFilled ? slot.name : "비어있음"}
+        </span>
+        <span style="display:block; margin-top:4px; font-size:12px; opacity:0.9;">
+          ${isMine ? "(나) · 취소" : !isFilled ? "신청" : ""}
+        </span>
+      </span>
+    `;
   }).join("");
 }
 
