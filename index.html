@@ -355,6 +355,12 @@ button.locked {
   background: rgba(244, 210, 122, 0.08) !important;
 }
 
+.member-chip.cancel {
+  background: rgba(220, 38, 38, 0.16) !important;
+  border: 1px solid rgba(220, 38, 38, 0.38) !important;
+  box-shadow: 0 0 10px rgba(220, 38, 38, 0.18) !important;
+}
+
 .member-chip.locked::after {
   content: " 마감";
   font-size: 12px;
@@ -1645,7 +1651,7 @@ if (!isFilled) {
 }
 
 return `
-  <span class="member-chip ${getRoleClass(role)} ${extraClass} ${isMine ? 'mine' : ''}" ${clickAction}>
+  <span class="member-chip ${getRoleClass(role)} ${extraClass} ${isMine ? 'mine cancel' : ''}" ${clickAction}>
     ${roleIcon(role)} [${roleLabel(role)}] ${nameText}${actionText}
   </span>
 `;
