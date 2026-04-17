@@ -452,8 +452,9 @@ button.locked {
 }
 
 .manage-buttons {
-  display: flex;
-  gap: 6px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
 }
 
 .role-tank {
@@ -528,10 +529,12 @@ button.locked {
     }
 
     .manage-list {
-      margin-top: 10px;
-      display: grid;
-      gap: 8px;
-    }
+  margin-top: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* ⭐ 핵심 */
+  gap: 10px;
+}
+
     .admin-add-box {
   display: grid;
   gap: 6px;
@@ -711,10 +714,11 @@ button.locked {
   }
 
   .manage-item-row {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 10px;
-  }
+  display: flex;
+  flex-direction: column; /* ⭐ 핵심 */
+  align-items: stretch;
+  gap: 10px;
+}
 
   .manage-left {
     justify-content: flex-start;
