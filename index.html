@@ -1593,7 +1593,7 @@ function adminAddMember(raidId, partyName) {
   });
 }
 
-  function renderSimpleParty(members, raidId, partyName) {
+function renderSimpleParty(members, raidId, partyName) {
   const slots = Array.isArray(members) ? members : Object.values(members || {});
   const myUser = getMyUserRecord();
   const raid = raids[raidId] || {};
@@ -1615,22 +1615,17 @@ function adminAddMember(raidId, partyName) {
   return slots.map((slot, index) => {
     const slotKey = `slot${index + 1}`;
     const isFilled = slot && slot.filled && slot.name;
-  let nameText = isFilled ? slot.name : "비어있음";
-
-const isMine =
-  isFilled &&
-  myUser &&
-  normalizeName(slot.name) === normalizeName(myUser.name);
-
-if (isMine) {
-  nameText += " (나)";
-}
     const role = slot?.wantedRole || slot?.role || "dps";
 
     const isMine =
       isFilled &&
       myUser &&
       normalizeName(slot.name) === normalizeName(myUser.name);
+
+    let nameText = isFilled ? slot.name : "비어있음";
+    if (isMine) {
+      nameText += " (나)";
+    }
 
     let clickAction = "";
     let extraClass = "";
