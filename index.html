@@ -1618,20 +1618,18 @@ function renderSimpleParty(members, raidId, partyName) {
     const role = slot?.wantedRole || slot?.role || "dps";
 
     const isMine =
-      isFilled &&
-      myUser &&
-      normalizeName(slot.name) === normalizeName(myUser.name);
+  isFilled &&
+  myUser &&
+  normalizeName(slot.name) === normalizeName(myUser.name);
 
-    const mineClass = isMine ? "mine cancel" : "";
+let nameText = isFilled ? slot.name : "비어있음";
+if (isMine) {
+  nameText += " (나)";
+}
 
-    let nameText = isFilled ? slot.name : "비어있음";
-    if (isMine) {
-      nameText += " (나)";
-    }
-
-    let clickAction = "";
-    let extraClass = "";
-    let mineClass = "";
+let clickAction = "";
+let extraClass = "";
+let mineClass = isMine ? "mine cancel" : "";
 
     if (!isFilled) {
       if (raidLocked) {
