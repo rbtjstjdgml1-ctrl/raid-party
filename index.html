@@ -1628,7 +1628,8 @@ if (isMine) {
 
 let clickAction = "";
 let extraClass = "";
-let mineClass = isMine ? "mine cancel" : "";
+let mineClass = isMine ? "mine" : "";
+let cancelClass = isMine ? "cancel" : "";
 
     if (!isFilled) {
       if (raidLocked) {
@@ -1651,7 +1652,7 @@ let mineClass = isMine ? "mine cancel" : "";
     }
 
     return `
-  <span class="member-chip ${getRoleClass(role)} ${extraClass} ${mineClass}" ${clickAction}>
+  <span class="member-chip ${getRoleClass(role)} ${extraClass} ${mineClass} ${cancelClass}" ${clickAction}>
     <span style="display:block; font-weight:800;">
       ${roleIcon(role)} [${roleLabel(role)}] ${isFilled ? slot.name : "비어있음"}
     </span>
