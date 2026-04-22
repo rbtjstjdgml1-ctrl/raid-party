@@ -1027,6 +1027,23 @@ function autoDeleteOldRaids() {
       document.getElementById("adminToggleIcon").textContent = adminPanelOpen ? "▼" : "▶";
     }
 
+function openDatePicker() {
+  document.getElementById("raidDate").showPicker();
+}
+
+function updateRaidDateDisplay(value) {
+  if (!value) {
+    document.getElementById("raidDateDisplay").textContent = "날짜 선택";
+    return;
+  }
+
+  const d = new Date(value);
+  const days = ["일", "월", "화", "수", "목", "금", "토"];
+  const text = `${d.getMonth() + 1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
+
+  document.getElementById("raidDateDisplay").textContent = text;
+}
+
     function isApprovedUser() {
       if (!myId) return false;
       const user = users[myId];
@@ -1369,7 +1386,13 @@ function createRaid() {
   }).then(() => {
     openedRaid = newRaidRef.key
     document.getElementById("raidName").value = "";
-    document.getElementById("raidDate").value = "";
+    const today = new Date();
+const yyyy = today.getFullYear();
+const mm = String(today.getMonth() + 1).padStart(2, "0");
+const dd = String(today.getDate()).padStart(2, "0");
+document.getElementById("raidDate").value = `${yyyy}-${mm}-${dd}`;
+updateRaidDateDisplay(document.getElementById("raidDate").value);
+    updateRaidDateDisplay("");
     document.getElementById("raidTime").value = "";
 
     document.getElementById("p1slot1").value = "";
@@ -1947,15 +1970,26 @@ ${raid.owner ? `<span class="tag">${isMine ? "👑 공대장(나)" : "👑 공�
 }
 
     function load() {
-      const raidDateEl = document.getElementById("raidDate");
-      if (raidDateEl && !raidDateEl.value) {
-        const today = new Date();
-        const yyyy = today.getFullYear();
-        const mm = String(today.getMonth() + 1).padStart(2, "0");
-        const dd = String(today.getDate()).padStart(2, "0");
-        raidDateEl.value = `${yyyy}-${mm}-${dd}`;
-        raidDateEl.min = `${yyyy}-${mm}-${dd}`;
-      }
+  const raidDateEl = document.getElementById("raidDate");
+
+  if (raidDateEl) {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, "0");
+    const dd = String(today.getDate()).padStart(2, "0");
+    const todayStr = `${yyyy}-${mm}-${dd}`;
+
+    if (!raidDateEl.value) {
+      raidDateEl.value = todayStr;
+    }
+
+    raidDateEl.min = todayStr;
+    updateRaidDateDisplay(raidDateEl.value);
+
+    raidDateEl.addEventListener("change", function () {
+      updateRaidDateDisplay(this.value);
+    });
+  }
   
       db.ref("users").on("value", snapshot => {
         users = snapshot.val() || {};
