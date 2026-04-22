@@ -311,6 +311,28 @@ button.locked {
   gap: 8px;
 }
 
+.date-wrap {
+  position: relative;
+  width: 100%;
+  height: 44px;
+}
+
+.date-wrap #raidDate {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 44px;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.date-wrap #raidDateDisplay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
 @media (max-width: 900px) {
   .user-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -893,8 +915,10 @@ button.locked {
         <option value="침식의 정화소">침식의 정화소</option>
       </select>
 
-      <input type="date" id="raidDate" style="display:none;" />
-<div id="raidDateDisplay" onclick="openDatePicker()">날짜 선택</div>
+     <div class="date-wrap">
+  <input type="date" id="raidDate" />
+  <div id="raidDateDisplay">날짜 선택</div>
+</div>
 
     <select id="raidTime">
   <option value="">시간 선택</option>
@@ -1046,10 +1070,6 @@ function autoDeleteOldRaids() {
       document.getElementById("adminPanel").style.display = adminPanelOpen ? "block" : "none";
       document.getElementById("adminToggleIcon").textContent = adminPanelOpen ? "▼" : "▶";
     }
-
-function openDatePicker() {
-  document.getElementById("raidDate").showPicker();
-}
 
 function updateRaidDateDisplay(value) {
   if (!value) {
