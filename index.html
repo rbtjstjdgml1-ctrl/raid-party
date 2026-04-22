@@ -1362,6 +1362,7 @@ function createRaid() {
     party1: party1Data,
     party2: party2Data
   }).then(() => {
+    openedRaid = newRaidRef.key
     document.getElementById("raidName").value = "";
     document.getElementById("raidDate").value = "";
     document.getElementById("raidTime").value = "";
