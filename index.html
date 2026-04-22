@@ -188,13 +188,15 @@ select {
 }
 
     button {
-      width: auto;
-      cursor: pointer;
-      color: #fff;
-      font-weight: 700;
-      background: linear-gradient(135deg, var(--purple), var(--purple-2));
-      box-shadow: 0 8px 18px rgba(91, 33, 182, 0.25);
-    }
+  width: auto;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--purple), var(--purple-2));
+  box-shadow:
+    0 10px 24px rgba(124, 58, 237, 0.4),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
 
     button.gray {
       background: linear-gradient(135deg, var(--gray), var(--gray-2));
@@ -247,12 +249,14 @@ button.locked {
     }
 
     .admin-toggle-box {
-      padding: 4px 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-    }
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: rgba(255,255,255,0.03);
+  border-radius: 12px;
+}
 
     .admin-toggle-title {
       color: var(--gold);
@@ -338,7 +342,7 @@ button.locked {
     .raid-summary-left {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   flex-wrap: wrap;
   min-width: 0;
 }
