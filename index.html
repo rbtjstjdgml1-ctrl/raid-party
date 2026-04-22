@@ -1959,8 +1959,7 @@ ${raid.owner ? `<span class="tag">${isMine ? "👑 공대장(나)" : "👑 공�
       db.ref("raids").on("value", snapshot => {
   raids = snapshot.val() || {};
 
-  autoDeleteOldRaids(); // ⭐ 추가
-
+  if (isAdmin) autoDeleteOldRaids();
   renderRaids();
 });
 
