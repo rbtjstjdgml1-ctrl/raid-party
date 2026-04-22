@@ -122,6 +122,18 @@
       color: var(--muted);
     }
 
+.raid-row.today-raid {
+  border: 1px solid rgba(244, 210, 122, 0.45);
+  box-shadow:
+    0 0 0 1px rgba(244, 210, 122, 0.12),
+    0 12px 28px rgba(244, 210, 122, 0.12),
+    inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+.raid-row.today-raid .raid-summary {
+  color: #ffe8a3;
+}
+
     input,
 select,
 button {
@@ -1156,6 +1168,18 @@ const job = document.getElementById("entryJob").value;
         return;
       }
       
+      function isTodayRaid(dateStr) {
+  if (!dateStr) return false;
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+
+  return dateStr === todayStr;
+}
+      
 if (!job) {
   alert("직업 선택");
   return;
@@ -1966,7 +1990,7 @@ function renderRaids() {
       const opened = openedRaid === raidId;
 
       html += `
-        <div class="raid-row">
+       <div class="raid-row ${isTodayRaid(raid.date) ? 'today-raid' : ''}">
           <div class="raid-summary" onclick="toggleRaid('${raidId}')">
             <div class="raid-summary-left">
               <span>${opened ? "▼" : "▶"}</span>
