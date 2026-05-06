@@ -1048,6 +1048,18 @@ button.locked {
   return `${d.getMonth() + 1}월 ${d.getDate()}일 (${days[d.getDay()]})`;
 }
 
+function isTodayRaid(dateStr) {
+  if (!dateStr) return false;
+
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  const todayStr = `${yyyy}-${mm}-${dd}`;
+
+  return dateStr === todayStr;
+}
+
 function getRaidSortValue(raid) {
   const raidDate = new Date(raid.date || "9999-12-31");
 
